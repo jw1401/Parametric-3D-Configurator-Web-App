@@ -1,0 +1,66 @@
+<div class="container" >
+  <div class="alert alert-danger alert-dismissible" *ngIf="error">{{error}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
+
+  <div class=row>
+    <div class="col-12">
+      <h5>Account settings</h5>
+      <hr />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4 col-md-4">
+      <label>Profile picture</label>
+      <div class="img-thumbnail">
+        <img  class="text-center "style="height:200px; width:100%; object-fit:cover; object-position: center" [src]="photoURL" accepts="image/*"/>
+      </div><br />
+      <div class="form-group" >
+        <label  class="btn btn-secondary btn-file" for="image">Select Image File
+          <input class="form-control" id="image" type="file" (change)="fileImageChangeEvent($event)" required/>
+        </label>
+      </div>
+    </div>
+
+    <div class="col-sm-8 col-md-8 col-md-offset-0">
+
+      <form  #userData="ngForm">
+        <div class="form-group">
+          <label for ="name">Name</label>
+          <div class="input-group">
+            <input class ="form-control" id ="name" type="text" name="displayName" (ngModel)="displayName" required>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" (click)="changeUser(userData)" [disabled]="!userData.valid">Save</button>
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <form #emailData='ngForm'>
+        <div class="form-group">
+          <label for ="email">Email</label>
+          <div class="input-group">
+            <input class=" form-control" type="email" name="email" id ="email" (ngModel)="email" required placeholder="example@example.com">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" (click)="changeEmail(emailData)" [disabled]="!emailData.valid">Save</button>
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <form #passwordData='ngForm'>
+        <div class="form-group">
+          <label for ="password">Password</label>
+          <div class="input-group">
+            <input class=" form-control" type="password" name="newpassword" id="password" (ngModel)="newpassword" required>
+            <span class="input-group-btn">
+              <button type="button" (click)="changePassword(passwordData)" class="btn btn-default" [disabled]="!passwordData.valid">Save</button>
+            </span>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

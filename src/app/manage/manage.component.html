@@ -1,0 +1,27 @@
+<div class="container" style="margin-top:90px">
+  <div class="row">
+    <div class="col-12">
+        <h2>Manage</h2>
+        <br />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item"><a class="nav-link" [routerLinkActive]="['active']" routerLink="/manage/newmodel">New Model</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLinkActive]="['active']" routerLink="/manage/editmodel">Edit Models</a></li>
+            </ul>
+        </div>
+        <div class="card-block">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

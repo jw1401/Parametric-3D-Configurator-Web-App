@@ -1,0 +1,47 @@
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <button class="navbar-toggler navbar-toggler-right" type="button"
+    data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false"
+    aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <a class="navbar-brand" href="#">Dingiversum</a>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" routerLink="/home" >Home</a></li>
+        <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" routerLink="/about" >About</a></li>
+        <!--<li><a routerLink="/hello" routerLinkActive="active">Hello Models</a></li>-->
+      </ul>
+
+      <div class="navbar-right">
+          <span *ngIf="af.auth | async">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item"[routerLinkActive]="['active']"><a class="nav-link"routerLink="/manage/newmodel">Manage</a></li>
+            <li class="nav-item"[routerLinkActive]="['active']"><a class="nav-link"routerLink="/dashboard/profile">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="" (click)="logout()" title="Logout">Logout ({{userName}})</a></li>
+            </ul>
+          </span>
+          <span *ngIf="!(af.auth | async)">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" routerLink="/login">Login</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/signup">Sign up</a></li>
+            </ul>
+          </span>
+      </div>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<div class="" style="">
+      <router-outlet></router-outlet>
+</div><!-- /.container -->
+
+<hr>
+
+<div class="container">
+  <p *ngIf="af.auth | async">LOGGED IN</p>
+  <p *ngIf="!(af.auth | async)">NOT LOGGED IN</p>
+</div>

@@ -1,0 +1,41 @@
+<div class="container" style="margin-top:70px">
+
+  <div class="row">
+    <div class="col-12">
+      <div class="media">
+        <img class="d-flex mr-3" style="height:63px; width:63px; object-fit:cover; object-position: center"
+          [src]="(item |async)?.imageURL" alt="Generic placeholder image">
+        <div class="media-body">
+          <h5 class="mt-0">{{(item |async)?.name}}</h5>
+          <i class="fa fa-heart" aria-hidden="true"></i> {{(item |async)?.like}}
+          <i class="fa fa-tags" aria-hidden="true"></i> <small class="text-muted">{{(item |async)?.power}}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <!-- The Cad Region-->
+    <div class="row">
+        <!-- The Viewer Canvas and the statusdiv-->
+        <div id="columnBig" [className]="myClass">
+          <div class ="draggable-status-div" id="statusdiv"></div>
+          <div oncontextmenu="return false;" id="viewerContext" ></div>  <!--[ngStyle]="{'margin-right':marginRight}"-->
+        </div>
+        <!-- The parametersdiv-->
+        <div [hidden]="isStl" id="columnSmall" class="col-sm-4">
+          <div id="pWrapper">
+            <div id="parametersdiv"></div>
+          </div>
+        </div>
+    </div>
+    <!-- the optionsdiv Region-->
+    <div class="row">
+          <div class="col-sm-12">
+            <div  id="tail" >
+              <div id="optionsdiv"></div>
+            </div>
+          </div>
+    </div>
+
+</div>

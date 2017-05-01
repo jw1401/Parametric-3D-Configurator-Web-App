@@ -1,0 +1,19 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let item of items | async" >
+      <div class="thumbnail" style="background:white; word-wrap: break-word;">
+        <img style="height:200px; object-fit:cover; object-position: center"[src]="item.imageURL" alt="no Image">
+        <div class="caption">
+          <span class="label label-default">{{item.power}}</span>
+          <h3 style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item.name}}</h3>
+          <p style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item.description}}</p>
+          <p>
+            <a class="btn btn-default"  (click)="open(item.$key)">Open</a>
+            <a class="btn btn-default pull-right"  (click)="updateLike(item.$key, item.like +1)">{{item.like}} Likes!</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

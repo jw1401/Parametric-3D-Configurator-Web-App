@@ -1,0 +1,32 @@
+<div class="container" style="margin-top:90px">
+
+  <div class="row">
+    <div class="col-12" >
+        <h2>Dashboard</h2>
+    <br />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item" ><a [routerLinkActive]="['active']" class="nav-link" routerLink="/dashboard/profile">Profile</a></li>
+            <li class="nav-item" ><a [routerLinkActive]="['active']" class="nav-link" routerLink="/dashboard/account">Account</a></li>
+          </ul>
+        </div>
+        <div class="card-block">
+
+            <router-outlet></router-outlet>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+</div>

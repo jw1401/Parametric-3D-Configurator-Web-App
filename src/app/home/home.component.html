@@ -1,0 +1,28 @@
+<div class="jumbotron jumbotron-fluid" style="margin-top:50px">
+  <div class="container">
+    <h1 class="display-4">Find the model of your dream's</h1>
+    <p class="lead">
+      This page represents the landing page of the site, and public to everyone visiting.
+    </p>
+    <br/>
+  </div>
+</div>
+
+<div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4 col-xl-3" *ngFor="let item of items | async" >
+        <div class="card mb-4" >
+          <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.imageURL" alt="no Image">
+          <div class="card-block">
+            <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item.name}}</h5>
+            <p class="card-text"><small class="text-muted">{{item.power}}</small></p>
+
+            <button class="btn btn-outline-primary"  (click)="open(item.$key)">Open</button>
+            <button class="btn btn-link float-right" (click)="updateLike(item.$key, item.like +1)">
+              <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
