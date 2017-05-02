@@ -1,14 +1,4 @@
-/*a {
-
-  background-color: red;
-  padding:10px;
-  text-decoration: none;
-  font-family: monospace;
-
-}
-
-a:hover
+.router-outlet
 {
-
-  background-color: gray;
-}*/
+  margin-top:90px;
+}

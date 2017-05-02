@@ -13,7 +13,7 @@
             <label for="password">Password</label>
               <input class="form-control" type="password" name="password" (ngModel)="password" required>
           </div>
-          <button type="submit" class="btn btn-default" [disabled]="!formData.valid">Login</button>
+          <button type="submit" class="btn btn-secondary" [disabled]="!formData.valid">Login</button>
           <br/><br />
           <a routerLink="/signup">Don't have an account?</a> &bull; <a routerLink="/password-reset">Forgotten password?</a>
         </form>

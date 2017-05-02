@@ -7,7 +7,7 @@
 
   <!--this are the thumbnails which displays all the models that belong to the user-->
   <div class="row">
-    <div class="col-12 col-md-6 col-lg-4 col-xl-3" *ngFor="let item of items | async" >
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items | async" >
 
       <div class="card mb-4" >
         <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.imageURL" alt="no Image">
@@ -17,8 +17,9 @@
 
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal"
             (click)="editItem(item.$key, item.name,item.description, item.power,item.like, item.imageURL,item.modelURL)">
-            Edit</button>
-            <button class="btn btn-outline-danger" (click)="deleteItem(item.$key, item.imageURL, item.modelURL)">Delete</button>
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+            <button class="btn btn-outline-danger" (click)="deleteItem(item.$key, item.imageURL, item.modelURL)">
+              <i class="fa fa-trash-o" aria-hidden="true"></i></button>
           <button class="btn btn-link float-right" (click)="updateLike(item.$key, item.like +1)">
             <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
           </button>

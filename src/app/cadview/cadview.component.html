@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-12">
       <div class="media">
-        <img class="d-flex mr-3" style="height:63px; width:63px; object-fit:cover; object-position: center"
+        <img class="d-flex mr-3" style="height:63px; width:63px; object-fit:cover; object-position: center; border-radius:31px;"
           [src]="(item |async)?.imageURL" alt="Generic placeholder image">
         <div class="media-body">
           <h5 class="mt-0">{{(item |async)?.name}}</h5>
@@ -23,7 +23,7 @@
           <div oncontextmenu="return false;" id="viewerContext" ></div>  <!--[ngStyle]="{'margin-right':marginRight}"-->
         </div>
         <!-- The parametersdiv-->
-        <div [hidden]="isStl" id="columnSmall" class="col-sm-4">
+        <div [hidden]="isStl" id="columnSmall" class="col-sm-12 col-md-12 col-lg-4">
           <div id="pWrapper">
             <div id="parametersdiv"></div>
           </div>

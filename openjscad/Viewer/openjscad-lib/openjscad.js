@@ -1448,7 +1448,7 @@ OpenJsCad.Processor.prototype =
 
         if('caption' in definition)
         {
-            control.text = definition.caption;
+            control.text = "<span class='lead  w-100'>"+definition.caption+"</span><hr>";
             control.className = 'caption';
         }
         else

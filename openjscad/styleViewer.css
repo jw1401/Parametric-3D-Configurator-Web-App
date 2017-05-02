@@ -57,6 +57,7 @@ canvas
 
   #pWrapper
   {
+      margin-top: 10px;
       height:400px;
   }
 
@@ -126,20 +127,24 @@ canvas
     margin-bottom: 10px;
     border:  0px solid red; /* not inherited */
     padding: 5px; /* not inherited */
-    background-color:gray;/*#337AB7;/*dodgerblue;*/
+    background-color:transparent;/*#337AB7;/*dodgerblue;*/
     font-weight: normal;
     text-align:center;
     width: 100%;
     border-radius: 2px !important;
     border: 0px solid black;
+    border-bottom: 1px solid transparent;
 }
 
 #parametersdiv th.caption
 {
     text-decoration: none;
     font-size:16px;
-    color:white;
+    color:dodgerblue;
     height:30px;
+    background-color: transparent;
+    text-align: left;
+
 }
 
 #parametersdiv td.caption

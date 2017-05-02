@@ -10,12 +10,12 @@
   <div *ngIf="!userData" class="row alert alert-warning">No Data available</div>
 
   <div class="row" *ngIf="userData">
-    <div class="col-md-5 col-lg-4 col-sm-12">
-      <img class="" style="height:250px;width:250px; object-fit:cover; object-position: center" [src]="userData.auth.photoURL">
+    <div class="col-md-5 col-lg-4 col-sm-12 col-xl-3">
+      <img class="rounded" style="height:250px;width:250px; object-fit:cover; object-position: center" [src]="userData.auth.photoURL">
     </div>
-    <div class="col-md-7 col-sm-12">
+    <div class="col-md-7 col-sm-12 col-lg-8">
       <h1>{{ userData.auth.displayName }}</h1>
-      <h5>{{ userData.auth.email }}</h5>
+      <h5>{{ userData.auth.email }}</h5><br />
       <h4><span *ngIf="userData.auth.emailVerified===false" class="badge badge-danger">not verified</span></h4>
     </div>
   </div>

@@ -1,16 +1,19 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+  <a class="navbar-brand hidden-sm-up text-center m-0" style="font-size:14px" href="#">Dingiversum</a>
+  <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <button class="navbar-toggler navbar-toggler-right" type="button"
-    data-toggle="collapse" data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false"
+    <button class="navbar-toggler navbar-toggler-right " type="button"
+    data-toggle="collapse" data-target="#navbarContent"
+    aria-controls="navbarContent" aria-expanded="false"
     aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <a class="navbar-brand" href="#">Dingiversum</a>
+    <a class="navbar-brand hidden-xs-down" href="#">Dingiversum</a>
+    <a class="navbar-brand hidden-sm-up invisible" href="#">Dingive</a>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+    <div class="collapse navbar-collapse " id="navbarContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" routerLink="/home" >Home</a></li>
         <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" routerLink="/about" >About</a></li>
@@ -33,11 +36,12 @@
           </span>
       </div>
     </div><!-- /.navbar-collapse -->
+    </div>
 </nav>
 
-<div class="" style="">
+<div class="router-outlet" >
       <router-outlet></router-outlet>
-</div><!-- /.container -->
+</div>
 
 <hr>
 

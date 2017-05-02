@@ -11,19 +11,9 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-4 col-md-4">
-      <label>Profile picture</label>
-      <div class="img-thumbnail">
-        <img  class="text-center "style="height:200px; width:100%; object-fit:cover; object-position: center" [src]="photoURL" accepts="image/*"/>
-      </div><br />
-      <div class="form-group" >
-        <label  class="btn btn-secondary btn-file" for="image">Select Image File
-          <input class="form-control" id="image" type="file" (change)="fileImageChangeEvent($event)" required/>
-        </label>
-      </div>
-    </div>
 
-    <div class="col-sm-8 col-md-8 col-md-offset-0">
+
+    <div class="col-12 col-sm-12 col-md-12 col-md-offset-0 col-lg-8">
 
       <form  #userData="ngForm">
         <div class="form-group">
@@ -31,7 +21,7 @@
           <div class="input-group">
             <input class ="form-control" id ="name" type="text" name="displayName" (ngModel)="displayName" required>
             <span class="input-group-btn">
-              <button type="button" class="btn btn-default" (click)="changeUser(userData)" [disabled]="!userData.valid">Save</button>
+              <button type="button" class="btn btn-secondary" (click)="changeUser(userData)" [disabled]="!userData.valid">Save</button>
             </span>
           </div>
         </div>
@@ -43,7 +33,7 @@
           <div class="input-group">
             <input class=" form-control" type="email" name="email" id ="email" (ngModel)="email" required placeholder="example@example.com">
             <span class="input-group-btn">
-              <button type="button" class="btn btn-default" (click)="changeEmail(emailData)" [disabled]="!emailData.valid">Save</button>
+              <button type="button" class="btn btn-secondary" (click)="changeEmail(emailData)" [disabled]="!emailData.valid">Save</button>
             </span>
           </div>
         </div>
@@ -55,12 +45,24 @@
           <div class="input-group">
             <input class=" form-control" type="password" name="newpassword" id="password" (ngModel)="newpassword" required>
             <span class="input-group-btn">
-              <button type="button" (click)="changePassword(passwordData)" class="btn btn-default" [disabled]="!passwordData.valid">Save</button>
+              <button type="button" (click)="changePassword(passwordData)" class="btn btn-secondary" [disabled]="!passwordData.valid">Save</button>
             </span>
           </div>
         </div>
       </form>
 
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+
+      <img  class="rounded"style="height:250px; width:250px; object-fit:cover; object-position: center" [src]="photoURL" accepts="image/*"/>
+      <br /><br />
+      <div class="form-group">
+        <label class="custom-file " style="width:250px">
+          <input type="file" id="file" class="custom-file-input" (change)="fileImageChangeEvent($event)" required >
+          <span class="custom-file-control" >{{imageFile.name}}</span>
+        </label>
+      </div>
     </div>
   </div>
 </div>

@@ -23,7 +23,7 @@ export class CadviewComponent implements OnInit
   private model_uid : string;
 
   public isStl = true;
-  public myClass = "col-sm-8";
+  public myClass = "col-sm-12 col-md-12 col-lg-8";
 
   public item : FirebaseObjectObservable<any>;
   private firebase : any;
@@ -73,7 +73,7 @@ export class CadviewComponent implements OnInit
              {
                console.log("Loading jscad...");
                this.isStl = false;
-               this.myClass = "col-sm-8"; //make jscad Style
+               this.myClass = "col-sm-12 col-md-12 col-lg-8"; //make jscad Style
 
                gProcessor.setOpenJsCadPath('../openjscad/Viewer/openjscad-lib/');// set for library path
                gProcessor.setStatus("Processing <img id=busy src='openjscad/Viewer/imgs/busy.gif'>");
