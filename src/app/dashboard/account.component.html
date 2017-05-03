@@ -5,26 +5,27 @@
 
   <div class=row>
     <div class="col-12">
-      <h5>Profile settings</h5>
+      <h5>Public profile</h5>
       <hr />
     </div>
   </div>
 
 
   <div class="row" >
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+    <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
       <form  #userData="ngForm">
         <div class="form-group row" >
           <label for ="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10 input-group">
-              <input class ="form-control" id ="name" type="text" name="displayName" [(ngModel)]="userModel.name" required>
+              <input class ="form-control " id ="name" type="text" name="displayName" [(ngModel)]="userModel.name" required>
           </div>
         </div>
 
         <div class="form-group row">
           <label for ="country" class="col-sm-2 col-form-label">Country</label>
           <div class=" col-sm-10 input-group">
-            <input class=" form-control" type="text" name="country" id ="country" [(ngModel)]="userModel.country"  required >
+            <input class=" form-control f" type="text" name="country" id ="country" [(ngModel)]="userModel.country"  required >
           </div>
         </div>
 
@@ -48,9 +49,9 @@
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row ">
           <div class="offset-sm-2  col-sm-10 input-group">
-              <div class="form-group">
+              <div class="form-group mb-0">
                 <label class="btn btn-secondary btn-file" style ="width:100px">Browse
                   <input type="file" id="file" style="display: none" (change)="fileImageChangeEvent($event)" required >
                 </label>
@@ -65,13 +66,13 @@
 <br />
 <div class=row>
   <div class="col-12">
-    <h5>Account settings</h5>
+    <h5>Account</h5>
     <hr />
   </div>
 </div>
 
 <div class="row">
-  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+  <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
     <form  #accountData="ngForm">
       <div class="form-group row">
         <label for ="name" class="col-sm-2 col-form-label">Name</label>
