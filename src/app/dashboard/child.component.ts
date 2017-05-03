@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../user.service';
 import {FormsModule} from'@angular/forms';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-
+import {UserModel} from './user-model'
 
 @Component
 ({
@@ -15,6 +15,8 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 export class ProfileComponent
 {
     public userData: any;
+    private user: FirebaseObjectObservable<any>;
+    public userModel = new UserModel("","","","");
 
     constructor(private af: AngularFire)
     {
@@ -22,7 +24,19 @@ export class ProfileComponent
 
     ngOnInit()
     {
-        this.af.auth.subscribe(auth =>{this.userData = auth;});
+        this.af.auth.subscribe(auth =>{
+          this.userData = auth;
+
+          this.user =this.af.database.object('/users/'+this.userData.uid);
+          this.user.take(1).subscribe(data=>
+            {
+            this.userModel.name = data.name;
+            this.userModel.country =data.country;
+            this.userModel.bio =data.bio;
+            this.userModel.image = this.userData.auth.photoURL;
+          });
+
+        });
     }
 }
 
@@ -39,7 +53,7 @@ export class AccountComponent
   public error:any;
   public photoURL:any;
   private userService:any;
-
+  public userModel = new UserModel("","","","");
   public trustedURL: SafeUrl;
   public imageFile={"name":'', "file":'',"type":''};
 
@@ -47,8 +61,13 @@ export class AccountComponent
   {
     // injects the userService
     this.userService = userService;
-    this.userService.getPhotoURL().then(url => this.photoURL = url);
+    this.userService.getUserData().then(data => {this.userModel=data;
+      //this.photoURL=data.image
+    });
   }
+
+  ngOnInit()
+  {}
 
   fileImageChangeEvent(fileInput: any)
   {
@@ -56,9 +75,13 @@ export class AccountComponent
     this.imageFile.name = fileInput.target.files[0].name;
     this.imageFile.type = fileInput.target.files[0].type;
 
-    //trust the imageUrl
-    this.trustedURL =  this.sanitizer.bypassSecurityTrustResourceUrl( URL.createObjectURL(fileInput.target.files[0]));
-    this.photoURL = this.trustedURL;
+
+    if (fileInput.target.files && fileInput.target.files[0])
+    {
+      var reader = new FileReader();
+      reader.onload = (event:any) => {this.userModel.image = event.target.result;}
+      reader.readAsDataURL(fileInput.target.files[0]);
+    }
 
     //uploads the image imideatly
     if (this.imageFile.type.match('image/*'))
@@ -77,6 +100,11 @@ export class AccountComponent
     this.userService.updateUser(userData);
   }
 
+  changeAccountName(accountData:any)
+  {
+    console.log(accountData.value);
+    this.userService.updateAccountName(accountData);
+  }
   changeEmail(emailData)
   {
     this.userService.updateEmail(emailData).then(result =>

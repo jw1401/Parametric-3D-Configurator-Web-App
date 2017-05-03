@@ -1,6 +1,7 @@
 import { Injectable,Inject } from '@angular/core';
 import {Router} from '@angular/router';
 import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
+import {UserModel} from './dashboard/user-model';
 
 //this is the user-service for the user-dashboard
 @Injectable()
@@ -10,6 +11,7 @@ export class UserService
   public error:any;
   public userData:any;
 
+  public userModel = new UserModel("","","","");
   public  firebase:any;
 
   private user: FirebaseObjectObservable<any>;
@@ -19,31 +21,53 @@ export class UserService
   constructor(@Inject(FirebaseApp) firebaseApp: any, private af: AngularFire)
   {
     this.auth = firebaseApp.auth();
+
     this.af.auth.subscribe(auth =>
     {
-      console.log("UserService active");
       this.userData = auth;
+      console.log("UserService active");
     });
-    this.user =af.database.object('/users/'+this.userData.uid);
+
+    //this.user =af.database.object('/users/'+this.userData.uid);
     this.firebase = firebaseApp;
   }
 
-  getPhotoURL () : Promise<any>
+  getUserData () : Promise<any>
   {
-    return Promise.resolve(this.userData.auth.photoURL);
+    this.user =this.af.database.object('/users/'+this.userData.uid);
+    this.user.take(1).subscribe(data=>
+      {
+      this.userModel.name = data.name;
+      this.userModel.country =data.country;
+      this.userModel.bio =data.bio;
+      this.userModel.image = this.userData.auth.photoURL;
+    });
+    return Promise.resolve(this.userModel);
   }
 
   updateUser(userData: any)
   {
     if(userData.valid)
     {
-      this.auth.currentUser.updateProfile(userData.value)
-        .then((success) => {
-          console.log('Success');
-        })
-        .catch((error) => {
-          console.log(error);
-        })
+      this.user.update({name: userData.value.displayName, country: userData.value.country, bio:userData.value.bio}).then((user)=>{}).catch((err)=>
+      {
+        this.error = err;
+        console.log(err)
+      });
+    }
+  }
+
+  updateAccountName(accountData:any)
+  {
+    if(accountData.valid)
+    {
+      this.auth.currentUser.updateProfile({displayName: accountData.value.accountName})
+      .then((success) => {
+        console.log('Success');
+      })
+      .catch((error) => {
+        console.log(error);
+      })
     }
   }
 
@@ -83,7 +107,7 @@ export class UserService
   uploadImage(imageFileName, imagefile)
   {
         let user = this.user;
-        let auth =this.auth;
+        let auth = this.auth;
 
         // todo: implement to delete the user photo first on image change
         let promise = new Promise((res,rej) =>
@@ -98,7 +122,7 @@ export class UserService
 
               auth.currentUser.updateProfile({photoURL: downloadURL});
 
-              user.set({photoURL: downloadURL}).then((user)=>{}).catch((err)=>
+              user.update({photoURL: downloadURL}).then((user)=>{}).catch((err)=>
               {
                 this.error = err;
                 console.log(err)

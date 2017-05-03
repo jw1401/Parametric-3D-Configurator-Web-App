@@ -10,13 +10,21 @@
   <div *ngIf="!userData" class="row alert alert-warning">No Data available</div>
 
   <div class="row" *ngIf="userData">
-    <div class="col-md-5 col-lg-4 col-sm-12 col-xl-3">
-      <img class="rounded" style="height:250px;width:250px; object-fit:cover; object-position: center" [src]="userData.auth.photoURL">
+    <div class="col-md-5 col-lg-4 col-sm-12 col-xl-3 d-flex justify-content-center">
+      <img class="rounded" style="height:250px;width:250px; object-fit:cover; object-position: center; border-radius:125px" [src]="userData.auth.photoURL">
     </div>
     <div class="col-md-7 col-sm-12 col-lg-8">
-      <h1>{{ userData.auth.displayName }}</h1>
-      <h5>{{ userData.auth.email }}</h5><br />
-      <h4><span *ngIf="userData.auth.emailVerified===false" class="badge badge-danger">not verified</span></h4>
+      <h1>{{userModel.name}}<span><small> ({{ userData.auth.displayName }})</small></span></h1>
+<br />
+      <p>{{ userData.auth.email }} <span *ngIf="userData.auth.emailVerified===false" class="badge badge-pill badge-danger">not verified</span></p>
+      <p>
+        {{userModel.country}}
+      </p>
+
+      <p>
+        {{userModel.bio}}
+      </p>
+
     </div>
   </div>
 </div>
