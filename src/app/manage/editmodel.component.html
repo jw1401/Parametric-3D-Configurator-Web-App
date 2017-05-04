@@ -58,7 +58,7 @@
             </div>
             <div class="form-group">
               <label>Description</label>
-              <input class="form-control" type="text" #updateDescription [(ngModel)]="model.description">
+              <textarea class="form-control" type="text" #updateDescription [(ngModel)]="model.description" style="height:100px"></textarea>
             </div>
             <div class="form-group">
               <label>Power</label>
@@ -67,10 +67,10 @@
           </ul>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
-          <button class="btn btn-outline-primary pull-left" data-dismiss="modal"
-            (click)="updateItem(model.uid, updateName.value, updateDescription.value, updatePower.value);">Save Changes</button>
-          <button class="btn btn-outline-danger pull-left" data-dismiss="modal"
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button class="btn btn-outline-primary" data-dismiss="modal"
+            (click)="updateItem(model.uid, updateName.value, updateDescription.value, updatePower.value);">Save</button>
+          <button class="btn btn-outline-danger" data-dismiss="modal"
             (click)="deleteItem(model.uid, model.imageURL, model.modelURL)">Delete</button>
         </div>
       </div>

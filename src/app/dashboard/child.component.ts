@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
 import {Router} from '@angular/router';
-import {UserService} from '../user.service';
+import {UserService} from './user.service';
 import {FormsModule} from'@angular/forms';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {UserModel} from './user-model'
@@ -24,18 +24,14 @@ export class ProfileComponent
 
     ngOnInit()
     {
-        this.af.auth.subscribe(auth =>{
-          this.userData = auth;
-
-          this.user =this.af.database.object('/users/'+this.userData.uid);
-          this.user.take(1).subscribe(data=>
-            {
-            this.userModel.name = data.name;
-            this.userModel.country =data.country;
-            this.userModel.bio =data.bio;
-            this.userModel.image = this.userData.auth.photoURL;
-          });
-
+        this.af.auth.subscribe(auth =>
+        {
+          if(auth!=null)
+          {
+            this.userData = auth;
+            this.user =this.af.database.object('/users/'+this.userData.uid);
+            this.user.take(1).subscribe(data=>{ this.userModel=data;});
+          }
         });
     }
 }
@@ -61,9 +57,7 @@ export class AccountComponent
   {
     // injects the userService
     this.userService = userService;
-    this.userService.getUserData().then(data => {this.userModel=data;
-      //this.photoURL=data.image
-    });
+    this.userService.getUserData().then(data => {this.userModel=data;});
   }
 
   ngOnInit()
@@ -102,9 +96,10 @@ export class AccountComponent
 
   changeAccountName(accountData:any)
   {
-    console.log(accountData.value);
+    //console.log(accountData.value);
     this.userService.updateAccountName(accountData);
   }
+
   changeEmail(emailData)
   {
     this.userService.updateEmail(emailData).then(result =>

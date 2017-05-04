@@ -20,6 +20,8 @@ export class NewmodelComponent implements OnInit
   public imageFile={"name":'', "file":'',"type":''};
   public modelFile={"name":'', "file":'',"type":''};
 
+  public imagePreview="../../assets/no-image-2.png";
+
   public submitted = false;
 
   public items: FirebaseListObservable<any>;
@@ -100,6 +102,13 @@ export class NewmodelComponent implements OnInit
          this.imageFile.name = fileInput.target.files[0].name;
          this.imageFile.type = fileInput.target.files[0].type;
 
+         if (fileInput.target.files && fileInput.target.files[0])
+         {
+           var reader = new FileReader();
+           reader.onload = (event:any) => {this.imagePreview = event.target.result;}
+           reader.readAsDataURL(fileInput.target.files[0]);
+         }
+
          if (this.imageFile.type.match('image/*'))
          {
            this.error = null;
@@ -153,6 +162,7 @@ export class NewmodelComponent implements OnInit
          this.model= new CadModel(this.userData.uid ,"Name", "Description",this.powers[0],0,"","");
          this.imageFile.name="";
          this.modelFile.name="";
+         this.imagePreview="../../assets/no-image-2.png";
          this.error=null;
        }
 

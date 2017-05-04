@@ -1,7 +1,7 @@
 import { Injectable,Inject } from '@angular/core';
 import {Router} from '@angular/router';
 import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
-import {UserModel} from './dashboard/user-model';
+import {UserModel} from './user-model';
 
 //this is the user-service for the user-dashboard
 @Injectable()
@@ -34,14 +34,22 @@ export class UserService
 
   getUserData () : Promise<any>
   {
-    this.user =this.af.database.object('/users/'+this.userData.uid);
-    this.user.take(1).subscribe(data=>
+    this.af.auth.take(1).subscribe(auth =>
+    {
+      if (auth!=null)
       {
-      this.userModel.name = data.name;
-      this.userModel.country =data.country;
-      this.userModel.bio =data.bio;
-      this.userModel.image = this.userData.auth.photoURL;
+        this.userData = auth;
+        this.user =this.af.database.object('/users/'+this.userData.uid);
+        this.user.take(1).subscribe(data=>
+          {
+            this.userModel.name = data.name;
+            this.userModel.country =data.country;
+            this.userModel.bio =data.bio;
+            this.userModel.image = this.userData.auth.photoURL;
+          });
+        }
     });
+
     return Promise.resolve(this.userModel);
   }
 

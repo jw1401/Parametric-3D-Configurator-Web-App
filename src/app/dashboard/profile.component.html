@@ -9,22 +9,18 @@
 
   <div *ngIf="!userData" class="row alert alert-warning">No Data available</div>
 
-  <div class="row" *ngIf="userData">
-    <div class="col-md-5 col-lg-4 col-sm-12 col-xl-3 d-flex justify-content-center">
-      <img class="rounded" style="height:250px;width:250px; object-fit:cover; object-position: center; border-radius:125px" [src]="userData.auth.photoURL">
+  <div class="row justify-content-center" *ngIf="userData">
+    <div class="col-12 col-sm-12 col-md-8 col-lg-6 ">
+      <div class="card text-center" style="background: whitesmoke">
+        <div class="card-block ">
+          <img class="rounded" style="height:225px;width:225px; object-fit:cover; object-position: center; border-radius:125px" [src]="userData.auth.photoURL">
+          <h1 class="card-title">{{userModel.name}}</h1>
+          <h5><small> ({{ userData.auth.displayName }})</small></h5>
+          <hr />
+          <p class="card-text"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ userData.auth.email }} <span *ngIf="userData.auth.emailVerified===false" class="badge badge-pill badge-danger">not verified</span></p>
+          <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{userModel.country}}</p>
+          <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{userModel.bio}}</p>
+        </div>
+      </div>
     </div>
-    <div class="col-md-7 col-sm-12 col-lg-8">
-      <h1>{{userModel.name}}<span><small> ({{ userData.auth.displayName }})</small></span></h1>
-<br />
-      <p>{{ userData.auth.email }} <span *ngIf="userData.auth.emailVerified===false" class="badge badge-pill badge-danger">not verified</span></p>
-      <p>
-        {{userModel.country}}
-      </p>
-
-      <p>
-        {{userModel.bio}}
-      </p>
-
-    </div>
-  </div>
 </div>

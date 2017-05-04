@@ -18,7 +18,7 @@
             <p class="card-text"><small class="text-muted">{{item.power}}</small></p>
 
             <button class="btn btn-outline-primary"  (click)="open(item.$key)">Open</button>
-            <button class="btn btn-link float-right" (click)="updateLike(item.$key, item.like +1)">
+            <button class="btn btn-link float-right" (click)="updateLike(item.$key, item.like)">
               <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
             </button>
           </div>
