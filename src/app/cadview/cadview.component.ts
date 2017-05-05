@@ -26,9 +26,12 @@ export class CadviewComponent implements OnInit
   public myClass = "col-sm-12 col-md-12 col-lg-8";
 
   public item : FirebaseObjectObservable<any>;
+  public user : FirebaseObjectObservable<any>;
+
   private firebase : any;
 
   public description: any;
+  public userUid: any;
 
   constructor( private http: Http, private route: ActivatedRoute, private location: Location, private af: AngularFire, @Inject(FirebaseApp) fb: any)
   {
@@ -63,6 +66,13 @@ export class CadviewComponent implements OnInit
       {
         let modelURL = model.modelURL;
         this.description =model.description;
+        this.userUid = model.uid;
+
+        this.user=this.af.database.object(`/users/${this.userUid}`);
+        this.user.take(1).subscribe(user=>
+        {
+          //console.log(user);
+        })
 
         let storageRef = this.firebase.storage().refFromURL(modelURL);
         let  strStorageRef =storageRef.toString();

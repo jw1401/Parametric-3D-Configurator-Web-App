@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit
     {
       if (this.userModel.likedModels==null)
       {
-        this.userModel.likedModels = [""];
+        this.userModel.likedModels = new Array;
       }
       //console.log(this.userModel.likedModels);
       let index = this.userModel.likedModels.indexOf(key);
