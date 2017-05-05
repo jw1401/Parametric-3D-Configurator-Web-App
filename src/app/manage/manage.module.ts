@@ -8,6 +8,7 @@ import { manageRouting } from './manage.routing';
 import { ManageComponent } from './manage.component';
 import {NewmodelComponent} from './newmodel.component';
 import {EditmodelComponent} from './editmodel.component';
+import {LikedModelsComponent} from './liked-models.component'
 //import { ProfileComponent, AccountComponent, SettingsComponent } from './child.component';
 
 @NgModule({
@@ -21,6 +22,7 @@ import {EditmodelComponent} from './editmodel.component';
     ManageComponent,
     NewmodelComponent,
     EditmodelComponent,
+    LikedModelsComponent,
   ]
 })
 export class ManageModule { }

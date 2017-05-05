@@ -9,5 +9,6 @@ export class CadModel
     public like?: number,
     public imageURL?: string,
     public modelURL?: string,
+    public isCustomizable?: boolean,
   ){}
 }

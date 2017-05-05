@@ -49,7 +49,7 @@ export class EditmodelComponent implements OnInit
   {}
 
   //make model data available in the modal
-  editItem(key: string, name: string, description: string, power: string,like: number, imageURL:string, modelURL:string)
+  editItem(key: string, name: string, description: string, power: string,like: number, imageURL:string, modelURL:string, customizable:boolean)
   {
     this.model.uid=key;
     this.model.name= name;
@@ -58,11 +58,13 @@ export class EditmodelComponent implements OnInit
     this.model.like = like;
     this.model.imageURL = imageURL;
     this.model.modelURL = modelURL;
+    this.model.isCustomizable = customizable;
   }
 
-  updateItem(key: string, newName: string, newDescription, newPower)
+  updateItem(key: string, newName: string, newDescription, newPower, customizable)
   {
-    this.items.update(key,{name: newName, description: newDescription, power: newPower});
+    //this.items.update(key,this.model);
+    this.items.update(key,{name: newName, description: newDescription, power: newPower, isCustomizable: customizable});
   }
 
   updateLike(key: string, like: number)

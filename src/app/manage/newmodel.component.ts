@@ -15,8 +15,8 @@ export class NewmodelComponent implements OnInit
 
   public userData: any;
 
-  public powers = ['Printable', 'Hi Tec','Art', 'Engineering','Not special','Customizable'];
-  public model = new CadModel("","Name", "Description",this.powers[0],0,"","");
+  public powers = [ 'Hi Tec Gadget','Art', 'Engineering','Not special','Universal','Printable'];
+  public model = new CadModel("","Name", "Description",this.powers[0],0,"","",false);
   public imageFile={"name":'', "file":'',"type":''};
   public modelFile={"name":'', "file":'',"type":''};
 
@@ -159,7 +159,7 @@ export class NewmodelComponent implements OnInit
 
        newCadModel()
        {
-         this.model= new CadModel(this.userData.uid ,"Name", "Description",this.powers[0],0,"","");
+         this.model= new CadModel(this.userData.uid ,"Name", "Description",this.powers[0],0,"","", false);
          this.imageFile.name="";
          this.modelFile.name="";
          this.imagePreview="../../assets/no-image-2.png";

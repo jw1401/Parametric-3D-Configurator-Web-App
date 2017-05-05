@@ -28,6 +28,8 @@ export class CadviewComponent implements OnInit
   public item : FirebaseObjectObservable<any>;
   private firebase : any;
 
+  public description: any;
+
   constructor( private http: Http, private route: ActivatedRoute, private location: Location, private af: AngularFire, @Inject(FirebaseApp) fb: any)
   {
     //get reference model_uid form passed parameters
@@ -60,6 +62,7 @@ export class CadviewComponent implements OnInit
     this.item.take(1).subscribe(model=>
       {
         let modelURL = model.modelURL;
+        this.description =model.description;
 
         let storageRef = this.firebase.storage().refFromURL(modelURL);
         let  strStorageRef =storageRef.toString();

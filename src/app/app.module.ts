@@ -19,6 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { CadviewComponent } from './cadview/cadview.component';
 
+
   export const firebaseConfig = {
 
     apiKey: "AIzaSyAINMYkpE9akJSIY53pAdXNhIJXqSd-HXI",
@@ -38,7 +39,8 @@ import { CadviewComponent } from './cadview/cadview.component';
     AboutComponent,
     HomeComponent,
     PageNotFoundComponent,
-    CadviewComponent
+    CadviewComponent,
+    
   ],
   imports: [
     BrowserModule,
