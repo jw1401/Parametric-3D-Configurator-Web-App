@@ -6,6 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import {Http, Response, ResponseContentType} from '@angular/http';
 import {Observable, Subscription} from 'rxjs/Rx';
 import 'rxjs/add/operator/take';
+import {CadModelService} from '../cad-model.service';
 
 //import openJsCad form plane JavaScript
 declare var OpenJsCad: any;
@@ -33,7 +34,7 @@ export class CadviewComponent implements OnInit
   public description: any;
   public userUid: any;
 
-  constructor( private http: Http, private route: ActivatedRoute, private location: Location, private af: AngularFire, @Inject(FirebaseApp) fb: any)
+  constructor( private modelService:CadModelService, private http: Http, private route: ActivatedRoute, private location: Location, private af: AngularFire, @Inject(FirebaseApp) fb: any)
   {
     //get reference model_uid form passed parameters
     this.route.params.map( params => params['model_uid']).subscribe((id)=>
@@ -51,6 +52,8 @@ export class CadviewComponent implements OnInit
     let storageRef;
 
     var gProcessor = null;
+
+    this.modelService.getModelByKey(this.model_uid).then(x=> console.log(x))
 
     //start OpenJsCad processor
     gProcessor = new OpenJsCad.Processor(document.getElementById("viewerContext"),

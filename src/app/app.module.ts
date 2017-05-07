@@ -19,6 +19,8 @@ import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { CadviewComponent } from './cadview/cadview.component';
 
+import {CadModelService} from './cad-model.service';
+
 
   export const firebaseConfig = {
 
@@ -40,7 +42,7 @@ import { CadviewComponent } from './cadview/cadview.component';
     HomeComponent,
     PageNotFoundComponent,
     CadviewComponent,
-    
+
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,7 @@ import { CadviewComponent } from './cadview/cadview.component';
     RoutingModule,
     AngularFireModule.initializeApp(firebaseConfig)
   ],
-  providers: [],
+  providers: [CadModelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
