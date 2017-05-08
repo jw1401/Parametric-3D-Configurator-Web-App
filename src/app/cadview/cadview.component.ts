@@ -1,16 +1,13 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
-import { Location }                 from '@angular/common';
-import { AngularFire, FirebaseApp , FirebaseListObservable,FirebaseObjectObservable} from 'angularfire2';
-import 'rxjs/add/operator/switchMap';
-import {Http, Response, ResponseContentType} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
-import 'rxjs/add/operator/take';
-import {CadModelService} from '../cad-model.service';
+import { FirebaseApp } from 'angularfire2';
+import {CadModelService} from '../shared/cad-model.service';
+import {CadModel} from '../shared/cad-model';
+import {UserService} from '../shared/user.service';
+import{UserModel} from '../shared/user-model';
 
 //import openJsCad form plane JavaScript
-declare var OpenJsCad: any;
-//import * as OpenJsCad from '../../openjscad/Viewer/openjscad-lib/openjscad';
+declare var OpenJsCad: any; //import * as OpenJsCad from '../../openjscad/Viewer/openjscad-lib/openjscad';
 
 @Component
 ({
@@ -21,42 +18,30 @@ declare var OpenJsCad: any;
 
 export class CadviewComponent implements OnInit
 {
-  private model_uid : string;
+  private modelKey : string;
 
   public isStl = true;
   public myClass = "col-sm-12 col-md-12 col-lg-8";
 
-  public item : FirebaseObjectObservable<any>;
-  public user : FirebaseObjectObservable<any>;
+  public user : any;
+  public model: CadModel;
 
   private firebase : any;
 
-  public description: any;
-  public userUid: any;
-
-  constructor( private modelService:CadModelService, private http: Http, private route: ActivatedRoute, private location: Location, private af: AngularFire, @Inject(FirebaseApp) fb: any)
+  constructor( private userService: UserService, private modelService:CadModelService, private route: ActivatedRoute, @Inject(FirebaseApp) fb: any)
   {
     //get reference model_uid form passed parameters
     this.route.params.map( params => params['model_uid']).subscribe((id)=>
     {
-      this.model_uid = id;
+      this.modelKey = id;
     });
-
-    this.item=af.database.object('/models/' + this.model_uid);
     this.firebase=fb;
   }
 
   ngOnInit()
   {
-    let modelURL;
-    let storageRef;
-
-    var gProcessor = null;
-
-    this.modelService.getModelByKey(this.model_uid).then(x=> console.log(x))
-
     //start OpenJsCad processor
-    gProcessor = new OpenJsCad.Processor(document.getElementById("viewerContext"),
+    var gProcessor = new OpenJsCad.Processor(document.getElementById("viewerContext"),
                                {
                                     viewerwidth: '100%',
                                     viewerheight: '100%',
@@ -65,27 +50,18 @@ export class CadviewComponent implements OnInit
                                 });
 
     //get the item from firebase only one time
-    this.item.take(1).subscribe(model=>
+    this.modelService.getModelByKey(this.modelKey).then(model =>
       {
-        let modelURL = model.modelURL;
-        this.description =model.description;
-        this.userUid = model.uid;
+        this.model = model;
+        this.user = this.userService.getUserById(this.model.uid)
 
-        this.user=this.af.database.object(`/users/${this.userUid}`);
-        this.user.take(1).subscribe(user=>
-        {
-          //console.log(user);
-        })
-
-        let storageRef = this.firebase.storage().refFromURL(modelURL);
-        let  strStorageRef =storageRef.toString();
+        let strStorageRef = this.firebase.storage().refFromURL(model.modelURL).toString();
+        let modelData = this.modelService.getModelData(model.modelURL);
 
         //load case .jscad
         if(strStorageRef.match(/\.jscad$/i) || strStorageRef.match(/\.js$/i))
         {
-          this.http.get(modelURL, {responseType: ResponseContentType.Text })
-           .map(response => response.text())
-           .subscribe(data =>
+          modelData.then(data=>
              {
                console.log("Loading jscad...");
                this.isStl = false;
@@ -100,9 +76,7 @@ export class CadviewComponent implements OnInit
         //load case .stl -- is not workin for Binary Stl !?
         else
         {
-          this.http.get(modelURL, {responseType: ResponseContentType.Text })
-           .map(response => response.text())
-           .subscribe(data =>
+            modelData.then(data=>
              {
                console.log("Loading other File Format...");
                this.isStl = true;

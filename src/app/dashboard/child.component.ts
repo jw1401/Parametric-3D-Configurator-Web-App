@@ -1,10 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
 import {Router} from '@angular/router';
-import {UserService} from './user.service';
-import {FormsModule} from'@angular/forms';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {UserModel} from './user-model'
+import {UserService} from '../shared/user.service';
+import {UserModel} from '../shared/user-model'
 
 @Component
 ({
@@ -14,25 +11,17 @@ import {UserModel} from './user-model'
 
 export class ProfileComponent
 {
-    public userData: any;
-    private user: FirebaseObjectObservable<any>;
-    public userModel = new UserModel("","","","");
+    public authData: any;
+    public userModel : UserModel;
 
-    constructor(private af: AngularFire)
+    constructor(private userService: UserService)
     {
     }
 
     ngOnInit()
     {
-        this.af.auth.subscribe(auth =>
-        {
-          if(auth!=null)
-          {
-            this.userData = auth;
-            this.user =this.af.database.object('/users/'+this.userData.uid);
-            this.user.take(1).subscribe(data=>{ this.userModel=data;});
-          }
-        });
+      this.userService.getUser().then(data => {this.userModel = data;});
+      this.authData = this.userService.getAuthData();
     }
 }
 
@@ -46,22 +35,19 @@ export class ProfileComponent
 
 export class AccountComponent
 {
-  public error:any;
-  public photoURL:any;
-  private userService:any;
-  public userModel = new UserModel("","","","");
-  public trustedURL: SafeUrl;
+  public error : any;
+  public userModel : UserModel;
   public imageFile={"name":'', "file":'',"type":''};
 
-  constructor(@Inject(UserService) userService:any, private router: Router, private sanitizer: DomSanitizer)
+  constructor(private userService: UserService, private router: Router)
   {
-    // injects the userService
-    this.userService = userService;
-    this.userService.getUserData().then(data => {this.userModel=data;});
+    this.userModel = new UserModel("","","","");
   }
 
   ngOnInit()
-  {}
+  {
+    this.userService.getUser().then(data => {this.userModel=data;});
+  }
 
   fileImageChangeEvent(fileInput: any)
   {
@@ -73,7 +59,7 @@ export class AccountComponent
     if (fileInput.target.files && fileInput.target.files[0])
     {
       var reader = new FileReader();
-      reader.onload = (event:any) => {this.userModel.image = event.target.result;}
+      reader.onload = (event:any) => {this.userModel.photoURL = event.target.result;}
       reader.readAsDataURL(fileInput.target.files[0]);
     }
 
@@ -91,40 +77,43 @@ export class AccountComponent
 
   changeUser(userData: any)
   {
-    this.userService.updateUser(userData);
+    if (userData.valid)
+    {
+      this.userService.updateUser(userData);
+    }
   }
 
   changeAccountName(accountData:any)
   {
-    //console.log(accountData.value);
-    this.userService.updateAccountName(accountData);
+    if(accountData.valid)
+    {
+      this.userService.updateAccountName(accountData);
+    }
   }
 
   changeEmail(emailData)
   {
-    this.userService.updateEmail(emailData).then(result =>
-      {
-        console.log(result)
-      }).catch((error=>
-        {
+    if(emailData.valid)
+    {
+      this.userService.updateEmail(emailData).then(result =>{
+        console.log(result)}).catch((error=>{
           console.log(error);
           this.router.navigate(['/login']);
         }));
+    }
   }
 
   changePassword(passwordData)
   {
-    this.userService.updatePassword(passwordData).then(result=>
-      {
-        console.log(result);
-      }).catch(error=>
-        {
+    if (passwordData.valid)
+    {
+      this.userService.updatePassword(passwordData).then(result=>{
+        console.log(result);}).catch(error=>{
           console.log(error);
           this.router.navigate(['/login']);
         });
-  }
-
-
+      }
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////

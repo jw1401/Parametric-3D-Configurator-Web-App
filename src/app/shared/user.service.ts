@@ -7,83 +7,66 @@ import {UserModel} from './user-model';
 @Injectable()
 export class UserService
 {
-  public auth: any;
-  public error:any;
-  public userData:any;
-
-  public userModel = new UserModel("","","","");
-  public  firebase:any;
-
-  private user: FirebaseObjectObservable<any>;
-
-  public imageFile={"name":'', "file":'',"type":''};
+  public auth : any;
+  public error : any;
+  public authData : any;
+  public userModel : UserModel;
+  public firebase : any;
+  private user : FirebaseObjectObservable<any>;
 
   constructor(@Inject(FirebaseApp) firebaseApp: any, private af: AngularFire)
   {
-    this.auth = firebaseApp.auth();
-
     this.af.auth.subscribe(auth =>
     {
-      this.userData = auth;
-      console.log("UserService active");
+      if(auth)
+      {
+        this.authData = auth;
+        console.log("UserService active for " + this.authData.auth.email);
+        this.user = this.af.database.object(`/users/${this.authData.uid}`);
+      }
     });
 
-    //this.user =af.database.object('/users/'+this.userData.uid);
     this.firebase = firebaseApp;
+    this.auth = firebaseApp.auth();
   }
 
-  getUserData () : Promise<any>
+  getUser () : Promise<UserModel>
   {
-    this.af.auth.take(1).subscribe(auth =>
+    return this.af.database.object(`/users/${this.authData.uid}`).first().toPromise();
+  }
+
+  getUserById (id: string) : Promise<UserModel>
+  {
+    return this.af.database.object(`/users/${id}`).first().toPromise();
+  }
+
+  getAuthData():any
+  {
+    return this.authData;
+  }
+
+  updateUser(user: any)
+  {
+    this.user.update({name: user.value.displayName, country: user.value.country, bio:user.value.bio}).then((user)=>{}).catch((err)=>
     {
-      if (auth!=null)
-      {
-        this.userData = auth;
-        this.user =this.af.database.object('/users/'+this.userData.uid);
-        this.user.take(1).subscribe(data=>
-          {
-            this.userModel.name = data.name;
-            this.userModel.country =data.country;
-            this.userModel.bio =data.bio;
-            this.userModel.image = this.userData.auth.photoURL;
-          });
-        }
+      this.error = err;
+      console.log(err)
     });
-
-    return Promise.resolve(this.userModel);
-  }
-
-  updateUser(userData: any)
-  {
-    if(userData.valid)
-    {
-      this.user.update({name: userData.value.displayName, country: userData.value.country, bio:userData.value.bio}).then((user)=>{}).catch((err)=>
-      {
-        this.error = err;
-        console.log(err)
-      });
-    }
   }
 
   updateAccountName(accountData:any)
   {
-    if(accountData.valid)
-    {
-      this.auth.currentUser.updateProfile({displayName: accountData.value.accountName})
+    this.auth.currentUser.updateProfile({displayName: accountData.value.accountName})
       .then((success) => {
         console.log('Success');
       })
       .catch((error) => {
         console.log(error);
       })
-    }
   }
 
   updateEmail(emailData: any) : Promise<any>
   {
-    if(emailData.valid)
-    {
-      console.log(emailData.value);
       return this.auth.currentUser.updateEmail(emailData.value.email)
         .then((success) =>
         {
@@ -93,23 +76,17 @@ export class UserService
         {
           return Promise.reject("Error in changeEmail " + error);
         })
-    }
-    else{return Promise.reject("big Error in changeEmail");}
   }
 
   updatePassword(passwordData: any) : Promise<any>
   {
-    if(passwordData.valid)
-    {
-      return this.auth.currentUser.updatePassword(passwordData.value.newpassword).then((sucess) =>
+    return this.auth.currentUser.updatePassword(passwordData.value.newpassword).then((sucess) =>
       {
         return Promise.resolve("Password changed")
       }).catch((error) =>
       {
         return Promise.reject(error);
       })
-    }
-    else {return Promise.reject("Big Error in update Password");}
   }
 
   uploadImage(imageFileName, imagefile)
@@ -120,7 +97,7 @@ export class UserService
         // todo: implement to delete the user photo first on image change
         let promise = new Promise((res,rej) =>
         {
-            let uploadTask = this.firebase.storage().ref(this.userData.uid+`/userData/${imageFileName}`).put(imagefile);
+            let uploadTask = this.firebase.storage().ref(this.authData.uid+`/userData/${imageFileName}`).put(imagefile);
 
             uploadTask.on('state_changed', function(snapshot){}, function(error){rej(error);},
             function()

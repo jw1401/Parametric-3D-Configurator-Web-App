@@ -1,7 +1,8 @@
 import { Component, Inject ,OnInit} from '@angular/core';
 import { AngularFire, FirebaseApp , FirebaseListObservable,FirebaseObjectObservable} from 'angularfire2';
 import {Router} from '@angular/router';
-import {CadModel} from '../cad-model';
+import {CadModel} from '../shared/cad-model';
+import {CadModelService} from '../shared/cad-model.service';
 
 @Component
 ({
@@ -12,88 +13,20 @@ import {CadModel} from '../cad-model';
 export class NewmodelComponent implements OnInit
 {
   public error:any;
-
-  public userData: any;
-
   public powers = [ 'Hi Tec Gadget','Art', 'Engineering','Not special','Universal','Printable'];
-  public model = new CadModel("","Name", "Description",this.powers[0],0,"","",false);
   public imageFile={"name":'', "file":'',"type":''};
   public modelFile={"name":'', "file":'',"type":''};
-
+  public model: CadModel;
   public imagePreview="../../assets/no-image-2.png";
-
   public submitted = false;
 
-  public items: FirebaseListObservable<any>;
-  public firebase:any;
-
-    constructor(private af: AngularFire, @Inject(FirebaseApp) fb: any)
+    constructor(private modelService: CadModelService)
     {
-      this.af.auth.subscribe(auth =>{this.userData = auth;});
-
-      //assigns the model the user_uid --> now you know to which user it belongs
-      // it is saved in the firebase db under each model
-      this.model.uid = this.userData.uid;
-
-      this.items =af.database.list('/models');
-      this.firebase=fb;
+      this.newCadModel();
     }
 
     ngOnInit()
     {}
-
-    uploadImage(imageFileName, imagefile, itemKey)
-    {
-      let items = this.items; //this is a must do
-
-          // gives back Promise with resolution or rejection
-          let promise = new Promise((res,rej) =>
-          {
-              let uploadTask = this.firebase.storage().ref(this.userData.uid+'/'+itemKey+`/images/${imageFileName}`).put(imagefile);
-
-              uploadTask.on('state_changed',
-              function(snapshot)
-              {
-              },
-              function(error)
-              {
-                  rej(error);
-              },
-              function()
-              {
-                var downloadURL = uploadTask.snapshot.downloadURL;
-                res(downloadURL);
-                items.update(itemKey,{imageURL:downloadURL}); //update the database with img url
-              });
-          });
-          return promise;
-      }
-
-      uploadModel(modelFileName, modelfile, itemKey)
-      {
-        let items = this.items;
-
-            let promise = new Promise((res,rej) =>
-            {
-                let uploadTask = this.firebase.storage().ref(this.userData.uid+'/'+itemKey+`/models/${modelFileName}`).put(modelfile);
-
-                uploadTask.on('state_changed',
-                function(snapshot)
-                {
-                },
-                function(error)
-                {
-                    rej(error);
-                },
-                function()
-                {
-                  var downloadURL = uploadTask.snapshot.downloadURL;
-                  res(downloadURL);
-                  items.update(itemKey,{modelURL:downloadURL});//update the database with model url
-                });
-            });
-            return promise;
-        }
 
        fileImageChangeEvent(fileInput: any)
        {
@@ -142,24 +75,15 @@ export class NewmodelComponent implements OnInit
        {
          if (this.imageFile.type.match('image/*') && (this.modelFile.type === "stl"|| this.modelFile.type ==="jscad"))
          {
-           //push model to database
-           this.items.push(this.model).then((item)=>
-           {
-             this.uploadImage(this.imageFile.name,this.imageFile.file,item.key);
-             this.uploadModel(this.modelFile.name,this.modelFile.file,item.key)
-             this.submitted = true;
-
-           }).catch((err)=>
-           {
-             this.error = err;
-           });
+           this.modelService.addModel(this.model,this.imageFile,this.modelFile);
+           this.submitted=true;
          }
          else this.error= "No file or wrong format...";
        }
 
        newCadModel()
        {
-         this.model= new CadModel(this.userData.uid ,"Name", "Description",this.powers[0],0,"","", false);
+         this.model= new CadModel("" ,"Name", "Description",this.powers[0],0,"","", false);
          this.imageFile.name="";
          this.modelFile.name="";
          this.imagePreview="../../assets/no-image-2.png";

@@ -10,19 +10,25 @@
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items | async" >
 
       <div class="card mb-4" >
-        <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.imageURL" alt="no Image">
+        <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item?.imageURL" alt="no Image">
         <div class="card-block">
           <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item.name}}</h5>
           <p class="card-text"><small class="text-muted">{{item.power}}</small></p>
 
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal"
-            (click)="editItem(item.$key, item.name,item.description, item.power,item.like, item.imageURL,item.modelURL, item.isCustomizable)">
-            <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-            <button class="btn btn-outline-danger" (click)="deleteItem(item.$key, item.imageURL, item.modelURL)">
-              <i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            (click)="editItem(item.$key, item.name,item.description, item.power,item.like,
+            item.imageURL,item.modelURL, item.isCustomizable, item.uid)">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </button>
+
+          <button class="btn btn-outline-danger" (click)="deleteItemOnCard(item.$key, item.imageURL, item.modelURL)">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+
           <button class="btn btn-link float-right" (click)="updateLike(item.$key, item.like +1)">
             <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
           </button>
+
         </div>
       </div>
     </div>
@@ -60,24 +66,23 @@
               <label>Power</label>
               <input class="form-control" type="text" #updatePower [(ngModel)]="model.power" />
             </div>
-            <div class="form-group row">
-            <label for="customizable" class="col-sm-0"></label>
-            <div class="col-sm-12">
+            <div class="form-group">
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" id="customizable"  name="customizable" type="checkbox" [(ngModel)]="model.isCustomizable" #customizable="ngModel">  Customizable
                 </label>
               </div>
-            </div>
           </div>
           </ul>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button class="btn btn-outline-primary" data-dismiss="modal"
-            (click)="updateItem(model.uid, updateName.value, updateDescription.value, updatePower.value,customizable.value);">Save</button>
+            (click)="updateItem(this.modelKey);">Save
+          </button>
           <button class="btn btn-outline-danger" data-dismiss="modal"
-            (click)="deleteItem(model.uid, model.imageURL, model.modelURL)">Delete</button>
+            (click)="deleteItem(this.modelKey)">Delete
+          </button>
         </div>
       </div>
     </div>

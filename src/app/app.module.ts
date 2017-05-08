@@ -19,7 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { CadviewComponent } from './cadview/cadview.component';
 
-import {CadModelService} from './cad-model.service';
+import {CadModelService} from './shared/cad-model.service';
 
 
   export const firebaseConfig = {

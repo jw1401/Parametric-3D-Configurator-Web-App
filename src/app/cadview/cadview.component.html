@@ -4,11 +4,11 @@
     <div class="col-12">
       <div class="media">
         <img class="d-flex mr-3" style="height:63px; width:63px; object-fit:cover; object-position: center; border-radius:31px;"
-          [src]="(item |async)?.imageURL" alt="Generic placeholder image">
+          [src]="model?.imageURL" alt="Generic placeholder image">
         <div class="media-body col-8">
-          <h5 class="mt-0">{{(item |async)?.name}}</h5>
-          <i class="fa fa-heart" aria-hidden="true"></i> {{(item |async)?.like}}
-          <i class="fa fa-tags" aria-hidden="true"></i> <small class="text-muted">{{(item |async)?.power}}</small>
+          <h5 class="mt-0">{{model?.name}}</h5>
+          <i class="fa fa-heart" aria-hidden="true"></i> {{model?.like}}
+          <i class="fa fa-tags" aria-hidden="true"></i> <small class="text-muted">{{model?.power}}</small>
         </div>
         <div class="media-body col-4 float-right">
           <a class="float-right text-center"><img class="mr-2" style="height:40px; width:40px; object-fit:cover; object-position: center; border-radius:31px;" [src]="(user |async)?.photoURL" alt="Generic placeholder image">{{(user|async)?.name}}</a>
@@ -46,7 +46,7 @@
             <div  class="card">
               <div class="card-block">
                 <p class="card-text">
-                  {{this.description}}
+                  {{model?.description}}
                 </p>
               </div>
             </div>

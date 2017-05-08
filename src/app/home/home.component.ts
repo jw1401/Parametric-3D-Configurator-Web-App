@@ -1,8 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { AngularFire , FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2';
 import {Router} from '@angular/router';
-import {UserModel} from '../dashboard/user-model';
-import {CadModelService} from '../cad-model.service';
+import {UserModel} from '../shared/user-model';
+import {CadModelService} from '../shared/cad-model.service';
+
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'home',
