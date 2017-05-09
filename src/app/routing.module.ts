@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ModuleWithProviders }  from '@angular/core';
-
-import {HelloComponent} from './hello/hello.component';
 import {AboutComponent} from './about/about.component';
 import { HomeComponent } from './home/home.component';
 import {DashboardComponent,} from './dashboard/dashboard.component';
@@ -16,8 +14,8 @@ const routes: Routes =
 [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 
-  { path: 'hello',
-    component: HelloComponent},/*
+  /*{ path: 'hello',
+    component: HelloComponent},
     canActivate: [AuthGuard]},*/
 
   { path:'cadview/:model_uid',component:CadviewComponent},

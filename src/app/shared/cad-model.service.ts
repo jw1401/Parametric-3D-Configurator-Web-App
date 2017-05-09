@@ -2,7 +2,7 @@ import { Injectable,Inject } from '@angular/core';
 import {Http, Response, ResponseContentType} from '@angular/http';
 import { AngularFire, FirebaseApp,FirebaseObjectObservable, FirebaseListObservable  } from 'angularfire2';
 import {CadModel} from './cad-model';
-import {UserModel} from './user-model';
+//import {UserModel} from './user-model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
@@ -60,7 +60,7 @@ export class CadModelService
     return this.getModelsForModelsKeys(this.getLikedModelsKeysPerUser())
   }
 
-  getModelsForModelsKeys(modelsKeys: Observable<string[]>):  Observable<any>
+  getModelsForModelsKeys(modelsKeys: Observable<string[]>): Observable<any>
   {
       return modelsKeys.map(mpu => mpu.map(modelKey => this.af.database.object(`models/`+ modelKey)))
       .flatMap(fbojs =>Observable.combineLatest(fbojs));
@@ -91,29 +91,6 @@ export class CadModelService
      .map(response => response.text()).toPromise()
   }
 
-  /*getLikedModels() : Promise<any>[]
-  {
-    let likedModels: FirebaseObjectObservable<any>
-    let model: FirebaseObjectObservable<any>
-    let list: any[]= new Array;
-
-    likedModels = this.af.database.object(`/users/${this.authData.uid}/likedModels`);
-    likedModels.first().toPromise().then(data=>
-    {
-      for (let entry of data)
-      {
-        model=this.af.database.object(`/models/${entry}`);
-        model.first().toPromise().then(data=>
-        {
-          list.push(data);
-        })
-      }
-    })
-    return list;
-  }*/
-
-
-
   addModel(model: CadModel, imageFile: any, modelFile: any)
   {
     //assigns the model to the auth_user_uid --> now you know to which user it belongs
@@ -136,7 +113,7 @@ export class CadModelService
     let userId = this.authData.uid;
     let item = this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).first().single().subscribe(data=>
       {
-        console.log(data.$value)
+        //console.log(data.$value)
         if (data.$value == null)
         {
           this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).set(true);
@@ -150,26 +127,12 @@ export class CadModelService
       });
   }
 
-  getModelsByUser()
-  {
-
-  }
-
   deleteModel(key:string, imageURL:string, modelURL:string)
   {
     let imgDelRef = this.firebase.storage().refFromURL(imageURL);
     let modelDelRef = this.firebase.storage().refFromURL(modelURL);
 
     //remove database entry then files
-    /*this.af.database.object(`/users/${this.authData.uid}`).subscribe(data =>
-      {
-        let userModel = new UserModel("","");
-        userModel=data
-        let index = userModel.likedModels.indexOf(key);
-        userModel.likedModels.splice(index,1);
-        this.af.database.object(`/users/${this.authData.uid}/likedModels`).set(userModel.likedModels);
-      });*/
-
     this.af.database.list(`/likedModelsPerUser/${this.authData.uid}/`).remove(key);
     this.af.database.list(`/modelsPerUser/${this.authData.uid}/`).remove(key);
 

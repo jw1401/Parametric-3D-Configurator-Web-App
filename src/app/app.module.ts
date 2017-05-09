@@ -7,7 +7,6 @@ import {AngularFireModule} from 'angularfire2';
 import {RoutingModule} from './routing.module';
 
 import { AppComponent, PageNotFoundComponent } from './app.component';
-import { HelloComponent } from './hello/hello.component';
 import { AboutComponent } from './about/about.component';
 
 import { AuthModule } from './auth/auth.module';
@@ -37,7 +36,6 @@ import {CadModelService} from './shared/cad-model.service';
 @NgModule({
   declarations: [
     AppComponent,
-    HelloComponent,
     AboutComponent,
     HomeComponent,
     PageNotFoundComponent,
