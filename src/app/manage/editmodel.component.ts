@@ -3,6 +3,7 @@ import { FirebaseListObservable} from 'angularfire2';
 import { CadModel } from '../shared/cad-model';
 import { FormsModule } from '@angular/forms';
 import {CadModelService} from '../shared/cad-model.service';
+import { Observable, Subject } from 'rxjs/Rx';
 
 @Component
 ({
@@ -16,26 +17,28 @@ export class EditmodelComponent implements OnInit
 
   public model : CadModel;
   public modelKey : string;
-  public items: FirebaseListObservable<any>;
+  public items: Observable<any>;
 
  constructor(private modelService: CadModelService)
  {
-   this.model=  new CadModel("uid","Name", "Description","",0,"imageURL","modelURL");
+   this.model=  new CadModel("userId","Name", "Description","",0,"imageURL","modelURL");
  }
 
   ngOnInit()
   {
     //query for all models that belongs to user with uid
     this.items = this.modelService.getEditModels();
+    //this.modelService.getEditModels().subscribe(value => this.items=value)
+
   }
 
   //make model data available in the modal
   editItem(key: string, name: string, description: string, power: string,
-    like: number, imageURL:string, modelURL:string, customizable:boolean, uid:string)
+    like: number, imageURL:string, modelURL:string, customizable:boolean, userId:string)
   {
     this.modelKey = key;
 
-    this.model.uid=uid;
+    this.model.userId=userId;
     this.model.name= name;
     this.model.description = description;
     this.model.power = power;
@@ -63,5 +66,7 @@ export class EditmodelComponent implements OnInit
   deleteItemOnCard(key:string, imageURL, modelURL)
   {
     this.modelService.deleteModel(key, imageURL, modelURL);
+    this.items = this.modelService.getEditModels();
+
   }
 }

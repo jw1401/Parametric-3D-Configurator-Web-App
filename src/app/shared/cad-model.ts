@@ -1,8 +1,11 @@
+import {Observable} from "rxjs/Rx";
+
 export class CadModel
 {
   constructor
   (
-    public uid: string,
+    //public $key : string,
+    public userId: string,
     public name: string,
     public description?: string,
     public power?:string,
@@ -11,4 +14,14 @@ export class CadModel
     public modelURL?: string,
     public isCustomizable?: boolean,
   ){}
+
+  static fromJson ({$key, userId, name, description, power,like,imageURL,modelURL,isCustomizable})
+  {
+    return new CadModel(userId, name, description, power,like,imageURL,modelURL,isCustomizable);
+  }
+
+  static fromJsonArray(json : any[]) : CadModel[]
+  {
+    return json.map(CadModel.fromJson);
+  }
 }

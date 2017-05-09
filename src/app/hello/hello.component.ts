@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { AngularFire, FirebaseApp , FirebaseListObservable,FirebaseObjectObservable} from 'angularfire2';
 import {Router} from '@angular/router';
-import {CadModel} from '../cad-model';
+import {CadModel} from '../shared/cad-model';
 
 
 @Component({

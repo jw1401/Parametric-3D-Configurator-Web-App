@@ -53,7 +53,7 @@ export class CadviewComponent implements OnInit
     this.modelService.getModelByKey(this.modelKey).then(model =>
       {
         this.model = model;
-        this.user = this.userService.getUserById(this.model.uid)
+        this.user = this.userService.getUserById(this.model.userId)
 
         let strStorageRef = this.firebase.storage().refFromURL(model.modelURL).toString();
         let modelData = this.modelService.getModelData(model.modelURL);

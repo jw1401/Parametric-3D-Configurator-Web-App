@@ -2,9 +2,11 @@ import { Injectable,Inject } from '@angular/core';
 import {Http, Response, ResponseContentType} from '@angular/http';
 import { AngularFire, FirebaseApp,FirebaseObjectObservable, FirebaseListObservable  } from 'angularfire2';
 import {CadModel} from './cad-model';
+import {UserModel} from './user-model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/do';
+import { Observable, Subject } from 'rxjs/Rx';
 
 //this is the cad-model-service for cad-model realated transactions in firebase
 @Injectable()
@@ -48,16 +50,34 @@ export class CadModelService
     this.limit.next( this.limit.getValue() + 10);
   }
 
-  getEditModels(): FirebaseListObservable<any>
+  getEditModels(): Observable<any>
   {
-    return this.af.database.list('/models',
-    {
-      query:
-      {
-        orderByChild: ('uid'),
-        equalTo: (this.authData.uid),
-      }
-    });
+    return this.getModelsForModelsKeys(this.getModelsKeysPerUser())
+  }
+
+  getLikedModels(): Observable<any>
+  {
+    return this.getModelsForModelsKeys(this.getLikedModelsKeysPerUser())
+  }
+
+  getModelsForModelsKeys(modelsKeys: Observable<string[]>):  Observable<any>
+  {
+      return modelsKeys.map(mpu => mpu.map(modelKey => this.af.database.object(`models/`+ modelKey)))
+      .flatMap(fbojs =>Observable.combineLatest(fbojs));
+  }
+
+  getModelsKeysPerUser() : Observable<string[]>
+  {
+    return this.af.database.list(`/modelsPerUser/${this.authData.uid}`, {preserveSnapshot: true})
+    .do(val => console.log("val: ",val))
+    .map(mspu => mspu.map(mpu=>mpu.key));
+  }
+
+  getLikedModelsKeysPerUser() : Observable<string[]>
+  {
+    return this.af.database.list(`/likedModelsPerUser/${this.authData.uid}`, {preserveSnapshot: true})
+    .do(val => console.log("val: ",val))
+    .map(mspu => mspu.map(mpu=>mpu.key));
   }
 
   getModelByKey(key: string): Promise<CadModel>
@@ -71,7 +91,7 @@ export class CadModelService
      .map(response => response.text()).toPromise()
   }
 
-  getLikedModels() : Promise<any>[]
+  /*getLikedModels() : Promise<any>[]
   {
     let likedModels: FirebaseObjectObservable<any>
     let model: FirebaseObjectObservable<any>
@@ -90,12 +110,14 @@ export class CadModelService
       }
     })
     return list;
-  }
+  }*/
+
+
 
   addModel(model: CadModel, imageFile: any, modelFile: any)
   {
     //assigns the model to the auth_user_uid --> now you know to which user it belongs
-    model.uid = this.authData.uid;
+    model.userId = this.authData.uid;
     this.models.push(model).then(item=>
     {
       this.uploadImage(imageFile.name,imageFile.file,item.key);
@@ -111,7 +133,21 @@ export class CadModelService
 
   updateLike(key: string, like)
   {
-    this.models.update(key, {like:like});
+    let userId = this.authData.uid;
+    let item = this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).first().single().subscribe(data=>
+      {
+        console.log(data.$value)
+        if (data.$value == null)
+        {
+          this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).set(true);
+          this.models.update(key, {like:like+1});
+        }
+        else
+        {
+          this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).remove();
+          this.models.update(key, {like:like-1});
+        }
+      });
   }
 
   getModelsByUser()
@@ -125,6 +161,18 @@ export class CadModelService
     let modelDelRef = this.firebase.storage().refFromURL(modelURL);
 
     //remove database entry then files
+    /*this.af.database.object(`/users/${this.authData.uid}`).subscribe(data =>
+      {
+        let userModel = new UserModel("","");
+        userModel=data
+        let index = userModel.likedModels.indexOf(key);
+        userModel.likedModels.splice(index,1);
+        this.af.database.object(`/users/${this.authData.uid}/likedModels`).set(userModel.likedModels);
+      });*/
+
+    this.af.database.list(`/likedModelsPerUser/${this.authData.uid}/`).remove(key);
+    this.af.database.list(`/modelsPerUser/${this.authData.uid}/`).remove(key);
+
     this.models.remove(key).then(_=>
     {
       imgDelRef.delete().then(function()

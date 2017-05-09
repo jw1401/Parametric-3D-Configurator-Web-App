@@ -50,7 +50,8 @@ export class HomeComponent implements OnInit
 
   updateLike(key: string, like: number)
   {
-    console.log(this.auth);
+    this.modelService.updateLike(key,like);
+    /*console.log(this.auth);
     if (this.auth!= null)
     {
       if (this.userModel.likedModels==null)
@@ -73,7 +74,7 @@ export class HomeComponent implements OnInit
         //this.user.$ref.child('likedModels').child(index.toString()).remove();
         this.items.update(key,{like:like-1});;
       }
-    }
+    }*/
   }
 
   open(key:string)
