@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { AngularFire, FirebaseApp, AuthMethods, AuthProviders } from 'angularfire2';
 
 @Component({
@@ -19,7 +18,7 @@ export class SignupComponent
   {
     if(formData.valid)
     {
-      console.log(formData.value);
+      //console.log(formData.value);
       this.af.auth.createUser({
         email: formData.value.email,
         password: formData.value.password
@@ -91,7 +90,7 @@ export class ResetpassComponent
   constructor(private af: AngularFire, @Inject(FirebaseApp) firebaseApp: any)
   {
     this.auth = firebaseApp.auth()
-    console.log(this.auth);
+    //console.log(this.auth);
   }
 
   onSubmit(formData)

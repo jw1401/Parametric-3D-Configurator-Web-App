@@ -1,5 +1,5 @@
 import { Injectable,Inject } from '@angular/core';
-import {Http, Response, ResponseContentType} from '@angular/http';
+import {Http, Response, ResponseContentType, Headers,RequestOptions} from '@angular/http';
 import { AngularFire, FirebaseApp,FirebaseObjectObservable, FirebaseListObservable  } from 'angularfire2';
 import {CadModel} from './cad-model';
 //import {UserModel} from './user-model';
@@ -7,6 +7,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 import { Observable, Subject } from 'rxjs/Rx';
+
 
 //this is the cad-model-service for cad-model realated transactions in firebase
 @Injectable()
@@ -75,9 +76,9 @@ export class CadModelService
 
   getLikedModelsKeysPerUser() : Observable<string[]>
   {
-    return this.af.database.list(`/likedModelsPerUser/${this.authData.uid}`, {preserveSnapshot: true})
+    return this.af.database.list(`/likedModelsPerUser/${this.authData.uid}`, {preserveSnapshot: true}).first()
     .do(val => console.log("val: ",val))
-    .map(mspu => mspu.map(mpu=>mpu.key));
+    .map(lmspu => lmspu.map(lmpu=>lmpu.key));
   }
 
   getModelByKey(key: string): Promise<CadModel>
@@ -87,8 +88,14 @@ export class CadModelService
 
   getModelData (modelURL: string): Promise<any>
   {
-    return this.http.get(modelURL, {responseType: ResponseContentType.Text })
+    return this.http.get(modelURL, { responseType: ResponseContentType.Text})
      .map(response => response.text()).toPromise()
+  }
+
+  getModelDataBinary (modelURL: string): Promise<any>
+  {
+    return this.http.get(modelURL, { responseType: ResponseContentType.ArrayBuffer})
+     .map(response => response.arrayBuffer()).toPromise()
   }
 
   addModel(model: CadModel, imageFile: any, modelFile: any)
@@ -160,6 +167,45 @@ export class CadModelService
 
   }
 
+  changeModelImage(imageFileName, imagefile, oldImageURL, itemKey) : Promise<any>
+  {
+    let models = this.models; //this is a must do
+    let imgDelRef = this.firebase.storage().refFromURL(oldImageURL);
+
+    imgDelRef.delete().then(function(){console.log("remove Model Image")});
+
+    let promise = new Promise((res,rej) =>
+    {
+      let uploadTask = this.firebase.storage().ref(`${this.authData.uid}/${itemKey}/images/${imageFileName}`).put(imagefile);
+      uploadTask.on('state_changed', function(snapshot){}, function(error){rej(error);},function()
+      {
+        var downloadURL = uploadTask.snapshot.downloadURL;
+        res(downloadURL);
+        models.update(itemKey,{imageURL:downloadURL}); //update the database with img url
+      });
+    });
+    return promise
+  }
+
+  changeModelFile(modelFileName, modelfile, oldModelURL, itemKey) : Promise<any>
+  {
+    let models = this.models; //this is a must do
+    let imgDelRef = this.firebase.storage().refFromURL(oldModelURL);
+
+    imgDelRef.delete().then(function(){console.log("remove Model")});
+
+    let promise = new Promise((res,rej) =>
+    {
+      let uploadTask = this.firebase.storage().ref(`${this.authData.uid}/${itemKey}/models/${modelFileName}`).put(modelfile);
+      uploadTask.on('state_changed', function(snapshot){}, function(error){rej(error);},function()
+      {
+        var downloadURL = uploadTask.snapshot.downloadURL;
+        res(downloadURL);
+        models.update(itemKey,{modelURL:downloadURL}); //update the database with img url
+      });
+    });
+    return promise
+  }
 
   uploadImage(imageFileName, imagefile, itemKey)
   {

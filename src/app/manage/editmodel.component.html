@@ -12,8 +12,8 @@
       <div class="card mb-4" >
         <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item?.imageURL" alt="no Image">
         <div class="card-block">
-          <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item.name}}</h5>
-          <p class="card-text"><small class="text-muted">{{item.power}}</small></p>
+          <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item?.name}}</h5>
+          <p class="card-text"><small class="text-muted">{{item?.power}}</small></p>
 
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal"
             (click)="editItem(item.$key, item.name,item.description, item.power,item.like,
@@ -26,7 +26,7 @@
           </button>
 
           <button class="btn btn-link float-right" (click)="updateLike(item.$key, item.like)">
-            <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
+            <i class="fa fa-heart" aria-hidden="true"></i> {{item?.like}}
           </button>
 
         </div>
@@ -45,14 +45,35 @@
         </div>
 
         <div class="modal-body">
-          <div class="container">
+          <div class="">
             <div class="row">
               <div class="col-xs-12 col-sm-8 offset-sm-2">
-                <img class="img-fluid"[src]="model.imageURL" alt="no Image">
+                <img class="img-fluid" [src]="this.imagePreview" alt="no Image" accepts="image/*">
               </div>
             </div>
+
           </div>
           <hr />
+          <div class="form-group row">
+            <label class="col-sm-12 col-form-label">Image</label>
+            <div class="col-sm-12">
+              <label class="custom-file w-100">
+                <input type="file" id="file" class="custom-file-input" (change)="fileImageChangeEvent($event)" required>
+                <span class="custom-file-control" >{{imageFile.name}}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-12 col-form-label">Model</label>
+            <div class="col-sm-12">
+              <label class="custom-file w-100">
+                <input type="file" id="file" class="custom-file-input" (change)="fileModelChangeEvent($event)" required >
+                <span class="custom-file-control" >{{modelFile.name}}</span>
+              </label>
+            </div>
+          </div>
+
           <ul class="list-group">
             <div class="form-group">
               <label>Name</label>
