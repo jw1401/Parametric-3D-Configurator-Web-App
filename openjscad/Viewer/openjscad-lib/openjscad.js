@@ -543,7 +543,7 @@ OpenJsCad.Processor.prototype =
         // creates the optionsdiv
         this.optionsdiv = document.querySelector("#optionsdiv");
 
-        this.optionsdiv.innerHTML= '<div class="dropup" style="float:left">'+
+        this.optionsdiv.innerHTML= '<div class="drodown" style="float:left">'+
                                     '<button class="btn btn-secondary btn-viewer dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                     '<i class="fa fa-cog" aria-hidden="true"></i></button>'+
                                       '<ul class="dropdown-menu">'+

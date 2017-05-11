@@ -18,10 +18,10 @@ OpenJsCadViewer.Viewer = function(containerElm, size, options)
     // config stuff
     // fg and bg colors
 
-    var defaultBgColor = [0.9, 0.9, 0.9];
+    var defaultBgColor = [1, 1, 1];
     var defaultMeshColor = [1, 0, 1];
-    var drawAxes = false;
-    var axLength = 110;
+    var drawAxes = true;
+    var axLength = 50;
     var gridLength = 100;
     this.perspective = 45; // in degrees
 
@@ -129,7 +129,7 @@ OpenJsCadViewer.Viewer.prototype =
 
       // we're creating new canvas on switching renderer, as same
       // canvas doesn't tolerate moving from webgl to canvasrenderer
-      var renderer = new Renderer({precision: 'highp', antialias: true});
+      var renderer = new Renderer({precision: 'highp', antialias: true, alpha:true});
       this.renderer_ = renderer;
 
       if (this.canvas)
@@ -139,7 +139,7 @@ OpenJsCadViewer.Viewer.prototype =
       this.canvas = renderer.domElement;
       this.containerElm_.appendChild(this.canvas);
 
-      renderer.setClearColor(this.bgColor_);
+      //renderer.setClearColor(this.bgColor_);
 
       // and add controls
       this.createControls(renderer.domElement);

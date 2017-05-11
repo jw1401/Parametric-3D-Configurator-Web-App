@@ -1,22 +1,10 @@
-<div class="container" style="margin-top:70px">
+<div class="container">
 
   <div class="row">
-    <div class="col-12">
-      <div class="media">
-        <img class="d-flex mr-3" style="height:63px; width:63px; object-fit:cover; object-position: center; border-radius:31px;"
-          [src]="model?.imageURL" alt="Generic placeholder image">
-        <div class="media-body col-8">
-          <h5 class="mt-0">{{model?.name}}</h5>
-          <i class="fa fa-heart" aria-hidden="true"></i> {{model?.like}}
-          <i class="fa fa-tags" aria-hidden="true"></i> <small class="text-muted">{{model?.power}}</small>
+    <div class="col-12 ">
+          <h1 class="pb-2">{{model?.name}} </h1>
         </div>
-        <div class="media-body col-4 float-right">
-          <a class="float-right text-center"><img class="mr-2" style="height:40px; width:40px; object-fit:cover; object-position: center; border-radius:31px;" [src]="(user |async)?.photoURL" alt="Generic placeholder image">{{(user|async)?.name}}</a>
-        </div>
-      </div>
     </div>
-  </div>
-  <hr />
 
   <!-- The Cad Region-->
     <div class="row">
@@ -37,50 +25,79 @@
           <div class="col-sm-12">
             <div  id="tail" >
               <div id="optionsdiv"></div>
+              <div class="float-right mt-2">
+                <span class="text-muted pr-3" style="font-size:16px"> <i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.name}}</span>
+                <span class="text-muted float-right "><i class="fa fa-heart" aria-hidden="true"></i> {{model?.like}}</span>
+                <span class="text-muted float-right pr-4"><i class="fa fa-tags" aria-hidden="true"></i> {{model?.power}}</span>
+              </div>
             </div>
           </div>
     </div>
-    <hr />
 
+    <!-- the Description Region-->
     <div class="row mt-3">
           <div class="col-sm-12">
             <div  class="card">
               <div class="card-header">
                   <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#description" role="tab">Description</a></li>
-                    <li *ngIf="!isStl" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit code</a></li>
+                    <li *ngIf="!isStl" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit</a></li>
                     <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#license" role="tab">License</a></li>
+                    <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#madeBy" role="tab">Made</a></li>
                   </ul>
               </div>
               <div class="card-block">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="description" role="tabpanel">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img class="img-fluid" [src]="model?.imageURL" alt="Generic placeholder image">
+                        </div>
+                        <div class="col-md-8">
+                          <div innerHTML ="{{model?.description}}" class="card-text"></div>
+                        </div>
+                      </div>
+                    </div>
 
-                <div class="tab-content">
-                  <div class="tab-pane active" id="description" role="tabpanel">
-                    <div innerHTML ="{{model?.description}}" class="card-text">
-                      
+                    <div class="tab-pane " id="code" role="tabpanel">
+                      <div class=row>
+                        <div class="col-md-10 col-sm-9">
+                          <textarea type="text" class="form-control" id="code" spellcheck="false"
+                           [(ngModel)]="this.code" name="code"
+                           id="description" placeholder="..." style="height:250px; font-size:12px"></textarea><br />
+                        </div>
+                        <div class="col-md-2 col-sm-3">
+                           <button type="button" class="btn btn-outline-primary w-100" (click)="redrawCadModel(); ">Redraw</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane " id="madeBy" role="tabpanel">
+                      <div class="row justify-content-center">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-6 ">
+                          <div class="card text-center" id="userCard" style="">
+                            <div class="card-block ">
+                              <img class="rounded" style="height:225px;width:225px; object-fit:cover; object-position: center; border-radius:125px" [src]="(user|async)?.photoURL">
+                              <h1 class="card-title">{{(user|async)?.name}}</h1>
+                              <hr />
+                              <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
+                              <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.bio}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane" id="license" role="tabpanel">
+                      <h2>Model License</h2>
+                      <p style="text-align:justify">
+                        Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen CC BY-NC-SA <br /><br />
+                        Diese Lizenz erlaubt es anderen, Ihr Werk zu verbreiten, zu remixen, zu verbessern und darauf aufzubauen, allerdings nur nicht-kommerziell und solange Sie als Urheber des Originals genannt werden und die auf Ihrem Werk basierenden neuen Werke unter denselben Bedingungen veröffentlicht werden.
+                      </p>
+
+                      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
                     </div>
                   </div>
-
-                  <div class="tab-pane " id="code" role="tabpanel">
-                    <textarea type="text" class="form-control" id="code" spellcheck="false"
-                           [(ngModel)]="this.code" name="code"
-                           id="description" placeholder="..." style="height:250px"></textarea><br />
-                    <button type="button" class="btn btn-outline-primary" (click)="redrawCadModel(); ">Redraw</button>
-                  </div>
-
-                  <div class="tab-pane" id="license" role="tabpanel">
-                    <h2>Model License</h2>
-
-                    <p style="text-align:justify">
-                      Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen CC BY-NC-SA <br /><br />
-                      Diese Lizenz erlaubt es anderen, Ihr Werk zu verbreiten, zu remixen, zu verbessern und darauf aufzubauen, allerdings nur nicht-kommerziell und solange Sie als Urheber des Originals genannt werden und die auf Ihrem Werk basierenden neuen Werke unter denselben Bedingungen veröffentlicht werden.
-                    </p>
-
-                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
-                  </div>
-
-                </div>
-
               </div>
             </div>
           </div>
