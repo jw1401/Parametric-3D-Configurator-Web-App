@@ -120,7 +120,7 @@ THREE.CSG = {
         var phongWireframeMaterial = new THREE.MeshPhongMaterial({
             wireframe: true,
             transparent: false,
-            color:'black'
+            color:'white'
         });
 
         var wireframe = new THREE.Mesh(three_geometry, phongWireframeMaterial);
