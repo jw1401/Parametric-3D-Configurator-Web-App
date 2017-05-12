@@ -6,10 +6,11 @@ import {CadModel} from '../shared/cad-model';
 import {UserService} from '../shared/user.service';
 import{UserModel} from '../shared/user-model';
 
+// textencoding for Binary files
 import * as encoding from 'text-encoding';
 
 //import openJsCad form plane JavaScript
-declare var OpenJsCad: any; //import * as OpenJsCad from '../../openjscad/Viewer/openjscad-lib/openjscad';
+declare var OpenJsCad: any;
 
 @Component
 ({
@@ -66,12 +67,13 @@ export class CadviewComponent implements OnInit
         //load case .jscad
         if(strStorageRef.match(/\.jscad$/i) || strStorageRef.match(/\.js$/i))
         {
+          this.isStl = false;
           let modelData = this.modelService.getModelData(model.modelURL);
 
           modelData.then(data=>
              {
                console.log("Loading jscad...");
-               this.isStl = false;
+
                this.myClass = "col-sm-12 col-md-12 col-lg-8"; //make jscad Style
                this.code = data;
 
@@ -84,6 +86,7 @@ export class CadviewComponent implements OnInit
         //load case .stl
         else
         {
+            this.isStl = true;
             let modelData = this.modelService.getModelDataBinary(model.modelURL);
 
             modelData.then(dataBinary=>
@@ -92,7 +95,7 @@ export class CadviewComponent implements OnInit
                let data = decoder.decode(dataBinary)//String.fromCharCode.apply(null, new Uint8Array(dataBinary));
 
                console.log("Loading other File Format...");
-               this.isStl = true;
+
                this.myClass="col-sm-12"; //make stl Style
 
                this.gProcessor.setStatus("Converting <img id=busy src='openjscad/Viewer/imgs/busy.gif'>");

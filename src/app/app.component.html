@@ -37,16 +37,28 @@
     </div><!-- /.navbar-collapse -->
 </nav>
 
-
 <div class="router-outlet" >
       <router-outlet></router-outlet>
 </div>
 
-<footer class="footer mt-4" style="">
+<footer class="footer mt-4">
   <hr />
-  <div class="container pt-4" >
-    <p *ngIf="af.auth | async">LOGGED IN</p>
-    <p *ngIf="!(af.auth | async)">NOT LOGGED IN</p>
-    <br />
+  <div class="container" >
+    <div class="row">
+      <div class="col-sm-12">
+        <ul class="nav justify-content-center">
+          <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link pt-0" routerLink="/about" >About</a></li>
+          <li *ngIf="af.auth | async" class="nav-item"><a class="nav-link pt-0" routerLink="" (click)="logout()" title="Logout">Logout</a></li>
+          <li class="nav-item"><a class="nav-link pt-0" routerLink="" title="">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="text-muted text-center">
+          Designed with love. Code licensed MIT, docs CC BY 3.0.
+        </p>
+      </div>
+    </div>
   </div>
 </footer>
