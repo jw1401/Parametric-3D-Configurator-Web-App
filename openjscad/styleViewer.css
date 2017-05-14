@@ -46,7 +46,13 @@ canvas
     height: 100%;
     width: 100%;
     cursor: crosshair;      /* show that we can change orientation of view */
-    background: black;
+    /*background: lightgray;*/
+    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
+    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
+    background-image: -o-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
+    background-image: -webkit-gradient(radial, center center, 0, center center, 286, color-stop(20, #FFFFFF), color-stop(100, #D9D9D9));
+    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
+    background-image: radial-gradient(ellipse farthest-corner at center, #FFFFFF 20%, #D9D9D9 100%);
 }
 
 @media screen and (max-width: 992px)
@@ -247,7 +253,7 @@ canvas
   font-size: 10px;
   text-align: left;
   margin: 4px;
-  color:white;
+  color:black;
 }
 
 #statusspan

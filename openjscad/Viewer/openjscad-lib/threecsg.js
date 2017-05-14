@@ -8,7 +8,8 @@
     Provided under the MIT License
 */
 
-THREE.CSG = {
+THREE.CSG =
+{
     // convert CSG object to three.js mesh.
     fromCSG: function(csg, defaultColor)
     {
@@ -120,7 +121,7 @@ THREE.CSG = {
         var phongWireframeMaterial = new THREE.MeshPhongMaterial({
             wireframe: true,
             transparent: false,
-            color:'white'
+            color:'black'
         });
 
         var wireframe = new THREE.Mesh(three_geometry, phongWireframeMaterial);
