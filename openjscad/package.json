@@ -1,0 +1,26 @@
+{
+  "name": "openjscad",
+  "version": "1.0.0",
+  "description": "",
+  "main": "openjscad-lib/openjscad.js",
+  "scripts": {
+    "build": "browserify openjscad-lib/openjscad.js -o dist/myBundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@log": "latest",
+    "browserify": "^14.3.0",
+    "browserify-shim": "^3.8.14",
+    "webpack": "^2.5.1"
+  },
+  "dependencies": {
+    "browserify": "^14.3.0"
+  },
+
+  "browserify": {
+    "transform": [ "browserify-shim" ]
+  },
+
+  "browserify-shim": {}
+}

@@ -6,6 +6,9 @@
 //    History:
 //
 
+//const log = require('./log');
+
+
 (function(module)
 {
 
