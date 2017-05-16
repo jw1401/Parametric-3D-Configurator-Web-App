@@ -47,6 +47,7 @@ export class CadviewComponent implements OnInit
 
   ngOnInit()
   {
+    window.scrollTo(0, 0);
     //start OpenJsCad processor
      this.gProcessor = new OpenJsCad.Processor(document.getElementById("viewerContext"),
                                {
