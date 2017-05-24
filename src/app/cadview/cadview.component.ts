@@ -9,8 +9,9 @@ import{UserModel} from '../shared/user-model';
 // textencoding for Binary files
 import * as encoding from 'text-encoding';
 
+//import * as Processor from './myBundle.js'
 //import openJsCad form plane JavaScript
-declare var OpenJsCad: any;
+declare var Processor: any;
 
 @Component
 ({
@@ -49,7 +50,7 @@ export class CadviewComponent implements OnInit
   {
     window.scrollTo(0, 0);
     //start OpenJsCad processor
-     this.gProcessor = new OpenJsCad.Processor(document.getElementById("viewerContext"),
+     this.gProcessor = new Processor(document.getElementById("viewerContext"),
                                {
                                     viewerwidth: '100%',
                                     viewerheight: '100%',
@@ -78,7 +79,7 @@ export class CadviewComponent implements OnInit
                this.myClass = "col-sm-12 col-md-12 col-lg-8"; //make jscad Style
                this.code = data;
 
-               this.gProcessor.setOpenJsCadPath('../openjscad/Viewer/openjscad-lib/');// set for library path
+               this.gProcessor.setOpenJsCadPath('https://gitcdn.xyz/repo/jw1401/openjscadV3/master/Viewer/Libraries/');// set for library path
                this.gProcessor.setStatus("Processing <img id=busy src='openjscad/Viewer/imgs/busy.gif'>");
                this.gProcessor.setJsCad(data);
                this.gProcessor.viewer.handleResize(); //call handleResize otherwise it looks ugly
@@ -100,11 +101,11 @@ export class CadviewComponent implements OnInit
                this.myClass="col-sm-12"; //make stl Style
 
                this.gProcessor.setStatus("Converting <img id=busy src='openjscad/Viewer/imgs/busy.gif'>");
-               this.gProcessor.setOpenJsCadPath('../openjscad/Viewer/openjscad-lib/');// set for library path
-               var worker = OpenJsCad.createConversionWorker(this.gProcessor);
+               this.gProcessor.setOpenJsCadPath('https://gitcdn.xyz/repo/jw1401/openjscadV3/master/Viewer/Libraries/');// set for library path
+               var worker = Processor.createImportWorker(this.gProcessor);
 
                //var u= gProcessor.baseurl+ '../openjscad/Viewer/openjscad-lib/';
-               var u = 'https://johnny-5eb4e.firebaseapp.com/openjscad/Viewer/openjscad-lib/';
+               var u = 'https://gitcdn.xyz/repo/jw1401/openjscadV3/master/Viewer/Libraries/';
 
                //note: cache: false is set to allow evaluation of 'include' statements
                worker.postMessage({baseurl: u, source: data, filename: "*.stl", cache: false});
