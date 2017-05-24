@@ -1,18 +1,26 @@
 {
-  "name": "openjscad",
+  "name": "jscad",
   "version": "1.0.0",
   "description": "jscad for Dingiversum",
   "main": "main.js",
-  "scripts": {
+
+  "scripts":
+  {
     "build": "browserify jscad/jscad-lib/processor.js --s Processor -o dist/myBundle.js"
   },
+
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+
+  "devDependencies":
+  {
     "browserify": "^14.3.0"
   },
+
   "browserify": {},
-  "dependencies": {
+
+  "dependencies":
+  {
     "three-canvas-renderer": "^2.0.0",
     "three-js": "^79.0.0",
     "three-orbit-controls": "^82.1.0",

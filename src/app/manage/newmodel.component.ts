@@ -17,7 +17,7 @@ export class NewmodelComponent implements OnInit
   public imageFile={"name":'', "file":'',"type":''};
   public modelFile={"name":'', "file":'',"type":''};
   public model: CadModel;
-  public imagePreview="../../assets/no-image-2.png";
+  public imagePreview="../../assets/imgs/no-image-2.png";
   public submitted = false;
 
     constructor(private modelService: CadModelService)
@@ -86,7 +86,7 @@ export class NewmodelComponent implements OnInit
          this.model= new CadModel("" ,"Name", "Description",this.powers[0],0,"","", false);
          this.imageFile.name="";
          this.modelFile.name="";
-         this.imagePreview="../../assets/no-image-2.png";
+         this.imagePreview="../../assets/imgs/no-image-2.png";
          this.error=null;
        }
 

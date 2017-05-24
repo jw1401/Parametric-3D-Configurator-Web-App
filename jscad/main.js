@@ -19,38 +19,10 @@ function init()
                                                 drawFaces: true,
                                             });
 
-
       loadJSCAD(0);
-
-/*
-      $('#toggleLines').on("click", function()
-      {
-        //console.log("toggle-lines");
-        gProcessor.toggleDrawOption('lines');
-      });
-
-      $('#toggleFaces').on("click", function()
-      {
-        //console.log("toggleFaces");
-        gProcessor.toggleDrawOption('faces');
-      });
-
-
-
-      $('#showToolbar').on("click",function()
-      {
-        //console.log($('#updatediv').is(':visible'));
-        if($('.draggable-status-div').is(':visible'))
-        {
-          $('.draggable-status-div').hide();
-        }
-        else $('.draggable-status-div').show();
-      });*/
 
       resize();
       $(window).resize(function(){resize();});
-
-
 
       $(window).on("hashchange", function(){
         hash = location.hash.substr(1);
@@ -59,14 +31,12 @@ function init()
         //console.log(component);
         loadJSCAD(component);
       });
-
 }
 
 function findComponent(component,hash)
 {
   return component.name === window.location.hash.substr(1);
 }
-
 
 function loadJSCAD(choice)
 {
