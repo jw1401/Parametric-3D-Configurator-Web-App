@@ -1,6 +1,8 @@
 {
   "compileOnSave": false,
-  "compilerOptions": {
+
+  "compilerOptions":
+  {
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
     "allowJs":true,
@@ -11,10 +13,14 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "typeRoots": [
+
+    "typeRoots":
+    [
       "node_modules/@types"
     ],
-    "lib": [
+    
+    "lib":
+    [
       "es2016",
       "dom"
     ]

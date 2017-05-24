@@ -1,5 +1,7 @@
-# Dingiversum-app
+# Dingiversum
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+The web app for customized products!!
 
 ## Purpose
+
+This is a web app based on OpenJsCad.
