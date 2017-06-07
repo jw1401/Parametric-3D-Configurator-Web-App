@@ -8,12 +8,12 @@
     display: block;
     margin: 0px;             /* not inherited */
     padding: 0px;            /* not inherited */
-    background: white;
+    background: transparent;
     width:auto;              /* defines Canvas width*/
     height:500px;            /* defines Canvas height*/
-  /*border: thin solid lightgray;
-    border-radius: 2px;
-    box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);*/
+    border: thin solid lightgray;
+    /*border-radius: 2px;*/
+    /*box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);*/
 }
 
 /*parametersdiv begins here*/
@@ -28,7 +28,7 @@
   width:100%;
   height:500px;
   overflow: hidden;
-  /*box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);*/
+  box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);
 }
 
 #columnBig
@@ -46,13 +46,13 @@ canvas
     height: 100%;
     width: 100%;
     cursor: crosshair;      /* show that we can change orientation of view */
-    /*background: lightgray;*/
-    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
-    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
-    background-image: -o-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
-    background-image: -webkit-gradient(radial, center center, 0, center center, 286, color-stop(20, #FFFFFF), color-stop(100, #D9D9D9));
-    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #D9D9D9 100%);
-    background-image: radial-gradient(ellipse farthest-corner at center, #FFFFFF 20%, #D9D9D9 100%);
+
+    /*background: transparent;*/
+    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: -o-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: radial-gradient(ellipse farthest-corner at center,#FFFFFF 20%, #f2f2f2 90%);
 }
 
 @media screen and (max-width: 992px)

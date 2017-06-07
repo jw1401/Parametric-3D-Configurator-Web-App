@@ -1,8 +1,8 @@
 <div class="jumbotron jumbotron-fluid" style="margin-top:-25px">
   <div class="container">
-    <h1 class="display-4">Find the model of your dream's</h1>
+    <h1 class="display-4">Find adaptable 3D models for 3D Printing!</h1>
     <p class="lead">
-      This page represents the landing page of the site, and public to everyone visiting.
+      Find a 3D model, change it to your needs, download and print it...
     </p>
     <br/>
   </div>
@@ -16,19 +16,21 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-6 col-lg-4 col-xl-3" *ngFor="let item of items | async" >
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4" *ngFor="let item of items | async" >
         <div class="card mb-4">
           <img class="card-img-top" (click)="open(item.$key)" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.imageURL" alt="no Image">
-          <div class="card-block">
-            <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item.name}}</h5>
-            <p class="card-text"><small class="text-muted">{{item.power}}</small></p>
-
-            <button class="btn btn-outline-primary"  (click)="open(item.$key)">Open</button>
-            <a class="btn btn-link float-right pr-0" *ngIf="item.isCustomizable"><i class="fa fa-magic text-success" aria-hidden="true"></i></a>
-            <button class="btn btn-link float-right pr-0" (click)="updateLike(item.$key, item.like)">
-              <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
-            </button>
-
+          <div class="card-block" >
+            <div class="row">
+              <div class="col-6">
+                <p class ="card-title text-muted lead" style=" white-space:nowrap;overflow:hidden; text-overflow: ellipsis;text-align:left;line-height:35px; ">{{item.name}}</p>
+              </div>
+              <div class="col-6">
+                <a class="btn btn-link float-right pr-0" *ngIf="item.isCustomizable"><i class="fa fa-magic text-muted" aria-hidden="true"></i></a>
+                <button class="btn btn-link float-right pr-0 text-muted" (click)="updateLike(item.$key, item.like)">
+                  <i class="fa fa-heart" aria-hidden="true"></i> {{item.like}}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 <div class="container"> <!--Container 1 begin-->
   <div class="row">
     <div class="col-12 ">
-      <h1 class="pb-2">{{model?.name}} </h1>
+      <h2 class="pb-2">{{model?.name}} </h2>
     </div>
   </div>
   <!-- The Cad Region-->
@@ -37,25 +37,64 @@
 <div class="container"> <!--Container 2 begin-->
   <!-- the Description Region-->
   <div class="row mt-3 p-3" >
-    <div class="col-sm-12 p-3" style="background:white">
+    <div class="col-sm-12 p-3" style="background:white;box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);">
       <nav class="nav">
-        <li class="nav-item"><a class="nav-link active pl-0" data-toggle="tab" href="#description" role="tab">Description</a></li>
+        <li class="nav-item"><a class="nav-link active pl-0" data-toggle="tab" href="#about" role="tab">About</a></li>
         <li *ngIf="!isStl" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit</a></li>
         <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#license" role="tab">License</a></li>
-        <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#madeBy" role="tab">Made</a></li>
+        <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#more" role="tab">more..</a></li>
       </nav>
       <hr />
       <div class="tab-content">
-        <div class="tab-pane active" id="description" role="tabpanel">
+        <div class="tab-pane active" id="about" role="tabpanel">
           <div class="row">
-            <div class="col-md-4">
-              <img class="img-fluid" [src]="model?.imageURL" alt="Generic placeholder image">
+            <div class="col-12" style="text-align:center">
+              <h1 class="">About "{{model?.name}}"</h1>
+              <br />
             </div>
-            <div class="col-md-8">
-              <div innerHTML ="{{model?.description}}" class="card-text"></div>
+            <div class="col-12">
+              <img class="rounded img-fluid mx-auto d-block" [src]="model?.imageURL" alt="Generic placeholder image" style="height:300px">
+            </div>
+
+          </div>
+          <br /><br />
+
+          <div class="row">
+            <div class="col-12" style="text-align:center">
+
+              <h4 class="">Description</h4>
+              <hr />
+            </div>
+            <div class="col-12">
+              <div innerHTML ="{{model?.description}}" class="card-text p-5"></div>
             </div>
           </div>
-        </div>
+
+
+
+          <div class="row justify-content-center">
+            <div class="col-12" style="text-align:center">
+
+              <h4 class="">Made by</h4>
+              <hr />
+            </div>
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-4 ">
+                <div class="card text-center" id="userCard" style="">
+                  <div class="card-block ">
+                    <img class="rounded" style="height:100px;width:100px; object-fit:cover; object-position: center; border-radius:50px" [src]="(user|async)?.photoURL">
+                    <h3 class="card-title">{{(user|async)?.name}}</h3>
+                    <hr />
+                    <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
+                    <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.bio}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
 
         <div class="tab-pane " id="code" role="tabpanel">
           <div class=row>
@@ -70,18 +109,10 @@
           </div>
         </div>
 
-        <div class="tab-pane " id="madeBy" role="tabpanel">
+        <div class="tab-pane " id="more" role="tabpanel">
           <div class="row">
             <div class="col-12 col-sm-12 col-md-8 col-lg-6 ">
-              <div class="card text-center" id="userCard" style="">
-                <div class="card-block ">
-                  <img class="rounded" style="height:225px;width:225px; object-fit:cover; object-position: center; border-radius:125px" [src]="(user|async)?.photoURL">
-                  <h1 class="card-title">{{(user|async)?.name}}</h1>
-                  <hr />
-                  <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
-                  <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.bio}}</p>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
