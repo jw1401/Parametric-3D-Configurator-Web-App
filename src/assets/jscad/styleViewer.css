@@ -1,0 +1,307 @@
+/*
+ * styleViewer.css
+ */
+
+#viewerContext
+{
+    position: relative;
+    display: block;
+    margin: 0px;             /* not inherited */
+    padding: 0px;            /* not inherited */
+    background: transparent;
+    width:auto;              /* defines Canvas width*/
+    height:500px;            /* defines Canvas height*/
+    border: thin solid lightgray;
+    /*border-radius: 2px;*/
+    /*box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);*/
+}
+
+/*parametersdiv begins here*/
+#pWrapper
+{
+  position:relative;
+  /*margin: 0px;  not inherited */
+  padding: 5px;
+  /*border: thin solid lightgray;
+  border-radius: 2px;*/
+  background: white;
+  width:100%;
+  height:500px;
+  overflow: hidden;
+  box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);
+}
+
+#columnBig
+{
+  /*padding-right: 0px;*/
+}
+
+canvas
+{
+    margin: 0px;            /* not inherited */
+    border: none;           /* not inherited */
+    padding: 0px;           /* not inherited */
+    /*border-radius: 2px;*/
+    /* ensure that the canvas uses the whole width and height of the document */
+    height: 100%;
+    width: 100%;
+    cursor: crosshair;      /* show that we can change orientation of view */
+
+    /*background: transparent;*/
+    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: -o-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #FFFFFF 20%, #f2f2f2 90%);
+    background-image: radial-gradient(ellipse farthest-corner at center,#FFFFFF 20%, #f2f2f2 90%);
+}
+
+@media screen and (max-width: 992px)
+{
+  #viewerContext
+  {
+      height:400px;
+  }
+
+  #pWrapper
+  {
+      margin-top: 10px;
+      height:400px;
+  }
+
+  body{}
+
+  .center
+  {
+    width:100%;
+    height: auto;
+  }
+
+}
+
+@media screen and (max-width: 767px)
+{
+  #viewerContext
+  {
+      height:300px;
+      /*margin-right: 0px;*/
+  }
+
+  body{}
+
+  #columnBig
+  {
+    /*padding-right:0px;*/
+  }
+
+  #pWrapper
+  {
+    margin-top: 10px;
+    height:300px;
+  }
+}
+
+
+
+
+
+#parametersdiv
+{
+    position:relative;;
+    border: none;
+    border-radius: 2px;
+    background: transparent;
+    height:100%;
+    width:100%;
+    overflow-y:auto;
+}
+
+#parametersdiv table
+{
+    margin-bottom: 5px;
+    vertical-align:middle;
+    text-align: left;
+    font-size: 14px;
+    font-weight: normal;
+    border:  0px solid green;
+    width: 100%;
+    height:auto;
+    color:gray;
+}
+
+#parametersdiv th
+{
+    margin:  0px; /* not inherited */
+    margin-bottom: 10px;
+    border:  0px solid red; /* not inherited */
+    padding: 5px; /* not inherited */
+    background-color:transparent;/*#337AB7;/*dodgerblue;*/
+    font-weight: normal;
+    text-align:center;
+    width: 100%;
+    border-radius: 2px !important;
+    border: 0px solid black;
+    border-bottom: 1px solid transparent;
+}
+
+#parametersdiv th.caption
+{
+    text-decoration: none;
+    font-size:16px;
+    color:dodgerblue;
+    height:30px;
+    background-color: transparent;
+    text-align: left;
+
+}
+
+#parametersdiv td.caption
+{
+    text-align: left;
+    font-weight: normal;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+#parametersdiv td
+{
+    margin:  0px; /* not inherited */
+    border:  0px solid black; /* not inherited */
+    padding: 5px; /* not inherited */
+    padding-top: 7px;
+    padding-bottom: 7px;
+    vertical-align:middle;
+}
+
+#parametersdiv textarea, #parametersdiv select
+{
+    font-size: 14px;
+    background: transparent;
+    border: thin solid lightgrey;
+    vertical-align:middle;
+    height:30px;
+    color:gray;
+    margin: 0px;
+    width:100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    background-image: url(jscad/imgs/down-arrow.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 20px;
+}
+
+#parametersdiv input[type="checkbox"]
+{
+    display:inline-block;
+    border: thick solid black;
+}
+
+#parametersdiv input[type="range"]
+{
+    display: inline-block;
+    background: transparent;
+    border: none;
+    vertical-align:middle;
+    height:25px;
+    color:gray;
+    margin: 0px;
+    width: 88%;
+}
+
+#parametersdiv input[type="number"]
+{
+    font-size: 14px;
+    background: transparent;
+    border: thin solid lightgrey;
+    vertical-align:middle;
+    height:30px;
+    color:gray;
+    margin: 0px;
+    width: 100%;
+    padding-left: 2px
+}
+
+#parametersdiv label
+{
+    display: inline;
+    font-size: 12px;
+    background: transparent;
+    border: none;
+    vertical-align:middle;
+    height:25px;
+    color:black;
+    padding-left:10px;
+    font-weight: normal;
+    max-width: 0px;
+    margin-bottom: 0px;
+}
+
+/*Status Div Region*/
+
+.draggable-status-div
+{
+  width:auto;
+  z-index:999;
+  position:absolute;
+  text-align: left;
+}
+
+#statusdiv
+{
+  font-size: 10px;
+  text-align: left;
+  margin: 4px;
+  color:black;
+}
+
+#statusspan
+{
+
+}
+
+#busy
+{
+   vertical-align: middle;
+   height:15px;
+}
+
+/*optionsdiv begins here*/
+
+#tail
+{
+    border: none;
+    margin: 0px;
+    margin-top:10px;
+    background: white;
+    border-radius: 2px;
+}
+
+#optionsdiv
+{
+    padding:0px;
+    margin: -5px;
+}
+
+.toggle
+{
+  float:left;
+}
+
+#downloadbuttons
+{
+  float:left;
+  margin-left: 0px;
+}
+
+#instantUpdate
+{
+  display: none;
+}
+
+.btn-viewer
+{
+  border-radius: 2px;
+  margin:5px;
+}

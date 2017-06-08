@@ -20,8 +20,9 @@ export class ProfileComponent
 
     ngOnInit()
     {
-      this.userService.getUser().then(data => {this.userModel = data;});
+
       this.authData = this.userService.getAuthData();
+      this.userService.getUser().then(data => {this.userModel = data;});
     }
 }
 

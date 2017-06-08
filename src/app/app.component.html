@@ -20,14 +20,14 @@
       </ul>
 
       <div class="navbar-right">
-          <span *ngIf="af.auth | async">
+          <span *ngIf="afAuth.authState | async">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item"[routerLinkActive]="['active']"><a class="nav-link"routerLink="/manage/newmodel">Manage</a></li>
             <li class="nav-item"[routerLinkActive]="['active']"><a class="nav-link"routerLink="/dashboard/profile">Dashboard</a></li>
             <li class="nav-item"><a class="nav-link" routerLink="" (click)="logout()" title="Logout">Logout ({{userName}})</a></li>
             </ul>
           </span>
-          <span *ngIf="!(af.auth | async)">
+          <span *ngIf="!(afAuth.authState | async)">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" routerLink="/login">Login</a></li>
             <li class="nav-item"><a class="nav-link" routerLink="/signup">Sign up</a></li>
@@ -48,7 +48,7 @@
       <div class="col-sm-12">
         <ul class="nav justify-content-center">
           <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link pt-0" routerLink="/about" >About</a></li>
-          <li *ngIf="af.auth | async" class="nav-item"><a class="nav-link pt-0" routerLink="" (click)="logout()" title="Logout">Logout</a></li>
+          <li *ngIf="afAuth.authState | async" class="nav-item"><a class="nav-link pt-0" routerLink="" (click)="logout()" title="Logout">Logout</a></li>
           <li class="nav-item"><a class="nav-link pt-0" routerLink="" title="">Contact</a></li>
         </ul>
       </div>

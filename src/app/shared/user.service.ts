@@ -7,6 +7,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 
+import { Observable } from 'rxjs/Observable';
+
 // Do not import from 'firebase' as you'd lose the tree shaking benefits
 import * as firebase from 'firebase/app';
 
@@ -22,14 +24,18 @@ export class UserService
   public isLoggedIn = false;
   private user : FirebaseObjectObservable<any>;
 
+  private user1: Observable<firebase.User>;
+
   constructor(/*@Inject(FirebaseApp) firebaseApp: any,*/ private afAuth: AngularFireAuth, private db: AngularFireDatabase)
   {
+    //this.user1=afAuth.authState;
+    //console.log(this.user1);
     this.afAuth.authState.subscribe(auth =>
     {
       if(auth)
       {
         this.authData = auth;
-        console.log("UserService active for " + this.authData.auth.email);
+        console.log("UserService active for " + this.authData.email);
         this.user = this.db.object(`/users/${this.authData.uid}`);
         this.isLoggedIn=true;
       }
@@ -42,6 +48,18 @@ export class UserService
 
   getUser () : Promise<UserModel>
   {
+    /*let user: any;
+    this.afAuth.authState.subscribe(auth=>
+      {
+        if(auth)
+        {
+          user = this.db.object(`/users/${auth.uid}`).first().toPromise();
+
+        }
+      });*/
+    console.log("Hallo");
+    //console.log("Auth = " + this.authData.uid);
+    //return user;
     return this.db.object(`/users/${this.authData.uid}`).first().toPromise();
   }
 

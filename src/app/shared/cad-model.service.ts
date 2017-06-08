@@ -34,7 +34,7 @@ export class CadModelService
       this.authData = auth;
       if(this.authData)
       {
-        console.log("Cad-Model-Service active for " + this.authData.auth.email);
+        console.log("Cad-Model-Service active for " + this.authData.email);
         this.models=this.db.list('/models');
       }
     });
