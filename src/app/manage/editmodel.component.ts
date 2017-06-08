@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import {CadModelService} from '../shared/cad-model.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
+import {licenses} from '../shared/license';
+
 @Component
 ({
   selector: 'editmodel',
@@ -18,6 +20,8 @@ export class EditmodelComponent implements OnInit
   public model : CadModel;
   public modelKey : string;
   public items: Observable<any>;
+
+  public licenses= licenses;
 
   public imagePreview : any;
   public imageFile={"name":'', "file":'',"type":''};
@@ -37,7 +41,7 @@ export class EditmodelComponent implements OnInit
 
   //make model data available in the modal
   editItem(key: string, name: string, description: string, power: string,
-    like: number, imageURL:string, modelURL:string, customizable:boolean, userId:string)
+    like: number, imageURL:string, modelURL:string, customizable:boolean, license:string ,userId:string)
   {
     this.modelKey = key;
 
@@ -49,6 +53,7 @@ export class EditmodelComponent implements OnInit
     this.model.imageURL = imageURL;
     this.model.modelURL = modelURL;
     this.model.isCustomizable = customizable;
+    this.model.license = license;
 
     this.imagePreview=this.model.imageURL;
     //this.modelFile.name = modelURL

@@ -112,7 +112,7 @@ export class CadModelService
 
   updateModel(key:string, model:CadModel)
   {
-    this.models.update(key, {name: model.name, description: model.description, power: model.power, isCustomizable: model.isCustomizable});
+    this.models.update(key, {name: model.name, description: model.description, power: model.power, isCustomizable: model.isCustomizable, license: model.license});
   }
 
   updateLike(key: string, like)

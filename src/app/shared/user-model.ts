@@ -6,6 +6,7 @@ export class UserModel
     public country: string,
     public bio?:string,
     public photoURL?: string,
-    public likedModels?:Array <string>
+    public likedModels?:Array <string>,
+
   ){}
 }

@@ -17,7 +17,7 @@
 
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal"
             (click)="editItem(item.$key, item.name,item.description, item.power,item.like,
-            item.imageURL,item.modelURL, item.isCustomizable, item.uid)">
+            item.imageURL,item.modelURL, item.isCustomizable, item.license, item.uid)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </button>
 
@@ -87,13 +87,22 @@
               <label>Power</label>
               <input class="form-control" type="text" #updatePower [(ngModel)]="model.power" />
             </div>
+
+            <div class="form-group">
+              <label for="license">License</label>
+              <select class="form-control" id="license"
+                      [(ngModel)]="model.license" name="license" >
+                <option *ngFor="let lic of licenses" [value]="lic.license">{{lic.name}}</option>
+              </select>
+            </div>
+
             <div class="form-group">
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" id="customizable"  name="customizable" type="checkbox" [(ngModel)]="model.isCustomizable" #customizable="ngModel">  Customizable
                 </label>
               </div>
-          </div>
+            </div>
           </ul>
         </div>
         <div class="modal-footer">

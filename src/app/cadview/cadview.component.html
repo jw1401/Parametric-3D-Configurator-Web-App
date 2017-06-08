@@ -40,7 +40,7 @@
     <div class="col-sm-12 p-3" style="background:white;box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);">
       <nav class="nav">
         <li class="nav-item"><a class="nav-link active pl-0" data-toggle="tab" href="#about" role="tab">About</a></li>
-        <li *ngIf="!isStl" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit</a></li>
+        <li *ngIf="isCodeVisible" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit</a></li>
         <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#license" role="tab">License</a></li>
         <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#more" role="tab">more..</a></li>
       </nav>
@@ -96,7 +96,7 @@
 
 
 
-        <div class="tab-pane " id="code" role="tabpanel">
+        <div class="tab-pane " id="code" role="tabpanel" *ngIf="isCodeVisible">
           <div class=row>
             <div class="col-md-10 col-sm-9">
               <textarea type="text" class="form-control" id="code" spellcheck="false"
@@ -104,7 +104,9 @@
                  id="description" placeholder="..." style="height:250px; font-size:12px"></textarea><br />
             </div>
             <div class="col-md-2 col-sm-3">
-               <button type="button" class="btn btn-outline-primary w-100" (click)="redrawCadModel(); ">Redraw</button>
+               <button type="button" class="btn btn-outline-primary w-100" (click)="redrawCadModel();">Redraw</button><br /><br />
+               <button type="button" class="btn btn-outline-primary w-100" data-toggle="modal" data-target="#codeModal">Open</button><br /><br />
+               <button type="button" class="btn btn-outline-primary w-100" (click)="save();">Save</button><br /><br />
             </div>
           </div>
         </div>
@@ -117,16 +119,44 @@
           </div>
         </div>
 
-        <div class="tab-pane" id="license" role="tabpanel">
-          <h2>Model License</h2>
-            <p style="text-align:justify">
-              Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen CC BY-NC-SA <br /><br />
-              Diese Lizenz erlaubt es anderen, Ihr Werk zu verbreiten, zu remixen, zu verbessern und darauf aufzubauen, allerdings nur nicht-kommerziell und solange Sie als Urheber des Originals genannt werden und die auf Ihrem Werk basierenden neuen Werke unter denselben Bedingungen veröffentlicht werden.
-            </p>
+        <div class="tab-pane" id="license" role="tabpanel" style="text-align:center">
+          <br />
+          
+            <a rel="license" href="http://creativecommons.org/licenses/{{model?.license}}/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/{{model?.license}}/4.0/88x31.png" /></a>
+            <br />This work is licensed under <a rel="license" href="http://creativecommons.org/licenses/{{model?.license}}/4.0/">cc {{model?.license}}</a><br /><br />
 
-            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
-          </div>
+            <p>
+              If you want to know more about the license follow above link!
+            </p>
         </div>
+      </div>
+
       </div>
     </div>
   </div> <!--Container 2 end-->
+
+
+  <!--this is the modal dialog for model editing-->
+  <div id="codeModal" class="modal fade" role="dialog" >
+    <div class="modal-dialog modal-lg" [ng2-draggable]="true">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Code</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <textarea type="text" class="form-control" id="code" spellcheck="false"
+             [(ngModel)]="this.code" name="code"
+             id="description" placeholder="..." style="height:500px; font-size:12px"></textarea><br />
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button class="btn btn-outline-primary" (click)="redrawCadModel();">Redraw</button>
+        </div>
+
+      </div>
+    </div>
+  </div>

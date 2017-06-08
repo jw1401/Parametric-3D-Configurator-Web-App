@@ -12,6 +12,7 @@ export class UserService
   public authData : any;
   public userModel : UserModel;
   public firebase : any;
+  public isLoggedIn = false;
   private user : FirebaseObjectObservable<any>;
 
   constructor(@Inject(FirebaseApp) firebaseApp: any, private af: AngularFire)
@@ -23,7 +24,9 @@ export class UserService
         this.authData = auth;
         console.log("UserService active for " + this.authData.auth.email);
         this.user = this.af.database.object(`/users/${this.authData.uid}`);
+        this.isLoggedIn=true;
       }
+      else {this.isLoggedIn=false;}
     });
 
     this.firebase = firebaseApp;

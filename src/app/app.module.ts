@@ -20,6 +20,8 @@ import { CadviewComponent } from './cadview/cadview.component';
 
 import {CadModelService} from './shared/cad-model.service';
 
+import {Draggable} from 'ng2draggable/draggable.directive';
+
 
   export const firebaseConfig = {
 
@@ -40,6 +42,7 @@ import {CadModelService} from './shared/cad-model.service';
     HomeComponent,
     PageNotFoundComponent,
     CadviewComponent,
+    Draggable,
 
   ],
   imports: [

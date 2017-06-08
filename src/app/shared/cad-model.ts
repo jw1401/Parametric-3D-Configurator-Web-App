@@ -13,6 +13,7 @@ export class CadModel
     public imageURL?: string,
     public modelURL?: string,
     public isCustomizable?: boolean,
+    public license?: any,
   ){}
 
   static fromJson ({$key, userId, name, description, power,like,imageURL,modelURL,isCustomizable})

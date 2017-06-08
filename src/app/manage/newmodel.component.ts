@@ -4,6 +4,9 @@ import {Router} from '@angular/router';
 import {CadModel} from '../shared/cad-model';
 import {CadModelService} from '../shared/cad-model.service';
 
+import {licenses} from '../shared/license';
+
+
 @Component
 ({
   selector: 'newmodel',
@@ -14,6 +17,8 @@ export class NewmodelComponent implements OnInit
 {
   public error:any;
   public powers = [ 'Hi Tec Gadget','Art', 'Engineering','Not special','Universal','Printable'];
+  public licenses = licenses;
+
   public imageFile={"name":'', "file":'',"type":''};
   public modelFile={"name":'', "file":'',"type":''};
   public model: CadModel;
@@ -26,7 +31,13 @@ export class NewmodelComponent implements OnInit
     }
 
     ngOnInit()
-    {}
+    {
+    }
+
+    onChange($event)
+    {
+      console.log(this.model.license);
+    }
 
        fileImageChangeEvent(fileInput: any)
        {
@@ -83,7 +94,7 @@ export class NewmodelComponent implements OnInit
 
        newCadModel()
        {
-         this.model= new CadModel("" ,"Name", "Description",this.powers[0],0,"","", false);
+         this.model= new CadModel("" ,"Name", "Description",this.powers[0],0,"","", false, this.licenses[0].license);
          this.imageFile.name="";
          this.modelFile.name="";
          this.imagePreview="../../assets/imgs/no-image-2.png";

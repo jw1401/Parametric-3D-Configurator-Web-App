@@ -8,6 +8,7 @@ import{UserModel} from '../shared/user-model';
 
 // textencoding for Binary files
 import * as encoding from 'text-encoding';
+import * as $ from 'jquery';
 
 //import * as Processor from './myBundle.js'
 //import openJsCad form plane JavaScript
@@ -25,6 +26,8 @@ export class CadviewComponent implements OnInit
   private modelKey : string;
 
   public isStl = true;
+  public isCodeVisible =false;
+
   public myClass = "col-sm-12 col-md-12 col-lg-8";
 
   public user : any;
@@ -48,6 +51,8 @@ export class CadviewComponent implements OnInit
 
   ngOnInit()
   {
+    //$('#test').ready(function (){console.log("Hallo jquery")});
+    console.log ("User   " + this.userService.isLoggedIn);
     window.scrollTo(0, 0);
     //start OpenJsCad processor
      this.gProcessor = new Processor(document.getElementById("viewerContext"),
@@ -70,6 +75,7 @@ export class CadviewComponent implements OnInit
         if(strStorageRef.match(/\.jscad$/i) || strStorageRef.match(/\.js$/i))
         {
           this.isStl = false;
+          if (this.userService.isLoggedIn){this.isCodeVisible=true}else{this.isCodeVisible=false}
           let modelData = this.modelService.getModelData(model.modelURL);
 
           modelData.then(data=>
@@ -89,6 +95,7 @@ export class CadviewComponent implements OnInit
         else
         {
             this.isStl = true;
+            this.isCodeVisible=false;
             let modelData = this.modelService.getModelDataBinary(model.modelURL);
 
             modelData.then(dataBinary=>
