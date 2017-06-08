@@ -1,7 +1,14 @@
 import { Injectable,Inject } from '@angular/core';
 import {Router} from '@angular/router';
-import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
+//import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
 import {UserModel} from './user-model';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+
+// Do not import from 'firebase' as you'd lose the tree shaking benefits
+import * as firebase from 'firebase/app';
 
 //this is the user-service for the user-dashboard
 @Injectable()
@@ -15,32 +22,32 @@ export class UserService
   public isLoggedIn = false;
   private user : FirebaseObjectObservable<any>;
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, private af: AngularFire)
+  constructor(/*@Inject(FirebaseApp) firebaseApp: any,*/ private afAuth: AngularFireAuth, private db: AngularFireDatabase)
   {
-    this.af.auth.subscribe(auth =>
+    this.afAuth.authState.subscribe(auth =>
     {
       if(auth)
       {
         this.authData = auth;
         console.log("UserService active for " + this.authData.auth.email);
-        this.user = this.af.database.object(`/users/${this.authData.uid}`);
+        this.user = this.db.object(`/users/${this.authData.uid}`);
         this.isLoggedIn=true;
       }
       else {this.isLoggedIn=false;}
     });
 
-    this.firebase = firebaseApp;
-    this.auth = firebaseApp.auth();
+    //this.firebase = firebaseApp;
+    //this.auth = firebaseApp.auth();
   }
 
   getUser () : Promise<UserModel>
   {
-    return this.af.database.object(`/users/${this.authData.uid}`).first().toPromise();
+    return this.db.object(`/users/${this.authData.uid}`).first().toPromise();
   }
 
   getUserById (id: string) : Promise<UserModel>
   {
-    return this.af.database.object(`/users/${id}`).first().toPromise();
+    return this.db.object(`/users/${id}`).first().toPromise();
   }
 
   getAuthData():any

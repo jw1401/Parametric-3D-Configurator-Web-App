@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { AngularFire , FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2';
+import {  FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2/database';
 import {Router} from '@angular/router';
 //import {UserModel} from '../shared/user-model';
 import {CadModelService} from '../shared/cad-model.service';
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit
 
   //public userModel = new UserModel("","","","");
 
-  constructor(private af: AngularFire, private router: Router, private modelService: CadModelService)
+  constructor(/*private af: AngularFire,*/ private router: Router, private modelService: CadModelService)
   {
     /*
     this.af.auth.take(2).subscribe((auth)=>

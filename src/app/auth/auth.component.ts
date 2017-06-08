@@ -1,6 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFire, FirebaseApp, AuthMethods, AuthProviders } from 'angularfire2';
+//import { AngularFire, FirebaseApp, AuthMethods, AuthProviders } from 'angularfire2';
+import { Observable } from 'rxjs/Observable';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+//import { environment } from '../environments/environment';
+
+// Do not import from 'firebase' as you'd lose the tree shaking benefits
+import * as firebase from 'firebase/app';
+
 
 @Component({
   templateUrl: './signup.component.html'
@@ -10,7 +19,7 @@ export class SignupComponent
 {
   public error: any;
 
-  constructor(private af: AngularFire, private router: Router)
+  constructor(private afAuth: AngularFireAuth, private router: Router)
   {
   }
 
@@ -19,10 +28,7 @@ export class SignupComponent
     if(formData.valid)
     {
       //console.log(formData.value);
-      this.af.auth.createUser({
-        email: formData.value.email,
-        password: formData.value.password
-      }).then(
+      this.afAuth.auth.createUserWithEmailAndPassword(formData.value.email,formData.value.password).then(
         (success) => {
         console.log(success);
         this.router.navigate(['/login'])
@@ -46,7 +52,7 @@ export class LoginComponent
 {
   public error: any;
 
-  constructor(private af: AngularFire, private router: Router)
+  constructor(private afAuth: AngularFireAuth, private router: Router)
   {
   }
 
@@ -55,14 +61,7 @@ export class LoginComponent
     if(formData.valid)
     {
       //console.log(formData.value);
-      this.af.auth.login({
-        email: formData.value.email,
-        password: formData.value.password
-      },
-      {
-      provider: AuthProviders.Password,
-      method: AuthMethods.Password,
-      }).then(
+      this.afAuth.auth.signInWithEmailAndPassword(formData.value.email, formData.value.password).then(
         (success) => {
         console.log("success");
         this.router.navigate(['/dashboard']);
@@ -87,9 +86,9 @@ export class ResetpassComponent
   public auth: any;
   public message: any;
 
-  constructor(private af: AngularFire, @Inject(FirebaseApp) firebaseApp: any)
+  constructor(private afAuth: AngularFireAuth, /*@Inject(FirebaseApp) firebaseApp: any*/)
   {
-    this.auth = firebaseApp.auth()
+    //this.auth = firebaseApp.auth()
     //console.log(this.auth);
   }
 
@@ -98,7 +97,7 @@ export class ResetpassComponent
      if(formData.valid)
      {
        console.log('Submission worked');
-       this.auth.sendPasswordResetEmail(formData.value.email)
+       this.afAuth.auth.sendPasswordResetEmail(formData.value.email)
          .then( (response) => {
            console.log('Sent successfully');
            this.message = 'Check your email for reset link';

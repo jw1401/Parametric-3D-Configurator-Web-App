@@ -1,5 +1,5 @@
 import { Component, Inject ,OnInit} from '@angular/core';
-import { FirebaseListObservable} from 'angularfire2';
+//import { FirebaseListObservable} from 'angularfire2';
 import { CadModel } from '../shared/cad-model';
 import { FormsModule } from '@angular/forms';
 import {CadModelService} from '../shared/cad-model.service';

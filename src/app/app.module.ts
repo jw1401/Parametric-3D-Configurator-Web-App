@@ -22,6 +22,10 @@ import {CadModelService} from './shared/cad-model.service';
 
 import {Draggable} from 'ng2draggable/draggable.directive';
 
+import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
+
 
   export const firebaseConfig = {
 
@@ -53,6 +57,8 @@ import {Draggable} from 'ng2draggable/draggable.directive';
     DashModule,
     ManageModule,
     RoutingModule,
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
     AngularFireModule.initializeApp(firebaseConfig)
   ],
   providers: [CadModelService],

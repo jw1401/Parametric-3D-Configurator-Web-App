@@ -1,12 +1,19 @@
 import { Injectable,Inject } from '@angular/core';
 import {Http, Response, ResponseContentType, Headers,RequestOptions} from '@angular/http';
-import { AngularFire, FirebaseApp,FirebaseObjectObservable, FirebaseListObservable  } from 'angularfire2';
+//import { AngularFire, FirebaseApp,FirebaseObjectObservable, FirebaseListObservable  } from 'angularfire2';
 import {CadModel} from './cad-model';
 //import {UserModel} from './user-model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 import { Observable, Subject } from 'rxjs/Rx';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+
+// Do not import from 'firebase' as you'd lose the tree shaking benefits
+import * as firebase from 'firebase/app';
 
 
 //this is the cad-model-service for cad-model realated transactions in firebase
@@ -19,24 +26,24 @@ export class CadModelService
   public models : FirebaseListObservable<any>;
   public limit : BehaviorSubject<number> = new BehaviorSubject<number>(10);
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, private af: AngularFire,private http: Http)
+  constructor(/*@Inject(FirebaseApp) firebaseApp: any,*/ private db: AngularFireDatabase, /*private af: AngularFire,*/private http: Http, private afAuth: AngularFireAuth)
   {
     console.log("Cad Model service is active!");
-    this.af.auth.subscribe(auth =>
+    this.afAuth.authState.subscribe(auth =>
     {
       this.authData = auth;
       if(this.authData)
       {
         console.log("Cad-Model-Service active for " + this.authData.auth.email);
-        this.models=this.af.database.list('/models');
+        this.models=this.db.list('/models');
       }
     });
-    this.firebase = firebaseApp;
+    //this.firebase = firebaseApp;
   }
 
   getModels(): FirebaseListObservable<any>
   {
-    return this.af.database.list('/models',
+    return this.db.list('/models',
     {
       query:
       {
@@ -63,27 +70,27 @@ export class CadModelService
 
   getModelsForModelsKeys(modelsKeys: Observable<string[]>): Observable<any>
   {
-      return modelsKeys.map(mpu => mpu.map(modelKey => this.af.database.object(`models/`+ modelKey)))
+      return modelsKeys.map(mpu => mpu.map(modelKey => this.db.object(`models/`+ modelKey)))
       .flatMap(fbojs =>Observable.combineLatest(fbojs));
   }
 
   getModelsKeysPerUser() : Observable<string[]>
   {
-    return this.af.database.list(`/modelsPerUser/${this.authData.uid}`, {preserveSnapshot: true})
+    return this.db.list(`/modelsPerUser/${this.authData.uid}`, {preserveSnapshot: true})
     .do(val => console.log("val: ",val))
     .map(mspu => mspu.map(mpu=>mpu.key));
   }
 
   getLikedModelsKeysPerUser() : Observable<string[]>
   {
-    return this.af.database.list(`/likedModelsPerUser/${this.authData.uid}`, {preserveSnapshot: true}).first()
+    return this.db.list(`/likedModelsPerUser/${this.authData.uid}`, {preserveSnapshot: true}).first()
     .do(val => console.log("val: ",val))
     .map(lmspu => lmspu.map(lmpu=>lmpu.key));
   }
 
   getModelByKey(key: string): Promise<CadModel>
   {
-    return this.af.database.object(`/models/${key}`).first().toPromise().then().catch();
+    return this.db.object(`/models/${key}`).first().toPromise().then().catch();
   }
 
   getModelData (modelURL: string): Promise<any>
@@ -106,7 +113,7 @@ export class CadModelService
     {
       this.uploadImage(imageFile.name,imageFile.file,item.key);
       this.uploadModel(modelFile.name,modelFile.file,item.key);
-      this.af.database.object(`/modelsPerUser/${this.authData.uid}/${item.key}`).set(true)
+      this.db.object(`/modelsPerUser/${this.authData.uid}/${item.key}`).set(true)
     });
   }
 
@@ -118,17 +125,17 @@ export class CadModelService
   updateLike(key: string, like)
   {
     let userId = this.authData.uid;
-    let item = this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).first().single().subscribe(data=>
+    let item = this.db.object(`/likedModelsPerUser/${userId}/${key}`).first().single().subscribe(data=>
       {
         //console.log(data.$value)
         if (data.$value == null)
         {
-          this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).set(true);
+          this.db.object(`/likedModelsPerUser/${userId}/${key}`).set(true);
           this.models.update(key, {like:like+1});
         }
         else
         {
-          this.af.database.object(`/likedModelsPerUser/${userId}/${key}`).remove();
+          this.db.object(`/likedModelsPerUser/${userId}/${key}`).remove();
           this.models.update(key, {like:like-1});
         }
       });
@@ -140,8 +147,8 @@ export class CadModelService
     let modelDelRef = this.firebase.storage().refFromURL(modelURL);
 
     //remove database entry then files
-    this.af.database.list(`/likedModelsPerUser/${this.authData.uid}/`).remove(key);
-    this.af.database.list(`/modelsPerUser/${this.authData.uid}/`).remove(key);
+    this.db.list(`/likedModelsPerUser/${this.authData.uid}/`).remove(key);
+    this.db.list(`/modelsPerUser/${this.authData.uid}/`).remove(key);
 
     this.models.remove(key).then(_=>
     {
