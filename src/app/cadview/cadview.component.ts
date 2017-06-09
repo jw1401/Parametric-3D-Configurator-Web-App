@@ -54,7 +54,7 @@ export class CadviewComponent implements OnInit
   ngOnInit()
   {
     //$('#test').ready(function (){console.log("Hallo jquery")});
-    console.log ("User   " + this.userService.isLoggedIn);
+    console.log ("User   " + this.userService.authenticated);
     window.scrollTo(0, 0);
     //start OpenJsCad processor
      this.gProcessor = new Processor(document.getElementById("viewerContext"),
@@ -77,7 +77,7 @@ export class CadviewComponent implements OnInit
         if(strStorageRef.match(/\.jscad$/i) || strStorageRef.match(/\.js$/i))
         {
           this.isStl = false;
-          if (this.userService.isLoggedIn){this.isCodeVisible=true}else{this.isCodeVisible=false}
+          if (this.userService.authenticated){this.isCodeVisible=true}else{this.isCodeVisible=false}
           let modelData = this.modelService.getModelData(model.modelURL);
 
           modelData.then(data=>

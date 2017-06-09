@@ -12,36 +12,29 @@ import * as firebase from 'firebase';
 export class UserService
 {
   authState: any = null;
+  rawFirebaseAuth : any;
 
-  public auth : any;
   public error : any;
-  public authData : any;
+
   public userModel : UserModel;
-  public firebase =firebase;
-  public isLoggedIn = false;
+
   private user : FirebaseObjectObservable<any>;
 
-  private user1: Observable<firebase.User>;
 
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router)
   {
-
-    this.afAuth.authState.subscribe((auth) =>
+    afAuth.authState.subscribe((auth) =>
     {
       this.authState = auth;
 
-      if(auth)
+      if(this.authState)
       {
-        this.authData = auth;
-        console.log("UserService active for " + this.authData.email);
-        this.user = this.db.object(`/users/${this.authData.uid}`);
-        this.isLoggedIn=true;
+        console.log("UserService active for " + this.authState.email);
+        this.user = this.db.object(`/users/${this.authState.uid}`);
       }
-      else {this.isLoggedIn=false;}
     });
 
-    //this.firebase = firebaseApp;
-    this.auth = firebase.auth();
+    this.rawFirebaseAuth = firebase.auth();
   }
 
   get authenticated(): boolean
@@ -67,21 +60,10 @@ export class UserService
     return this.authenticated ? this.authState.uid : '';
   }
 
-  getUser () : Promise<UserModel>
+  get CurrentUserData() : Promise<UserModel>
   {
-    /*let user: any;
-    this.afAuth.authState.subscribe(auth=>
-      {
-        if(auth)
-        {
-          user = this.db.object(`/users/${auth.uid}`).first().toPromise();
-
-        }
-      });*/
-    console.log("Hallo");
-    //console.log("Auth = " + this.authData.uid);
-    //return user;
-    return this.db.object(`/users/${this.authData.uid}`).first().toPromise();
+    console.log("CurrentUserData()");
+    return this.db.object(`/users/${this.authState.uid}`).first().toPromise();
   }
 
   getUserById (id: string) : Promise<UserModel>
@@ -89,10 +71,10 @@ export class UserService
     return this.db.object(`/users/${id}`).first().toPromise();
   }
 
-  getAuthData():any
+  /*getAuthData():any
   {
-    return this.authData;
-  }
+    return this.authState;
+  }*/
 
   updateUser(user: any)
   {
@@ -105,7 +87,7 @@ export class UserService
 
   updateAccountName(accountData:any)
   {
-    this.auth.currentUser.updateProfile({displayName: accountData.value.accountName})
+    this.rawFirebaseAuth.currentUser.updateProfile({displayName: accountData.value.accountName})
       .then((success) => {
         console.log('Success');
       })
@@ -116,7 +98,7 @@ export class UserService
 
   updateEmail(emailData: any) : Promise<any>
   {
-      return this.auth.currentUser.updateEmail(emailData.value.email)
+      return this.rawFirebaseAuth.currentUser.updateEmail(emailData.value.email)
         .then((success) =>
         {
           return Promise.resolve("Success in changeEmail ");
@@ -129,7 +111,7 @@ export class UserService
 
   updatePassword(passwordData: any) : Promise<any>
   {
-    return this.auth.currentUser.updatePassword(passwordData.value.newpassword).then((sucess) =>
+    return this.rawFirebaseAuth.currentUser.updatePassword(passwordData.value.newpassword).then((sucess) =>
       {
         return Promise.resolve("Password changed")
       }).catch((error) =>
@@ -141,12 +123,12 @@ export class UserService
   uploadImage(imageFileName, imagefile)
   {
         let user = this.user;
-        let auth = this.auth;
+        let auth = this.rawFirebaseAuth;
 
         // todo: implement to delete the user photo first on image change
         let promise = new Promise((res,rej) =>
         {
-            let uploadTask = this.firebase.storage().ref(this.authData.uid+`/userData/${imageFileName}`).put(imagefile);
+            let uploadTask = firebase.storage().ref(this.authState.uid+`/userData/${imageFileName}`).put(imagefile);
 
             uploadTask.on('state_changed', function(snapshot){}, function(error){rej(error);},
             function()

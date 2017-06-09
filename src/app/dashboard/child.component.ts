@@ -20,9 +20,8 @@ export class ProfileComponent
 
     ngOnInit()
     {
-
-      this.authData = this.userService.getAuthData();
-      this.userService.getUser().then(data => {this.userModel = data;});
+      this.authData = this.userService.currentUser; //gets the authState Data
+      this.userService.CurrentUserData.then((data) => {this.userModel = data;});
     }
 }
 
@@ -47,7 +46,7 @@ export class AccountComponent
 
   ngOnInit()
   {
-    this.userService.getUser().then(data => {this.userModel=data;});
+    this.userService.CurrentUserData.then(data => {this.userModel=data;});
   }
 
   fileImageChangeEvent(fileInput: any)

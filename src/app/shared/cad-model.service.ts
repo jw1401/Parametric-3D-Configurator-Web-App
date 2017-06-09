@@ -1,18 +1,13 @@
 import { Injectable,Inject } from '@angular/core';
 import {Http, Response, ResponseContentType, Headers,RequestOptions} from '@angular/http';
-//import { AngularFire, FirebaseApp,FirebaseObjectObservable, FirebaseListObservable  } from 'angularfire2';
 import {CadModel} from './cad-model';
-//import {UserModel} from './user-model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 import { Observable, Subject } from 'rxjs/Rx';
-
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
-
-// Do not import from 'firebase' as you'd lose the tree shaking benefits
 import * as firebase from 'firebase/app';
 
 
@@ -22,11 +17,12 @@ export class CadModelService
 {
   //public error:any;
   public firebase = firebase;
+
   public authData : any;
   public models : FirebaseListObservable<any>;
   public limit : BehaviorSubject<number> = new BehaviorSubject<number>(10);
 
-  constructor(/*@Inject(FirebaseApp) firebaseApp: any,*/ private db: AngularFireDatabase, /*private af: AngularFire,*/private http: Http, private afAuth: AngularFireAuth)
+  constructor( private db: AngularFireDatabase, private http: Http, private afAuth: AngularFireAuth)
   {
     console.log("Cad Model service is active!");
     this.afAuth.authState.subscribe(auth =>
