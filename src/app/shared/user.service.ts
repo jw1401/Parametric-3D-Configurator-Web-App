@@ -1,37 +1,35 @@
-import { Injectable,Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import {Router} from '@angular/router';
-//import { AngularFire, FirebaseApp,FirebaseObjectObservable  } from 'angularfire2';
 import {UserModel} from './user-model';
-
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
-
 import { Observable } from 'rxjs/Observable';
-
-// Do not import from 'firebase' as you'd lose the tree shaking benefits
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase';
 
 //this is the user-service for the user-dashboard
 @Injectable()
 export class UserService
 {
+  authState: any = null;
+
   public auth : any;
   public error : any;
   public authData : any;
   public userModel : UserModel;
-  public firebase : any;
+  public firebase =firebase;
   public isLoggedIn = false;
   private user : FirebaseObjectObservable<any>;
 
   private user1: Observable<firebase.User>;
 
-  constructor(/*@Inject(FirebaseApp) firebaseApp: any,*/ private afAuth: AngularFireAuth, private db: AngularFireDatabase)
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router)
   {
-    //this.user1=afAuth.authState;
-    //console.log(this.user1);
-    this.afAuth.authState.subscribe(auth =>
+
+    this.afAuth.authState.subscribe((auth) =>
     {
+      this.authState = auth;
+
       if(auth)
       {
         this.authData = auth;
@@ -43,7 +41,30 @@ export class UserService
     });
 
     //this.firebase = firebaseApp;
-    //this.auth = firebaseApp.auth();
+    this.auth = firebase.auth();
+  }
+
+  get authenticated(): boolean
+  {
+    return this.authState !== null;
+  }
+
+  // Returns current user data
+  get currentUser(): any
+  {
+    return this.authenticated ? this.authState : null;
+  }
+
+  // Returns
+  get currentUserObservable(): any
+  {
+    return this.afAuth.authState
+  }
+
+  // Returns current user UID
+  get currentUserId(): string
+  {
+    return this.authenticated ? this.authState.uid : '';
   }
 
   getUser () : Promise<UserModel>

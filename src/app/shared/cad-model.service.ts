@@ -21,7 +21,7 @@ import * as firebase from 'firebase/app';
 export class CadModelService
 {
   //public error:any;
-  public firebase : any;
+  public firebase = firebase;
   public authData : any;
   public models : FirebaseListObservable<any>;
   public limit : BehaviorSubject<number> = new BehaviorSubject<number>(10);

@@ -6,6 +6,8 @@ import {CadModel} from '../shared/cad-model';
 import {UserService} from '../shared/user.service';
 import{UserModel} from '../shared/user-model';
 
+import * as firebase from 'firebase';
+
 // textencoding for Binary files
 import * as encoding from 'text-encoding';
 import * as $ from 'jquery';
@@ -33,20 +35,20 @@ export class CadviewComponent implements OnInit
   public user : any;
   public model: CadModel;
 
-  private firebase : any;
+  private firebase = firebase;
 
   public code : string;
 
   public gProcessor = null;
 
-  constructor( private userService: UserService, private modelService:CadModelService, private route: ActivatedRoute, @Inject(FirebaseApp) fb: any)
+  constructor( private userService: UserService, private modelService:CadModelService, private route: ActivatedRoute,/* @Inject(FirebaseApp) fb: any*/)
   {
     //get reference model_uid form passed parameters
     this.route.params.map( params => params['model_uid']).subscribe((id)=>
     {
       this.modelKey = id;
     });
-    this.firebase=fb;
+    //this.firebase=fb;
   }
 
   ngOnInit()
@@ -85,7 +87,7 @@ export class CadviewComponent implements OnInit
                this.myClass = "col-sm-12 col-md-12 col-lg-8"; //make jscad Style
                this.code = data;
 
-               this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../jscad/jscad/Libraries/');// set for library path
+               this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../assets/jscad/jscad/Libraries/');// set for library path
                this.gProcessor.setStatus("Processing <img id=busy src='jscad/jscad/imgs/busy.gif'>");
                this.gProcessor.setJsCad(data);
                this.gProcessor.viewer.handleResize(); //call handleResize otherwise it looks ugly
@@ -107,11 +109,11 @@ export class CadviewComponent implements OnInit
 
                this.myClass="col-sm-12"; //make stl Style
 
-               this.gProcessor.setStatus("Converting <img id=busy src='jscad/jscad/imgs/busy.gif'>");
-               this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../jscad/jscad/Libraries/');// set for library path
+               this.gProcessor.setStatus("Converting <img id=busy src='/assets/jscad/jscad/imgs/busy.gif'>");
+               this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../assets/jscad/jscad/Libraries/');// set for library path
                var worker = Processor.createImportWorker(this.gProcessor);
 
-               var u= this.gProcessor.baseurl+ '../jscad/jscad/Libraries/';
+               var u= this.gProcessor.baseurl+ '../assets/jscad/jscad/Libraries/';
                //var u = 'https://gitcdn.xyz/repo/jw1401/openjscadV3/master/Viewer/Libraries/';
 
                //note: cache: false is set to allow evaluation of 'include' statements

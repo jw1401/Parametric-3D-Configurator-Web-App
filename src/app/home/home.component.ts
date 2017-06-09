@@ -3,6 +3,7 @@ import {  FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2/d
 import {Router} from '@angular/router';
 //import {UserModel} from '../shared/user-model';
 import {CadModelService} from '../shared/cad-model.service';
+import {UserService} from '../shared/user.service';
 
 import 'rxjs/add/operator/take';
 
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit
 
   //public userModel = new UserModel("","","","");
 
-  constructor(/*private af: AngularFire,*/ private router: Router, private modelService: CadModelService)
+  constructor(/*private af: AngularFire,*/ private router: Router, private modelService: CadModelService, private userService:UserService)
   {
     /*
     this.af.auth.take(2).subscribe((auth)=>

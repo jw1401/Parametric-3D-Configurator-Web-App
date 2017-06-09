@@ -93,9 +93,9 @@ function Processor(containerdiv, viewerOptions, onchange)
 
   this.state = 0;
 
-  this.readyStr = "Ready <img id=busy src='/jscad/jscad/imgs/ready.png'>";
-  this.abortStr = "Aborted <img id=busy src='/jscad/jscad/imgs/aborted.png'>";
-  this.busyStr  = "Rendering. Please wait <img id=busy src='/jscad/jscad/imgs/busy.gif'>";
+  this.readyStr = "Ready <img id=busy src='assets/jscad/jscad/imgs/ready.png'>";
+  this.abortStr = "Aborted <img id=busy src='assets/jscad/jscad/imgs/aborted.png'>";
+  this.busyStr  = "Rendering. Please wait <img id=busy src='assets/jscad/jscad/imgs/busy.gif'>";
 
   this.createElements();
 };
