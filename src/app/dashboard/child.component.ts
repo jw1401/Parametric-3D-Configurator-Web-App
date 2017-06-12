@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import {Router} from '@angular/router';
 import {UserService} from '../shared/user.service';
-import {UserModel} from '../shared/user-model'
+import {User, Upload} from '../shared/user.model'
+
+import * as $ from 'jquery';
 
 @Component
 ({
@@ -12,7 +14,8 @@ import {UserModel} from '../shared/user-model'
 export class ProfileComponent
 {
     public authData: any;
-    public userModel : UserModel;
+    public userModel : User;
+
 
     constructor(private userService: UserService)
     {
@@ -36,80 +39,135 @@ export class ProfileComponent
 export class AccountComponent
 {
   public error : any;
-  public userModel : UserModel;
-  public imageFile={"name":'', "file":'',"type":''};
+  public success: any;
+  public userModel : User;
+
+  upload : Upload;
+  //selectedFiles: FileList;
 
   constructor(private userService: UserService, private router: Router)
   {
-    this.userModel = new UserModel("","","","");
+    this.userModel = new User("","","");
+    this.upload = new Upload();
   }
 
   ngOnInit()
   {
-    this.userService.CurrentUserData.then(data => {this.userModel=data;});
+    this.userService.CurrentUserData.then(data =>
+      {
+        this.userModel = data;
+      });
+      //this.userService.unsubscribeUser();
+
   }
 
-  fileImageChangeEvent(fileInput: any)
+  fileImageChangeEvent(event: any)
   {
-    this.imageFile.file = fileInput.target.files[0];
-    this.imageFile.name = fileInput.target.files[0].name;
-    this.imageFile.type = fileInput.target.files[0].type;
+    this.success = null;
 
-
-    if (fileInput.target.files && fileInput.target.files[0])
-    {
-      var reader = new FileReader();
-      reader.onload = (event:any) => {this.userModel.photoURL = event.target.result;}
-      reader.readAsDataURL(fileInput.target.files[0]);
-    }
+    this.upload.file = event.target.files[0];
+    this.upload.name = event.target.files[0].name;
+    this.upload.type = event.target.files[0].type;
 
     //uploads the image imideatly
-    if (this.imageFile.type.match('image/*'))
+    if (this.upload.type.match('image/*'))
     {
-      this.error = null;
-      this.userService.uploadImage(this.imageFile.name,this.imageFile.file).then(()=>
+
+      /*this.userService.CurrentUserData.then(data =>
+        {
+          this.userModel = data;
+        });*/
+
+      this.userModel.photo != null ? this.userService.deleteProfilePicture(this.userModel.photo.name) : undefined
+
+      var reader = new FileReader();
+      reader.onload = (event:any) =>
       {
-        console.log("changing image...");
-      });
+        this.userModel.photo.photoURL = event.target.result;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+
+      this.error = null;
+      this.userService.uploadProfilePicture(this.upload)
+        .then((success) =>
+        {
+          this.success = success;
+          $(document).ready(function(){$('#success').fadeOut(4000);});
+          this.userModel.photo.name = this.upload.name;
+        });
     }
-    else this.error="Only images...";
+    else this.error = "Only images...";
   }
 
-  changeUser(userData: any)
+  UpdateUser(userForm: any)
   {
-    if (userData.valid)
+    this.success = null;
+    if (userForm.valid)
     {
-      this.userService.updateUser(userData);
+      this.userService.updateUserData(this.userModel)
+        .then(success=>
+        {
+          this.success = success;
+          $(document).ready(function(){$('#success').fadeOut(4000);})
+        })
+        .catch(err=>
+        {
+          this.error = err
+        });
     }
   }
 
-  changeAccountName(accountData:any)
+  updateAccountName(accountData:any)
   {
+    this.success = null;
     if(accountData.valid)
     {
-      this.userService.updateAccountName(accountData);
+      this.userService.updateAccountName(accountData)
+      .then(success=>
+      {
+        this.success = success;
+        $(document).ready(function(){$('#success').fadeOut(4000);})
+      })
+      .catch(err=>
+      {
+        this.error = err
+      });
     }
   }
 
-  changeEmail(emailData)
+  updateAccountEmail(emailData)
   {
+    this.success = null;
     if(emailData.valid)
     {
-      this.userService.updateEmail(emailData).then(result =>{
-        console.log(result)}).catch((error=>{
-          console.log(error);
+      this.userService.updateAccountEmail(emailData)
+      .then(success =>
+        {
+          this.success = success;
+          $(document).ready(function(){$('#success').fadeOut(4000);})
+        })
+        .catch(err=>
+        {
+          console.log(err);
           this.router.navigate(['/login']);
-        }));
+        });
     }
   }
 
-  changePassword(passwordData)
+  updatePassword(passwordData)
   {
+    this.success = null;
     if (passwordData.valid)
     {
-      this.userService.updatePassword(passwordData).then(result=>{
-        console.log(result);}).catch(error=>{
-          console.log(error);
+      this.userService.updateAccountPassword(passwordData)
+        .then(success =>
+        {
+          this.success = success;
+          $(document).ready(function(){$('#success').fadeOut(4000);})
+        })
+        .catch(err =>
+        {
+          console.log(err);
           this.router.navigate(['/login']);
         });
       }

@@ -4,7 +4,7 @@ import { FirebaseApp } from 'angularfire2';
 import {CadModelService} from '../shared/cad-model.service';
 import {CadModel} from '../shared/cad-model';
 import {UserService} from '../shared/user.service';
-import{UserModel} from '../shared/user-model';
+import{User} from '../shared/user.model';
 
 import * as firebase from 'firebase';
 

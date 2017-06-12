@@ -1,8 +1,10 @@
 <div class="container" >
-  <div class="alert alert-danger alert-dismissible" *ngIf="error">{{error}}
+  <div class="alert alert-danger alert-dismissible" *ngIf="error" id="error">{{error}}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
-
+  <div class="alert alert-success alert-dismissible" *ngIf="success" id="success">{{success}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
   <div class=row>
     <div class="col-12">
       <h5>Public profile</h5>
@@ -14,7 +16,7 @@
   <div class="row" >
 
     <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
-      <form  #userData="ngForm">
+      <form  #userForm="ngForm">
         <div class="form-group row" >
           <label for ="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10 input-group">
@@ -38,14 +40,14 @@
 
         <div class="form-group row">
           <div class="offset-sm-2 col-sm-10">
-            <button type="button" class="btn btn-secondary" (click)="changeUser(userData)" [disabled]="!userData.valid">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="UpdateUser(userForm)" [disabled]="!userForm.valid">Save</button>
           </div>
         </div>
 
         <div class="form-group row">
           <label for ="image" class="col-sm-2 col-form-label">Image</label>
           <div class=" col-sm-10 input-group">
-            <img  class="rounded" style="height:200px; width:200px; object-fit:cover; object-position: center" [src]="userModel.photoURL" accepts="image/*"/>
+            <img  class="rounded" style="height:200px; width:200px; object-fit:cover; object-position: center" [src]="userModel.photo?.photoURL" accepts="image/*"/>
           </div>
         </div>
 
@@ -78,7 +80,7 @@
         <label for ="name" class="col-sm-2 col-form-label">Name</label>
         <div class="col-sm-10 input-group">
           <input class ="form-control" id ="name" type="text" name="accountName" (ngModel)="accountName" required>
-          <button type="button" class="btn btn-link" (click)="changeAccountName(accountData)" [disabled]="!accountData.valid">Save</button>
+          <button type="button" class="btn btn-link" (click)="updateAccountName(accountData)" [disabled]="!accountData.valid">Save</button>
         </div>
       </div>
     </form>
@@ -88,7 +90,7 @@
           <label for ="password" class="col-sm-2 col-form-label">Password</label>
           <div class=" col-sm-10 input-group">
             <input class=" form-control" type="password" name="newpassword" id="password" (ngModel)="newpassword" required>
-            <button type="button" (click)="changePassword(passwordData)" class="btn btn-link" [disabled]="!passwordData.valid">Save</button>
+            <button type="button" (click)="updatePassword(passwordData)" class="btn btn-link" [disabled]="!passwordData.valid">Save</button>
           </div>
         </div>
       </form>
@@ -98,7 +100,7 @@
           <label for ="email" class="col-sm-2 col-form-label">Email</label>
           <div class=" col-sm-10 input-group">
             <input class=" form-control" type="email" name="email" id ="email" (ngModel)="email" required placeholder="example@example.com">
-            <button type="button" class="btn btn-link" (click)="changeEmail(emailData)" [disabled]="!emailData.valid">Save</button>
+            <button type="button" class="btn btn-link" (click)="updateAccountEmail(emailData)" [disabled]="!emailData.valid">Save</button>
           </div>
         </div>
       </form>
