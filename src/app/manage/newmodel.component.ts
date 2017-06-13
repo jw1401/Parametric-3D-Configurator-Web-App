@@ -39,21 +39,23 @@ export class NewmodelComponent implements OnInit
       console.log(this.model.license);
     }
 
-       fileImageChangeEvent(fileInput: any)
+       fileImageChangeEvent(event: any)
        {
          //get the file and fileinfo
-         this.imageFile.file = fileInput.target.files[0];
-         this.imageFile.name = fileInput.target.files[0].name;
-         this.imageFile.type = fileInput.target.files[0].type;
 
-         if (fileInput.target.files && fileInput.target.files[0])
+         console.log(event.target.files[0])
+         this.model.image.file = event.target.files[0];
+         this.model.image.name = event.target.files[0].name;
+         this.model.image.type = event.target.files[0].type;
+
+         if (event.target.files && event.target.files[0])
          {
            var reader = new FileReader();
            reader.onload = (event:any) => {this.imagePreview = event.target.result;}
-           reader.readAsDataURL(fileInput.target.files[0]);
+           reader.readAsDataURL(event.target.files[0]);
          }
 
-         if (this.imageFile.type.match('image/*'))
+         if (this.model.image.type.match('image/*'))
          {
            this.error = null;
          }
@@ -64,12 +66,12 @@ export class NewmodelComponent implements OnInit
        {
          let extension:string;
 
-         this.modelFile.file = fileInput.target.files[0];
-         this.modelFile.name = fileInput.target.files[0].name;
-         this.modelFile.type = fileInput.target.files[0].type;
+         this.model.model.file = fileInput.target.files[0];
+         this.model.model.name = fileInput.target.files[0].name;
+         this.model.model.type = fileInput.target.files[0].type;
 
          //get the file extension
-         extension = this.modelFile.name.split('.').pop().toLowerCase()
+         extension = this.model.model.name.split('.').pop().toLowerCase()
 
          //console.log("MIME stl: " + this.modelFile.type +"Extension: " + extension );
 
@@ -77,16 +79,17 @@ export class NewmodelComponent implements OnInit
          if (extension === "stl" || extension ==="jscad")
          {
            this.error=null;
-           this.modelFile.type="stl";
+           this.model.model.type="stl";
          }
          else this.error="only .stl or .jscad files...";
        }
 
        onSubmit()
        {
-         if (this.imageFile.type.match('image/*') && (this.modelFile.type === "stl"|| this.modelFile.type ==="jscad"))
+         console.log(this.model);
+         if (this.model.image.type.match('image/*') && (this.model.model.type === "stl"|| this.model.model.type ==="jscad"))
          {
-           this.modelService.addModel(this.model,this.imageFile,this.modelFile);
+           this.modelService.addModel(this.model,this.model.image,this.model.model);
            this.submitted=true;
          }
          else this.error= "No file or wrong format...";
@@ -94,7 +97,7 @@ export class NewmodelComponent implements OnInit
 
        newCadModel()
        {
-         this.model= new CadModel("" ,"Name", "Description",this.powers[0],0,"","", false, this.licenses[0].license);
+         this.model= new CadModel();
          this.imageFile.name="";
          this.modelFile.name="";
          this.imagePreview="../../assets/imgs/no-image-2.png";

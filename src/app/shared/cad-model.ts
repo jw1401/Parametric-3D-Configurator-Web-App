@@ -1,28 +1,38 @@
-import {Observable} from "rxjs/Rx";
+import { Upload } from './user.model';
+import {licenses} from './license';
 
 export class CadModel
 {
-  constructor
-  (
-    //public $key : string,
-    public userId: string,
-    public name: string,
-    public description?: string,
-    public power?:string,
-    public like?: number,
-    public imageURL?: string,
-    public modelURL?: string,
-    public isCustomizable?: boolean,
-    public license?: any,
-  ){}
+    public $key : string
+    public userId: string
+    public name: string
+    public description?: string
+    public power?:string
+    public like?: number
+    public image?: Upload
+    public model?: Upload
+    public isCustomizable?: boolean
+    public license?: any
 
-  static fromJson ({$key, userId, name, description, power,like,imageURL,modelURL,isCustomizable})
-  {
-    return new CadModel(userId, name, description, power,like,imageURL,modelURL,isCustomizable);
-  }
+    constructor()
+    {
+      this.name=""
+      this.description=""
+      this.image = new Upload();
+      this.model = new Upload();
+      this.like = 0;
+      this.license =  licenses[0].license;
+      this.power = "Printable";
+      this.isCustomizable=false;
+    }
 
-  static fromJsonArray(json : any[]) : CadModel[]
+  /*static fromJson ({$key, userId, name, description, power,like,imageURL,modelURL,isCustomizable})
   {
-    return json.map(CadModel.fromJson);
-  }
+    //return new CadModel(userId, name, description, power,like,imageURL,modelURL,isCustomizable);
+  }*/
+
+  //static fromJsonArray(json : any[]) : CadModel[]
+  //{
+    //return json.map(CadModel.fromJson);
+  //}
 }

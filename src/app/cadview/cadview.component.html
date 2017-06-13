@@ -82,7 +82,7 @@
               <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-4 ">
                 <div class="card text-center" id="userCard" style="">
                   <div class="card-block ">
-                    <img class="rounded" style="height:100px;width:100px; object-fit:cover; object-position: center; border-radius:50px" [src]="(user|async)?.photoURL">
+                    <img class="rounded" style="height:100px;width:100px; object-fit:cover; object-position: center; border-radius:50px" [src]="(user|async)?.photo.URL">
                     <h3 class="card-title">{{(user|async)?.name}}</h3>
                     <hr />
                     <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
@@ -121,7 +121,7 @@
 
         <div class="tab-pane" id="license" role="tabpanel" style="text-align:center">
           <br />
-          
+
             <a rel="license" href="http://creativecommons.org/licenses/{{model?.license}}/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/{{model?.license}}/4.0/88x31.png" /></a>
             <br />This work is licensed under <a rel="license" href="http://creativecommons.org/licenses/{{model?.license}}/4.0/">cc {{model?.license}}</a><br /><br />
 

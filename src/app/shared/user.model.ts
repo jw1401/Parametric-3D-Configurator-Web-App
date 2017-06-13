@@ -15,5 +15,5 @@ export class Upload
   name: string;
   file: File;
   type: string;
-  photoURL?: string;
+  URL?: string;
 }

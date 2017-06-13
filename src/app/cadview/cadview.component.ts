@@ -88,6 +88,7 @@ export class CadviewComponent implements OnInit
                this.code = data;
 
                this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../assets/jscad/jscad/Libraries/');// set for library path
+               this.gProcessor.setImagePath("/assets/jscad/jscad/imgs/");
                this.gProcessor.setStatus("Processing <img id=busy src='jscad/jscad/imgs/busy.gif'>");
                this.gProcessor.setJsCad(data);
                this.gProcessor.viewer.handleResize(); //call handleResize otherwise it looks ugly
@@ -110,6 +111,7 @@ export class CadviewComponent implements OnInit
                this.myClass="col-sm-12"; //make stl Style
 
                this.gProcessor.setStatus("Converting <img id=busy src='/assets/jscad/jscad/imgs/busy.gif'>");
+               this.gProcessor.setImagePath("/assets/jscad/jscad/imgs/");
                this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../assets/jscad/jscad/Libraries/');// set for library path
                var worker = Processor.createImportWorker(this.gProcessor);
 

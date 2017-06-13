@@ -65,6 +65,7 @@ function Processor(containerdiv, viewerOptions, onchange)
   {
     libraries: ['libCSG.js','libCSGExporter.js','libOpenscad.js'],
     openJsCadPath: 'jscad/Libraries/',
+    imagePath: 'jscad/imgs/',
     useAsync: true,
     useSync:  true,
   };
@@ -93,9 +94,9 @@ function Processor(containerdiv, viewerOptions, onchange)
 
   this.state = 0;
 
-  this.readyStr = "Ready <img id=busy src='/jscad/jscad/imgs/ready.png'>";
-  this.abortStr = "Aborted <img id=busy src='/jscad/jscad/imgs/aborted.png'>";
-  this.busyStr  = "Rendering. Please wait <img id=busy src='/jscad/jscad/imgs/busy.gif'>";
+  this.readyStr = "Ready <img id=busy src='" + this.processOpts.imagePath + "ready.png'>";
+  this.abortStr = "Aborted <img id=busy src='" + this.processOpts.imagePath + "aborted.png'>";
+  this.busyStr  = "Rendering. Please wait <img id=busy src='" + this.processOpts.imagePath + "busy.gif'>";
 
   this.createElements();
 };
@@ -458,6 +459,16 @@ Processor.prototype =
     setOpenJsCadPath: function(path)
     {
         this.processOpts['openJsCadPath'] = path;
+    },
+
+    // set image path externaly
+    //
+    setImagePath: function(path)
+    {
+      this.processOpts['imagePath'] = path;
+      this.readyStr = "Ready <img id=busy src='" + this.processOpts.imagePath + "ready.png'>";
+      this.abortStr = "Aborted <img id=busy src='" + this.processOpts.imagePath + "aborted.png'>";
+      this.busyStr  = "Rendering. Please wait <img id=busy src='" + this.processOpts.imagePath + "busy.gif'>";
     },
 
     // sets the error message in the errordiv

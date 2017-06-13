@@ -9,14 +9,13 @@ import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  title = '~';
-  public isAuth = false;
+export class AppComponent implements OnInit
+{
   userName:string;
 
   constructor(public afAuth: AngularFireAuth, private router:Router)
   {
-    this.afAuth.authState.subscribe(auth=>
+    this.afAuth.authState.subscribe((auth) =>
       {
         if(auth)
         {

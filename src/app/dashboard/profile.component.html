@@ -2,24 +2,22 @@
 
   <div class="row">
     <div class="col-12">
-      <h5>Public profile</h5>
+      <h5>Public profile {{auth?.displayName}} ({{auth?.email}}) <span *ngIf="auth.emailVerified===false" class="badge badge-pill badge-danger">not verified</span></h5>
       <hr>
     </div>
   </div>
 
-  <div *ngIf="!authData" class="row alert alert-warning">No Data available</div>
+  <div *ngIf="!auth" class="row alert alert-warning">No Data available</div>
 
-  <div class="row justify-content-center" *ngIf="authData">
+  <div class="row justify-content-center" *ngIf="auth">
     <div class="col-12 col-sm-12 col-md-8 col-lg-6 ">
       <div class="card text-center" style="background: whitesmoke">
         <div class="card-block ">
-          <img class="rounded" style="height:225px;width:225px; object-fit:cover; object-position: center; border-radius:125px" [src]="authData.photoURL">
-          <h1 class="card-title">{{userModel?.name}}</h1>
-          <h5><small> ({{ authData.displayName }})</small></h5>
+          <img class="rounded" style="height:225px;width:225px; object-fit:cover; object-position: center; border-radius:125px" [src]="(user|async)?.photo.URL">
+          <h1 class="card-title">{{(user | async)?.name}}</h1>
           <hr />
-          <p class="card-text"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ authData.email }} <span *ngIf="authData.emailVerified===false" class="badge badge-pill badge-danger">not verified</span></p>
-          <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{userModel?.country}}</p>
-          <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{userModel?.bio}}</p>
+          <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
+          <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.bio}}</p>
         </div>
       </div>
     </div>

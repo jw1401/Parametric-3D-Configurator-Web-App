@@ -20,21 +20,21 @@
         <div class="form-group row" >
           <label for ="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10 input-group">
-              <input class ="form-control " id ="name" type="text" name="displayName" [(ngModel)]="userModel.name" required>
+              <input class ="form-control " id ="name" type="text" name="displayName" [(ngModel)]="user.name" required>
           </div>
         </div>
 
         <div class="form-group row">
           <label for ="country" class="col-sm-2 col-form-label">Country</label>
           <div class=" col-sm-10 input-group">
-            <input class=" form-control f" type="text" name="country" id ="country" [(ngModel)]="userModel.country"  required >
+            <input class=" form-control f" type="text" name="country" id ="country" [(ngModel)]="user.country"  required >
           </div>
         </div>
 
         <div class="form-group row">
           <label for ="bio" class="col-sm-2 col-form-label">Bio</label>
           <div class=" col-sm-10 input-group">
-            <textarea class=" form-control" type="text" name="bio" id ="bio" [(ngModel)]="userModel.bio"></textarea>
+            <textarea class=" form-control" type="text" name="bio" id ="bio" [(ngModel)]="user.bio"></textarea>
           </div>
         </div>
 
@@ -47,7 +47,7 @@
         <div class="form-group row">
           <label for ="image" class="col-sm-2 col-form-label">Image</label>
           <div class=" col-sm-10 input-group">
-            <img  class="rounded" style="height:200px; width:200px; object-fit:cover; object-position: center" [src]="userModel.photo?.photoURL" accepts="image/*"/>
+            <img  class="rounded" style="height:200px; width:200px; object-fit:cover; object-position: center" [src]="user.photo?.URL" accepts="image/*"/>
           </div>
         </div>
 
@@ -75,35 +75,54 @@
 
 <div class="row">
   <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
-    <form  #accountData="ngForm">
+
+
+    <form  #accountForm="ngForm">
+
       <div class="form-group row">
-        <label for ="name" class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10 input-group">
-          <input class ="form-control" id ="name" type="text" name="accountName" (ngModel)="accountName" required>
-          <button type="button" class="btn btn-link" (click)="updateAccountName(accountData)" [disabled]="!accountData.valid">Save</button>
+        <label for ="email" class="col-sm-2 col-form-label">Email</label>
+        <div class=" col-sm-10 input-group">
+          <input class=" form-control" type="email" name="email"  (ngModel)="email" required >
         </div>
       </div>
+
+      <div class="form-group row">
+        <label for ="newEmail" class="col-sm-2 col-form-label">Email new</label>
+        <div class=" col-sm-10 input-group">
+          <input class=" form-control" type="email" name="newEmail"  (ngModel)="newEmail" >
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for ="password" class="col-sm-2 col-form-label">Password</label>
+        <div class=" col-sm-10 input-group">
+          <input class=" form-control" type="password" name="password" (ngModel)="password" required>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for ="newPassword" class="col-sm-2 col-form-label">Passw. new</label>
+        <div class=" col-sm-10 input-group">
+          <input class=" form-control" type="password" name="newPassword"  (ngModel)="newPassword" >
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for ="accountName" class="col-sm-2 col-form-label">Account Name</label>
+        <div class="col-sm-10 input-group">
+          <input class ="form-control" id ="accountName" type="text" name="accountName" (ngModel)="accountName" >
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="offset-sm-2 col-sm-10">
+          <button type="button" class="btn btn-secondary" (click)="updateAccount(accountForm)" [disabled]="!accountForm.valid">Save</button>
+        </div>
+      </div>
+
     </form>
 
-      <form #passwordData='ngForm'>
-        <div class="form-group row">
-          <label for ="password" class="col-sm-2 col-form-label">Password</label>
-          <div class=" col-sm-10 input-group">
-            <input class=" form-control" type="password" name="newpassword" id="password" (ngModel)="newpassword" required>
-            <button type="button" (click)="updatePassword(passwordData)" class="btn btn-link" [disabled]="!passwordData.valid">Save</button>
-          </div>
-        </div>
-      </form>
 
-      <form #emailData='ngForm'>
-        <div class="form-group row">
-          <label for ="email" class="col-sm-2 col-form-label">Email</label>
-          <div class=" col-sm-10 input-group">
-            <input class=" form-control" type="email" name="email" id ="email" (ngModel)="email" required placeholder="example@example.com">
-            <button type="button" class="btn btn-link" (click)="updateAccountEmail(emailData)" [disabled]="!emailData.valid">Save</button>
-          </div>
-        </div>
-      </form>
     </div>
   </div>
 

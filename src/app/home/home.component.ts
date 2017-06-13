@@ -1,11 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {  FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2/database';
-import {Router} from '@angular/router';
-//import {UserModel} from '../shared/user-model';
-import {CadModelService} from '../shared/cad-model.service';
-import {UserService} from '../shared/user.service';
+import { FirebaseListObservable } from 'angularfire2/database';
+import { Router } from '@angular/router';
+import { CadModelService } from '../shared/cad-model.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'home',
@@ -16,37 +14,24 @@ import 'rxjs/add/operator/take';
 export class HomeComponent implements OnInit
 {
   items: FirebaseListObservable<any>;
-  //user: FirebaseObjectObservable<any>;
+  limit : BehaviorSubject<number> = new BehaviorSubject<number>(5);
 
-  //public page = 1;
-  //public auth : any;
-
-  //public userModel = new UserModel("","","","");
-
-  constructor(/*private af: AngularFire,*/ private router: Router, private modelService: CadModelService, private userService:UserService)
+  constructor(private router: Router, private modelService: CadModelService)
   {
-    /*
-    this.af.auth.take(2).subscribe((auth)=>
-    {
-      this.auth=auth;
-
-      if (auth!=null)
-      {
-        this.user = af.database.object('users/'+this.auth.uid);
-        this.user.take(1).subscribe(data=>{this.userModel=data; })
-      }
-    });
-    */
   }
 
   ngOnInit()
   {
-    this.items = this.modelService.getModels();
+    this.items = this.modelService.getModelsList(
+      {
+        limitToFirst: this.limit,
+        orderByKey : true
+      });
   }
 
   nextPage()
   {
-    this.modelService.scroll();
+    this.limit.next( this.limit.getValue() + 5);
   }
 
   updateLike(key: string, like: number)
@@ -56,6 +41,6 @@ export class HomeComponent implements OnInit
 
   open(key:string)
   {
-    this.router.navigate(['/cadview/'+key])
+    this.router.navigate(['/cadview/' + key])
   }
 }

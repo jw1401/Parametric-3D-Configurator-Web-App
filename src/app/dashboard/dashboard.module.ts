@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { AuthGuard } from '../auth/auth-guard.service';
 import { UserService} from '../shared/user.service';
-
+import { FileService} from '../shared/fbStorage.service';
 import { dashRouting } from './dashboard.routing';
 import { DashboardComponent } from './dashboard.component';
 import { ProfileComponent, AccountComponent, SettingsComponent } from './child.component';
@@ -15,7 +15,7 @@ import { ProfileComponent, AccountComponent, SettingsComponent } from './child.c
     FormsModule,
     CommonModule
    ],
-   providers: [AuthGuard,UserService],
+   providers: [AuthGuard,UserService, FileService],
   declarations: [
     DashboardComponent,
     AccountComponent,

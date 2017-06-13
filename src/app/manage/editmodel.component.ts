@@ -29,7 +29,7 @@ export class EditmodelComponent implements OnInit
 
  constructor(private modelService: CadModelService)
  {
-   this.model=  new CadModel("userId","Name", "Description","",0,"imageURL","modelURL");
+   this.model=  new CadModel();
  }
 
   ngOnInit()
@@ -41,27 +41,30 @@ export class EditmodelComponent implements OnInit
 
   //make model data available in the modal
   editItem(key: string, name: string, description: string, power: string,
-    like: number, imageURL:string, modelURL:string, customizable:boolean, license:string ,userId:string)
+    like: number, imageURL:string, modelURL:string, customizable:boolean, license:string , userId:string)
   {
     this.modelKey = key;
 
-    this.model.userId=userId;
+    this.model.$key = key;
+    this.model.userId = userId;
     this.model.name= name;
     this.model.description = description;
     this.model.power = power;
     this.model.like = like;
-    this.model.imageURL = imageURL;
-    this.model.modelURL = modelURL;
+    this.model.image.URL = imageURL;
+    this.model.model.URL = modelURL;
     this.model.isCustomizable = customizable;
     this.model.license = license;
 
-    this.imagePreview=this.model.imageURL;
+    this.imagePreview=this.model.image.URL;
     //this.modelFile.name = modelURL
+
+    console.log(this.model);
   }
 
   updateItem(key: string)
   {
-    this.modelService.updateModel(key, this.model);
+    this.modelService.updateModel(this.model.$key, this.model);
   }
 
   updateLike(key: string, like: number)
@@ -71,7 +74,7 @@ export class EditmodelComponent implements OnInit
 
   deleteItem(key:string)
   {
-    this.modelService.deleteModel(key, this.model.imageURL, this.model.modelURL);
+    this.modelService.deleteModel(key, this.model.image.URL, this.model.model.URL);
     this.items = this.modelService.getEditModels();
   }
 
@@ -99,7 +102,7 @@ export class EditmodelComponent implements OnInit
     if (this.imageFile.type.match('image/*'))
     {
       this.error = null;
-      this.modelService.changeModelImage(this.imageFile.name, this.imageFile.file, this.model.imageURL, this.modelKey).then(()=>
+      this.modelService.changeModelImage(this.imageFile.name, this.imageFile.file, this.model.image.URL, this.modelKey).then(()=>
       {
         console.log("changing image...");
       });
@@ -122,7 +125,7 @@ export class EditmodelComponent implements OnInit
     if (extension === "stl" || extension ==="jscad")
     {
       this.error=null;
-      this.modelService.changeModelFile(this.modelFile.name, this.modelFile.file, this.model.modelURL, this.modelKey).then(()=>console.log("changing model file"))
+      this.modelService.changeModelFile(this.modelFile.name, this.modelFile.file, this.model.model.URL, this.modelKey).then(()=>console.log("changing model file"))
     }
     else this.error="only .stl or .jscad files...";
   }

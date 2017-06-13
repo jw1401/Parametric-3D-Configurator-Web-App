@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import {Router} from '@angular/router';
-import {UserService} from '../shared/user.service';
-import {User, Upload} from '../shared/user.model'
+import { Router } from '@angular/router';
+import { UserService } from '../shared/user.service';
+import { User, Upload } from '../shared/user.model'
+import { FirebaseObjectObservable } from 'angularfire2/database';
 
 import * as $ from 'jquery';
 
@@ -13,9 +14,8 @@ import * as $ from 'jquery';
 
 export class ProfileComponent
 {
-    public authData: any;
-    public userModel : User;
-
+    public auth: any;
+    public user : any;
 
     constructor(private userService: UserService)
     {
@@ -23,8 +23,8 @@ export class ProfileComponent
 
     ngOnInit()
     {
-      this.authData = this.userService.currentUser; //gets the authState Data
-      this.userService.CurrentUserData.then((data) => {this.userModel = data;});
+      this.auth = this.userService.currentUser; // gets the authState Data
+      this.user = this.userService.currentUserData; // gets the Observable for async pipe
     }
 }
 
@@ -40,30 +40,35 @@ export class AccountComponent
 {
   public error : any;
   public success: any;
-  public userModel : User;
+  public user : User;
 
+  subscription : any;
   upload : Upload;
-  //selectedFiles: FileList;
+
 
   constructor(private userService: UserService, private router: Router)
   {
-    this.userModel = new User("","","");
+    this.user = new User("","","");
     this.upload = new Upload();
   }
 
   ngOnInit()
   {
-    this.userService.CurrentUserData.then(data =>
+    this.subscription = this.userService.currentUserData.subscribe(data =>
       {
-        this.userModel = data;
+        this.user = data;
       });
-      //this.userService.unsubscribeUser();
+  }
 
+  ngOnDestroy()
+  {
+    this.subscription.unsubscribe();
   }
 
   fileImageChangeEvent(event: any)
   {
     this.success = null;
+    this.error = null;
 
     this.upload.file = event.target.files[0];
     this.upload.name = event.target.files[0].name;
@@ -72,39 +77,82 @@ export class AccountComponent
     //uploads the image imideatly
     if (this.upload.type.match('image/*'))
     {
-
-      /*this.userService.CurrentUserData.then(data =>
-        {
-          this.userModel = data;
-        });*/
-
-      this.userModel.photo != null ? this.userService.deleteProfilePicture(this.userModel.photo.name) : undefined
-
-      var reader = new FileReader();
-      reader.onload = (event:any) =>
-      {
-        this.userModel.photo.photoURL = event.target.result;
-      }
-      reader.readAsDataURL(event.target.files[0]);
-
-      this.error = null;
+      this.user.photo != null ? this.userService.deleteProfilePicture(this.user.photo.name) : undefined
       this.userService.uploadProfilePicture(this.upload)
         .then((success) =>
-        {
-          this.success = success;
-          $(document).ready(function(){$('#success').fadeOut(4000);});
-          this.userModel.photo.name = this.upload.name;
-        });
+          {
+            this.success = success;
+            $(document).ready(function(){$('#success').fadeOut(4000);});
+          })
+        .catch((err) =>
+          {
+            this.error = err
+          });
     }
-    else this.error = "Only images...";
+    else
+    {
+      this.error = "Only images...";
+    }
   }
 
   UpdateUser(userForm: any)
   {
     this.success = null;
+
     if (userForm.valid)
     {
-      this.userService.updateUserData(this.userModel)
+      this.userService.updateUserData(this.user)
+        .then(success=>
+          {
+            this.success = success;
+            $(document).ready(function(){$('#success').fadeOut(4000);})
+          })
+        .catch(err=>
+          {
+            this.error = err
+          });
+    }
+  }
+
+  updateAccount(accountForm : any)
+  {
+    this.success = null
+
+    if (accountForm.valid)
+    {
+      if (accountForm.value.newEmail != null && accountForm.value.newEmail !='')
+      {
+        this.userService.updateAccountEmail(accountForm.value.newEmail, accountForm.value.email, accountForm.value.password)
+        .then(success =>
+          {
+            this.success = success;
+            $(document).ready(function(){$('#success').fadeOut(4000);})
+          })
+          .catch(err=>
+          {
+            console.log(err);
+            this.router.navigate(['/login']);
+          });
+      }
+
+      if (accountForm.value.newPassword != null && accountForm.value.newPassword !='')
+      {
+        this.userService.updateAccountPassword(accountForm.value.newPassword, accountForm.value.email, accountForm.value.password)
+          .then(success =>
+          {
+            this.success = success;
+            $(document).ready(function(){$('#success').fadeOut(4000);})
+          })
+          .catch(err =>
+          {
+            console.log(err);
+            this.router.navigate(['/login']);
+          });
+      }
+
+      if (accountForm.value.accountName != null && accountForm.value.accountName !='')
+      {
+        this.userService.updateAccountName(accountForm.value.accountName)
         .then(success=>
         {
           this.success = success;
@@ -114,64 +162,9 @@ export class AccountComponent
         {
           this.error = err
         });
-    }
-  }
-
-  updateAccountName(accountData:any)
-  {
-    this.success = null;
-    if(accountData.valid)
-    {
-      this.userService.updateAccountName(accountData)
-      .then(success=>
-      {
-        this.success = success;
-        $(document).ready(function(){$('#success').fadeOut(4000);})
-      })
-      .catch(err=>
-      {
-        this.error = err
-      });
-    }
-  }
-
-  updateAccountEmail(emailData)
-  {
-    this.success = null;
-    if(emailData.valid)
-    {
-      this.userService.updateAccountEmail(emailData)
-      .then(success =>
-        {
-          this.success = success;
-          $(document).ready(function(){$('#success').fadeOut(4000);})
-        })
-        .catch(err=>
-        {
-          console.log(err);
-          this.router.navigate(['/login']);
-        });
-    }
-  }
-
-  updatePassword(passwordData)
-  {
-    this.success = null;
-    if (passwordData.valid)
-    {
-      this.userService.updateAccountPassword(passwordData)
-        .then(success =>
-        {
-          this.success = success;
-          $(document).ready(function(){$('#success').fadeOut(4000);})
-        })
-        .catch(err =>
-        {
-          console.log(err);
-          this.router.navigate(['/login']);
-        });
       }
     }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////

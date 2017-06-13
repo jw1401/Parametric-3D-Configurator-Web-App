@@ -10,18 +10,18 @@
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items | async" >
 
       <div class="card mb-4" >
-        <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item?.imageURL" alt="no Image">
+        <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image?.URL" alt="no Image">
         <div class="card-block">
           <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item?.name}}</h5>
           <p class="card-text"><small class="text-muted">{{item?.power}}</small></p>
 
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal"
             (click)="editItem(item.$key, item.name,item.description, item.power,item.like,
-            item.imageURL,item.modelURL, item.isCustomizable, item.license, item.uid)">
+            item.image.URL,item.model.URL, item.isCustomizable, item.license, item.userId)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </button>
 
-          <button class="btn btn-outline-danger" (click)="deleteItemOnCard(item.$key, item.imageURL, item.modelURL)">
+          <button class="btn btn-outline-danger" (click)="deleteItemOnCard(item.$key, item.image.URL, item.model.URL)">
               <i class="fa fa-trash-o" aria-hidden="true"></i>
           </button>
 

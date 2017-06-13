@@ -5,7 +5,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
-
+import { FileService} from './fbStorage.service';
 import { User, Upload } from './user.model';
 
 
@@ -16,10 +16,9 @@ export class UserService
 {
   authState: any = null;
   rawFirebaseAuth : any;
-  userModel : User;
   subscriber : any;
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router)
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private fileService : FileService)
   {
     this.subscriber = afAuth.authState.subscribe((auth) =>
     {
@@ -58,9 +57,9 @@ export class UserService
   }
 
   // Gets the UserData from db of current user
-  get CurrentUserData() :  Promise<User>
+  get currentUserData() :  FirebaseObjectObservable <any>
   {
-    return this.authenticated ? this.db.object(`/users/${this.currentUserId}`).first().toPromise() : null;
+    return this.authenticated ? this.db.object(`/users/${this.currentUserId}`) : null;
   }
 
   // Gets an specific user by id
@@ -91,9 +90,9 @@ export class UserService
   }
 
   // upodate the account name in the firebase auth User Object
-  updateAccountName(accountData:any) : Promise<any>
+  updateAccountName(name : any) : Promise<any>
   {
-    return this.rawFirebaseAuth.currentUser.updateProfile({displayName: accountData.value.accountName})
+    return this.rawFirebaseAuth.currentUser.updateProfile({displayName: name})
       .then((success) =>
       {
         console.log('Success');
@@ -107,105 +106,109 @@ export class UserService
   }
 
   // upodate the account email in the firebase auth User Object
-  updateAccountEmail(emailData: any) : Promise<any>
+  updateAccountEmail(newEmail: any, email : any, password : any) : Promise <any>
   {
-    return this.rawFirebaseAuth.currentUser.updateEmail(emailData.value.email)
-      .then((success) =>
-      {
-        return Promise.resolve("Success changing email");
-      })
-      .catch((err) =>
-      {
-        return Promise.reject(err);
-      })
+    const credential = firebase.auth.EmailAuthProvider.credential(email, password)
+
+    return new Promise ((resolve, reject) =>
+    {
+      firebase.auth().currentUser.reauthenticateWithCredential(credential)
+        .then(() =>
+          {
+            this.rawFirebaseAuth.currentUser.updateEmail(newEmail)
+              .then((success) =>
+                {
+                  resolve("Success changing email");
+                })
+              .catch((err) =>
+                {
+                  reject(err);
+                })
+          });
+    });
   }
 
   // upodate the account password
-  updateAccountPassword(passwordData: any) : Promise<any>
+  updateAccountPassword(newPassword: any, email : any, password : any) : Promise<any>
   {
-    return this.rawFirebaseAuth.currentUser.updatePassword(passwordData.value.newpassword)
-      .then((success) =>
-      {
-        return Promise.resolve("Success changing password")
-      })
-      .catch((err) =>
-      {
-        return Promise.reject(err);
-      })
+    const credential = firebase.auth.EmailAuthProvider.credential(email, password)
+
+    return new Promise ((resolve, reject) =>
+    {
+      firebase.auth().currentUser.reauthenticateWithCredential(credential)
+        .then(() =>
+          {
+            this.rawFirebaseAuth.currentUser.updatePassword(newPassword)
+              .then((success) =>
+                {
+                  resolve("Success changing password")
+                })
+              .catch((err) =>
+                {
+                  reject(err);
+                })
+          });
+    });
   }
 
   uploadProfilePicture(upload : Upload) : Promise<any>
   {
     let dbUser = this.db.object(`/users/${this.currentUserId}/photo`);
-    let storageRef = firebase.storage().ref(this.currentUserId+`/userData/${upload.name}`)
     let rawFirebaseAuth = this.rawFirebaseAuth;
+    let storagePath = `${this.currentUserId}/userData/${upload.name}`
 
-    // todo: implement to delete the user photo first on image change
-    return new Promise((resolve,reject) =>
+    return new Promise ((resolve, reject) =>
     {
-      let uploadTask = storageRef.put(upload.file);
+      this.fileService.uploadFile(storagePath,upload.file)
+        .then((uploadURL) =>
+          {
+            upload.URL = uploadURL;
 
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        (snapshot) =>
-        {
-          // upload in progress
-        },
-        (err) =>
-        {
-          // upload error
-          console.log(err);
-          reject(err);
-        },
-        ()=>
-        {
-          // upload success
-          let uploadURL = uploadTask.snapshot.downloadURL;
-          console.log("Profile picture upload task with URL " + uploadURL + " successfull");
-
-          // update user DB with uploadFile Data
-          upload.photoURL = uploadURL;
-          dbUser.update(upload)
-            .then((user) =>
-            {
-              rawFirebaseAuth.currentUser.updateProfile({photoURL: uploadURL}); // update auth object with photoURL
-              resolve("Success changing profile picture");
+            dbUser.update(upload)
+              .then((success) =>
+                {
+                  rawFirebaseAuth.currentUser.updateProfile({photoURL: uploadURL}); // update auth object with photoURL
+                  resolve("Success changing profile picture ");
+                })
+              .catch((err) =>
+                {
+                  console.log (err)
+                  reject (err);
+                });
             })
-            .catch((err) =>
+          .catch ((err) =>
             {
-              console.log(err)
+              console.log (err);
               reject(err);
-            });
+            })
           });
-      });
-    }
+      }
 
     deleteProfilePicture(name : any)
     {
       let dbUser = this.db.object(`/users/${this.currentUserId}/photo`);
+      let storagePath = `${this.currentUserId}/userData/${name}`;
 
-      dbUser.remove()
-        .then(success =>
+      this.fileService.deleteFile(storagePath)
+        .then((success) =>
           {
-            console.log("Success removing photo node from user db");
-            this.deleteFileStorage(name);
+            dbUser.remove()
+              .then((success) =>
+                {
+                  console.log("Success removing photo node from user db");
+                })
+                .catch(err =>
+                {
+                  console.log(err);
+                })
           })
-          .catch(err =>
+        .catch((err) =>
           {
             console.log(err);
           })
+
     }
 
-    private deleteFileStorage (name: any)
-    {
-      let storageRef = firebase.storage().ref();
-      storageRef.child(`${this.currentUserId}/userData/${name}`).delete();
-    }
-
-    unsubscribeUser()
-    {
-      this.subscriber.unsubscribe();
-      this.authState=null;
-    }
 
 
 // class end

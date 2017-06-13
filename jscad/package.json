@@ -6,7 +6,7 @@
 
   "scripts":
   {
-    "build": "browserify jscad/jscad-lib/processor.js --s Processor -o dist/myBundle.js"
+    "build": "browserify jscad/jscad-lib/processor.js --s Processor -o ../src/assets/jscad/jscadBundle.js"
   },
 
   "author": "",
