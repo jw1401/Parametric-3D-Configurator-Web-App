@@ -1,18 +1,18 @@
 
 <div class="container">
 
-
 <div class="row">
-  <div class="alert alert-danger w-100 text-center" *ngIf="error">{{error}}</div>
+  <div class="alert alert-danger w-100 text-center alert-dismissible" *ngIf="error">{{error}}</div>
+  <div class="alert alert-success  w-100 text-center" *ngIf="success" id="success">{{success}}</div>
 </div>
 
-<div class="row" [hidden]="submitted">
+<div class="row">
   <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
     <h5>Create model</h5><hr />
   </div>
 </div>
 
-<div class="row" [hidden]="submitted">
+<div class="row">
 
   <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
     <form (ngSubmit)="onSubmit()" #ModelForm="ngForm">
@@ -60,7 +60,7 @@
         <div class="col-sm-10">
           <label class="custom-file w-100">
             <input type="file" id="file" class="custom-file-input" (change)="fileImageChangeEvent($event)" required>
-            <span class="custom-file-control" >{{imageFile.name}}</span>
+            <span class="custom-file-control" >{{model.image.name}}</span>
           </label>
           <img  class="rounded mt-3" alt="upload image" style="height:200px; width:200px; object-fit:cover; object-position: center" [src]="this.imagePreview" accepts="image/*"/>
         </div>
@@ -71,7 +71,7 @@
       <div class="col-sm-10">
         <label class="custom-file w-100">
           <input type="file" id="file" class="custom-file-input" (change)="fileModelChangeEvent($event)" required >
-          <span class="custom-file-control" >{{modelFile.name}}</span>
+          <span class="custom-file-control" >{{model.model.name}}</span>
         </label>
       </div>
     </div>
@@ -81,7 +81,7 @@
       <label for="license" class="col-sm-2 col-form-label">License</label>
       <div class="col-sm-10">
       <select class="form-control" id="license"
-              [(ngModel)]="model.license" (change)="onChange($event)" name="license" >
+              [(ngModel)]="model.license" name="license" >
         <option *ngFor="let lic of licenses" [value]="lic.license">{{lic.name}}</option>
       </select>
     </div>
@@ -98,25 +98,6 @@
     </div>
 
     </form>
-    </div>
-  </div>
-
-
-  <div class="row" [hidden]="!submitted">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 offset-lg-2">
-      <h3>You created the model...</h3>
-      <ul class="list-group">
-        <li class="list-group-item">
-          Name: {{ model.name }}
-        </li>
-        <li class="list-group-item">
-          Description: {{ model.description }}
-        </li>
-        <li class="list-group-item">
-          Power: {{ model.power }}
-        </li>
-      </ul><br />
-      <button class="btn btn-outline-primary" style="margin-left:0px" (click)="submitted=false; newCadModel()">New Model</button>
     </div>
   </div>
 

@@ -14,14 +14,14 @@ import { Observable, Subject } from 'rxjs/Rx';
 export class LikedModelsComponent implements OnInit
 {
   public error:any;
-  public list: Observable<any>;//any[]= new Array;
+  public items: Observable<any>;//any[]= new Array;
 
   constructor(private router: Router, private modelService: CadModelService)
   {}
 
   ngOnInit()
   {
-    this.modelService.getLikedModels().subscribe(data=> this.list=data);
+    this.items = this.modelService.getLikedModels()
   }
 
   openItem(key:string)

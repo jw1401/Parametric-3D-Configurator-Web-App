@@ -71,14 +71,14 @@ export class CadviewComponent implements OnInit
         this.model = model;
         this.user = this.userService.getUserById(this.model.userId)
 
-        let strStorageRef = this.firebase.storage().refFromURL(model.modelURL).toString();
+        let strStorageRef = this.firebase.storage().refFromURL(model.model.URL).toString();
 
         //load case .jscad
         if(strStorageRef.match(/\.jscad$/i) || strStorageRef.match(/\.js$/i))
         {
           this.isStl = false;
           if (this.userService.authenticated){this.isCodeVisible=true}else{this.isCodeVisible=false}
-          let modelData = this.modelService.getModelData(model.modelURL);
+          let modelData = this.modelService.getModelData(model.model.URL);
 
           modelData.then(data=>
              {
@@ -99,7 +99,7 @@ export class CadviewComponent implements OnInit
         {
             this.isStl = true;
             this.isCodeVisible=false;
-            let modelData = this.modelService.getModelDataBinary(model.modelURL);
+            let modelData = this.modelService.getModelDataBinary(model.model.URL);
 
             modelData.then(dataBinary=>
              {

@@ -1,11 +1,8 @@
 import { Component, Inject ,OnInit} from '@angular/core';
-//import { FirebaseListObservable} from 'angularfire2';
 import { CadModel } from '../shared/cad-model';
-import { FormsModule } from '@angular/forms';
-import {CadModelService} from '../shared/cad-model.service';
-import { Observable, Subject } from 'rxjs/Rx';
-
-import {licenses} from '../shared/license';
+import { CadModelService } from '../shared/cad-model.service';
+import { Observable } from 'rxjs/Rx';
+import { licenses } from '../shared/license';
 
 @Component
 ({
@@ -15,17 +12,14 @@ import {licenses} from '../shared/license';
 
 export class EditmodelComponent implements OnInit
 {
-  public error:any;
-
+  public error: any;
+  public success: any;
   public model : CadModel;
   public modelKey : string;
   public items: Observable<any>;
-
-  public licenses= licenses;
-
+  public licenses :any = licenses;
   public imagePreview : any;
-  public imageFile={"name":'', "file":'',"type":''};
-  public modelFile={"name":'', "file":'',"type":''};
+
 
  constructor(private modelService: CadModelService)
  {
@@ -34,99 +28,86 @@ export class EditmodelComponent implements OnInit
 
   ngOnInit()
   {
-    //query for all models that belongs to user with uid
+    // query for all models that belongs to user with uid
     this.items = this.modelService.getEditModels();
-    //this.modelService.getEditModels().subscribe(value => this.items=value)
   }
 
-  //make model data available in the modal
-  editItem(key: string, name: string, description: string, power: string,
-    like: number, imageURL:string, modelURL:string, customizable:boolean, license:string , userId:string)
+  // make model data available in the modal Dialog
+  editItem (item: any)
   {
-    this.modelKey = key;
-
-    this.model.$key = key;
-    this.model.userId = userId;
-    this.model.name= name;
-    this.model.description = description;
-    this.model.power = power;
-    this.model.like = like;
-    this.model.image.URL = imageURL;
-    this.model.model.URL = modelURL;
-    this.model.isCustomizable = customizable;
-    this.model.license = license;
-
-    this.imagePreview=this.model.image.URL;
-    //this.modelFile.name = modelURL
-
-    console.log(this.model);
+    this.error = null;
+    this.success = null;
+    this.model = item; // gets all the data from the ngModel of EditmodelComponent.html
+    this.imagePreview = this.model.image.URL;
   }
 
-  updateItem(key: string)
+  updateItem ()
   {
-    this.modelService.updateModel(this.model.$key, this.model);
+    this.modelService.updateModel(this.model.$key, this.model).then((success) => this.success=success);
   }
 
-  updateLike(key: string, like: number)
+  updateItemLike(key: string, like: number)
   {
     this.modelService.updateLike(key, like);
   }
 
-  deleteItem(key:string)
+  deleteItem(itemKey:string, imageName, modelName)
   {
-    this.modelService.deleteModel(key, this.model.image.URL, this.model.model.URL);
+    this.modelService.deleteModel(itemKey, imageName, modelName);
     this.items = this.modelService.getEditModels();
   }
 
-  deleteItemOnCard(key:string, imageURL, modelURL)
+  fileImageChangeEvent(event: any)
   {
-    this.modelService.deleteModel(key, imageURL, modelURL);
-    this.items = this.modelService.getEditModels();
-  }
+    this.error = null;
 
-  fileImageChangeEvent(fileInput: any)
-  {
-    //get the file and fileinfo
-    this.imageFile.file = fileInput.target.files[0];
-    this.imageFile.name = fileInput.target.files[0].name;
-    this.imageFile.type = fileInput.target.files[0].type;
-
-    if (fileInput.target.files && fileInput.target.files[0])
+    // checks if it is an imagefile
+    if (event.target.files[0].type.match('image/*'))
     {
+      // remember which file to delete
+      let tmpName = this.model.image.name;
+
+      // get the file and fileinfo
+      this.model.image.file = event.target.files[0];
+      this.model.image.name = event.target.files[0].name;
+      this.model.image.type = event.target.files[0].type;
+
+      // show the image preview in the EditmodelComponent.html
       var reader = new FileReader();
       reader.onload = (event:any) => {this.imagePreview = event.target.result;}
-      reader.readAsDataURL(fileInput.target.files[0]);
-    }
+      reader.readAsDataURL(event.target.files[0]);
 
-    //uploads the image imideatly
-    if (this.imageFile.type.match('image/*'))
-    {
-      this.error = null;
-      this.modelService.changeModelImage(this.imageFile.name, this.imageFile.file, this.model.image.URL, this.modelKey).then(()=>
-      {
-        console.log("changing image...");
-      });
-    }
-    else this.error="Only images...";
+      //deletes old image and uploads new image imideatly
+      this.modelService.deleteImageFile(tmpName, this.model.$key)
+        .then((success) =>
+          {
+            this.modelService.uploadImage(this.model.$key, this.model).then((success) => this.success=success);
+          }).catch(err=>console.log(err))
+    } else this.error = "Only images..."
   }
 
-  fileModelChangeEvent(fileInput: any)
+  fileModelChangeEvent(event: any)
   {
-    let extension:string;
-
-    this.modelFile.file = fileInput.target.files[0];
-    this.modelFile.name = fileInput.target.files[0].name;
-    this.modelFile.type = fileInput.target.files[0].type;
+    this.error = null;
+    let extension: string;
 
     //get the file extension
-    extension = this.modelFile.name.split('.').pop().toLowerCase()
+    extension = event.target.files[0].name.split('.').pop().toLowerCase()
 
     //check the file extension
     if (extension === "stl" || extension ==="jscad")
     {
-      this.error=null;
-      this.modelService.changeModelFile(this.modelFile.name, this.modelFile.file, this.model.model.URL, this.modelKey).then(()=>console.log("changing model file"))
+      let tmpName = this.model.model.name;
+      this.model.model.file = event.target.files[0];
+      this.model.model.name = event.target.files[0].name;
+      this.model.model.type = extension;
+
+      this.modelService.deleteModelFile(tmpName, this.model.$key)
+        .then((success) =>
+          {
+            this.modelService.uploadModel(this.model.$key, this.model).then((success) => this.success=success);
+          })
     }
-    else this.error="only .stl or .jscad files...";
+    else this.error="only .stl or .jscad files..."
   }
 }

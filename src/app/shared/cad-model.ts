@@ -3,7 +3,7 @@ import {licenses} from './license';
 
 export class CadModel
 {
-    public $key : string
+    public $key? : string
     public userId: string
     public name: string
     public description?: string
@@ -16,6 +16,7 @@ export class CadModel
 
     constructor()
     {
+      //this.$key=""
       this.name=""
       this.description=""
       this.image = new Upload();
@@ -23,16 +24,15 @@ export class CadModel
       this.like = 0;
       this.license =  licenses[0].license;
       this.power = "Printable";
-      this.isCustomizable=false;
+      this.isCustomizable = false;
     }
 
-  /*static fromJson ({$key, userId, name, description, power,like,imageURL,modelURL,isCustomizable})
-  {
-    //return new CadModel(userId, name, description, power,like,imageURL,modelURL,isCustomizable);
-  }*/
-
-  //static fromJsonArray(json : any[]) : CadModel[]
-  //{
-    //return json.map(CadModel.fromJson);
-  //}
+    /*static modelWithoutKey(model: CadModel) : CadModel
+    {
+      let object :CadModel = new CadModel();
+      object = model;
+      delete object.$key;
+      console.log(object)
+      return object;
+    }*/
 }

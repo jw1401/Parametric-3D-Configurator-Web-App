@@ -1,11 +1,9 @@
 import { Component, Inject ,OnInit} from '@angular/core';
-//import { AngularFire, FirebaseApp , FirebaseListObservable,FirebaseObjectObservable} from 'angularfire2';
-import {Router} from '@angular/router';
-import {CadModel} from '../shared/cad-model';
-import {CadModelService} from '../shared/cad-model.service';
+import { CadModel } from '../shared/cad-model';
+import { CadModelService } from '../shared/cad-model.service';
+import { licenses } from '../shared/license';
 
-import {licenses} from '../shared/license';
-
+import * as $ from 'jquery';
 
 @Component
 ({
@@ -15,93 +13,98 @@ import {licenses} from '../shared/license';
 
 export class NewmodelComponent implements OnInit
 {
-  public error:any;
+  public error: any;
+  public success: any;
   public powers = [ 'Hi Tec Gadget','Art', 'Engineering','Not special','Universal','Printable'];
   public licenses = licenses;
-
-  public imageFile={"name":'', "file":'',"type":''};
-  public modelFile={"name":'', "file":'',"type":''};
   public model: CadModel;
-  public imagePreview="../../assets/imgs/no-image-2.png";
-  public submitted = false;
+  public imagePreview: any;
 
-    constructor(private modelService: CadModelService)
+
+  constructor(private modelService: CadModelService)
+  {
+    this.newCadModel();
+  }
+
+  ngOnInit()
+  {}
+
+  fileImageChangeEvent(event: any)
+  {
+    this.error = null;
+
+    // get file and attributes
+    this.model.image.file = event.target.files[0];
+    this.model.image.name = event.target.files[0].name;
+    this.model.image.type = event.target.files[0].type;
+
+    if (event.target.files && event.target.files[0])
     {
-      this.newCadModel();
+      var reader = new FileReader();
+      reader.onload = (event:any) => {this.imagePreview = event.target.result;}
+      reader.readAsDataURL(event.target.files[0]);
     }
 
-    ngOnInit()
+    if (!this.model.image.type.match('image/*')) this.error = "only images...";
+  }
+
+  fileModelChangeEvent(event: any)
+  {
+    let extension: string;
+
+    this.model.model.file = event.target.files[0];
+    this.model.model.name = event.target.files[0].name;
+    this.model.model.type = event.target.files[0].type;
+
+    //get file extension
+    extension = this.model.model.name.split('.').pop().toLowerCase()
+
+   //check the file extension and set model.type
+   switch(extension)
     {
-    }
+      case "stl":
+        this.error = null;
+        this.model.model.type = "stl";
+        break;
 
-    onChange($event)
+      case "jscad":
+        this.error = null;
+        this.model.model.type = "jscad";
+        break;
+
+      default:
+        this.error = "only .stl or .jscad files...";
+    }
+  }
+
+  onSubmit()
+  {
+    this.error = null;
+    this.success = null;
+
+    if (this.model.image.type.match('image/*') && (this.model.model.type === "stl"|| this.model.model.type ==="jscad"))
     {
-      console.log(this.model.license);
+      this.modelService.createModel(this.model)
+        .then((success) =>
+          {
+            this.success = success;
+            $(document).ready(function(){$('#success').fadeOut(4000);});
+            this.newCadModel();
+          })
+        .catch((err) => this.error = err)
     }
+    else this.error = "No file or wrong format...";
+  }
 
-       fileImageChangeEvent(event: any)
-       {
-         //get the file and fileinfo
+  newCadModel()
+  {
+    this.model= new CadModel();
+    this.model.image.name="";
+    this.model.image.type="";
+    this.model.model.name="";
+    this.imagePreview="../../assets/imgs/no-image-2.png";
+    this.error = null;
+  }
 
-         console.log(event.target.files[0])
-         this.model.image.file = event.target.files[0];
-         this.model.image.name = event.target.files[0].name;
-         this.model.image.type = event.target.files[0].type;
-
-         if (event.target.files && event.target.files[0])
-         {
-           var reader = new FileReader();
-           reader.onload = (event:any) => {this.imagePreview = event.target.result;}
-           reader.readAsDataURL(event.target.files[0]);
-         }
-
-         if (this.model.image.type.match('image/*'))
-         {
-           this.error = null;
-         }
-         else this.error="only images...";
-       }
-
-       fileModelChangeEvent(fileInput: any)
-       {
-         let extension:string;
-
-         this.model.model.file = fileInput.target.files[0];
-         this.model.model.name = fileInput.target.files[0].name;
-         this.model.model.type = fileInput.target.files[0].type;
-
-         //get the file extension
-         extension = this.model.model.name.split('.').pop().toLowerCase()
-
-         //console.log("MIME stl: " + this.modelFile.type +"Extension: " + extension );
-
-         //check the file extension
-         if (extension === "stl" || extension ==="jscad")
-         {
-           this.error=null;
-           this.model.model.type="stl";
-         }
-         else this.error="only .stl or .jscad files...";
-       }
-
-       onSubmit()
-       {
-         console.log(this.model);
-         if (this.model.image.type.match('image/*') && (this.model.model.type === "stl"|| this.model.model.type ==="jscad"))
-         {
-           this.modelService.addModel(this.model,this.model.image,this.model.model);
-           this.submitted=true;
-         }
-         else this.error= "No file or wrong format...";
-       }
-
-       newCadModel()
-       {
-         this.model= new CadModel();
-         this.imageFile.name="";
-         this.modelFile.name="";
-         this.imagePreview="../../assets/imgs/no-image-2.png";
-         this.error=null;
-       }
-
+//end of class
 }
