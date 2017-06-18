@@ -1,5 +1,5 @@
 import { Upload } from './user.model';
-import {licenses} from './license';
+import { licenses } from './license';
 
 export class CadModel
 {
@@ -7,7 +7,7 @@ export class CadModel
     public userId: string
     public name: string
     public description?: string
-    public power?:string
+    public power?: string
     public like?: number
     public image?: Upload
     public model?: Upload
@@ -16,23 +16,21 @@ export class CadModel
 
     constructor()
     {
-      //this.$key=""
-      this.name=""
-      this.description=""
+      this.name = ""
+      this.description = ""
+
       this.image = new Upload();
+      this.image.name = "";
+      this.image.type = "";
+
       this.model = new Upload();
+      this.model.name = "";
+
       this.like = 0;
       this.license =  licenses[0].license;
-      this.power = "Printable";
+      this.power = powers[0];
       this.isCustomizable = false;
     }
-
-    /*static modelWithoutKey(model: CadModel) : CadModel
-    {
-      let object :CadModel = new CadModel();
-      object = model;
-      delete object.$key;
-      console.log(object)
-      return object;
-    }*/
 }
+
+export const powers = [ 'Printable', 'Hi Tec Gadget','Art', 'Engineering','Not special','Universal'];

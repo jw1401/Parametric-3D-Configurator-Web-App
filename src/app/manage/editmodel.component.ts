@@ -16,10 +16,9 @@ export class EditmodelComponent implements OnInit
   public success: any;
   public model : CadModel;
   public modelKey : string;
-  public items: Observable<any>;
-  public licenses :any = licenses;
+  public items: Observable <any>;
+  public licenses: any = licenses;
   public imagePreview : any;
-
 
  constructor(private modelService: CadModelService)
  {
@@ -51,9 +50,9 @@ export class EditmodelComponent implements OnInit
     this.modelService.updateLike(key, like);
   }
 
-  deleteItem(itemKey:string, imageName, modelName)
+  deleteItem(key:string, imageName, modelName)
   {
-    this.modelService.deleteModel(itemKey, imageName, modelName);
+    this.modelService.deleteModel(key, imageName, modelName);
     this.items = this.modelService.getEditModels();
   }
 
@@ -78,12 +77,13 @@ export class EditmodelComponent implements OnInit
       reader.readAsDataURL(event.target.files[0]);
 
       //deletes old image and uploads new image imideatly
-      this.modelService.deleteImageFile(tmpName, this.model.$key)
+      this.modelService.deleteImageFile(this.model.$key, tmpName)
         .then((success) =>
           {
             this.modelService.uploadImage(this.model.$key, this.model).then((success) => this.success=success);
           }).catch(err=>console.log(err))
-    } else this.error = "Only images..."
+    }
+    else this.error = "Only images..."
   }
 
   fileModelChangeEvent(event: any)
@@ -97,12 +97,15 @@ export class EditmodelComponent implements OnInit
     //check the file extension
     if (extension === "stl" || extension ==="jscad")
     {
+      // remember file to delete
       let tmpName = this.model.model.name;
+
+      // get file data
       this.model.model.file = event.target.files[0];
       this.model.model.name = event.target.files[0].name;
       this.model.model.type = extension;
 
-      this.modelService.deleteModelFile(tmpName, this.model.$key)
+      this.modelService.deleteModelFile(this.model.$key, tmpName)
         .then((success) =>
           {
             this.modelService.uploadModel(this.model.$key, this.model).then((success) => this.success=success);

@@ -1,22 +1,20 @@
-import { Injectable,Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http, Response, ResponseContentType, Headers,RequestOptions } from '@angular/http';
 import { CadModel } from './cad-model';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 import { Observable, Subject } from 'rxjs/Rx';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
-//import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { UserService } from './user.service';
 import { FileService} from './fbStorage.service';
-//import { Upload } from './user.model';
-
 
 //this is the cad-model-service for cad-model realated transactions in firebase
+//
 @Injectable()
 export class CadModelService
 {
-  public firebase = firebase;
+  //public firebase = firebase;
   rawFirebaseAuth : any;
   dbModels : FirebaseListObservable <any> = null;
 
@@ -26,59 +24,59 @@ export class CadModelService
     this.rawFirebaseAuth = firebase.auth();
   }
 
-  getModelsList(query={}): FirebaseListObservable<any>
+  getModelsList(query={}): FirebaseListObservable <any>
   {
     return this.db.list('/models', { query: query });
   }
 
-  getEditModels(): Observable<any>
+  getEditModels(): Observable <any>
   {
     return this.getModelsForModelsKeys(this.getModelsKeysPerUser())
   }
 
-  getLikedModels(): Observable<any>
+  getLikedModels(): Observable <any>
   {
     return this.getModelsForModelsKeys(this.getLikedModelsKeysPerUser())
   }
 
-  getModelsForModelsKeys(modelsKeys: Observable<string[]>): Observable<any>
+  getModelsForModelsKeys(modelsKeys: Observable <string[]>): Observable <any>
   {
     return modelsKeys.map(mpu => mpu.map(modelKey => this.db.object(`models/`+ modelKey)))
       .flatMap(fbojs =>Observable.combineLatest(fbojs));
   }
 
-  getModelsKeysPerUser() : Observable<string[]>
+  getModelsKeysPerUser() : Observable <string[]>
   {
     return this.db.list(`/modelsPerUser/${this.userService.currentUserId}`, {preserveSnapshot: true})
-      .do(val => console.log("val: ",val))
+      /*.do(val => console.log("val: ",val))*/
       .map(mspu => mspu.map(mpu=>mpu.key));
   }
 
-  getLikedModelsKeysPerUser() : Observable<string[]>
+  getLikedModelsKeysPerUser() : Observable <string[]>
   {
     return this.db.list(`/likedModelsPerUser/${this.userService.currentUserId}`, {preserveSnapshot: true}).first()
-      .do(val => console.log("val: ",val))
+      /*.do(val => console.log("val: ",val))*/
       .map(lmspu => lmspu.map(lmpu=>lmpu.key));
   }
 
-  getModelByKey(key: string): Promise<CadModel>
+  getModelByKey(key: string): Promise <CadModel>
   {
     return this.db.object(`/models/${key}`).first().toPromise().then().catch();
   }
 
-  getModelData (modelURL: string): Promise<any>
+  getModelData (modelURL: string): Promise <any>
   {
     return this.http.get(modelURL, { responseType: ResponseContentType.Text})
      .map(response => response.text()).toPromise()
   }
 
-  getModelDataBinary (modelURL: string): Promise<any>
+  getModelDataBinary (modelURL: string): Promise <any>
   {
     return this.http.get(modelURL, { responseType: ResponseContentType.ArrayBuffer})
      .map(response => response.arrayBuffer()).toPromise()
   }
 
-  createModel (model: CadModel) : Promise<any>
+  createModel (model: CadModel) : Promise <any>
   {
     // assigns the model to currentUserId
     model.userId = this.userService.currentUserId;
@@ -119,7 +117,7 @@ export class CadModelService
 
   }
 
-  updateLike(key: string, like)
+  updateLike(key: string, like: number)
   {
     let item = this.db.object(`/likedModelsPerUser/${this.userService.currentUserId}/${key}`).first().single().subscribe((data) =>
       {
@@ -144,13 +142,13 @@ export class CadModelService
           this.db.list(`/likedModelsPerUser/${this.userService.currentUserId}/`).remove(key);
           this.db.list(`/modelsPerUser/${this.userService.currentUserId}/`).remove(key);
 
-          this.deleteImageFile(imageName, key)
+          this.deleteImageFile(key, imageName)
             .then((success) =>
               {
                 console.log("success deleteImageFile")
               }).catch((err) => {console.log(err)})
 
-          this.deleteModelFile(modelName, key)
+          this.deleteModelFile(key, modelName)
             .then((success) =>
               {
                 console.log("success deleteModelFile")
@@ -158,9 +156,9 @@ export class CadModelService
         })
   }
 
-  deleteModelFile(name: any, itemKey) : Promise<any>
+  deleteModelFile(key: string, name: any) : Promise <any>
   {
-    let storagePath = `${this.userService.currentUserId}/${itemKey}/models/${name}`;
+    let storagePath = `${this.userService.currentUserId}/${key}/models/${name}`;
 
     return new Promise((resolve, reject) =>
     {
@@ -176,9 +174,9 @@ export class CadModelService
         })
   }
 
-  deleteImageFile(name: any, itemKey) : Promise<any>
+  deleteImageFile(key: string, name: any) : Promise <any>
   {
-    let storagePath = `${this.userService.currentUserId}/${itemKey}/images/${name}`;
+    let storagePath = `${this.userService.currentUserId}/${key}/images/${name}`;
 
     return new Promise((resolve, reject) =>
     {
@@ -195,7 +193,7 @@ export class CadModelService
   }
 
 
-  uploadImage(key , model: CadModel) : Promise <any>
+  uploadImage(key: string , model: CadModel) : Promise <any>
   {
     let rawFirebaseAuth = this.rawFirebaseAuth;
     let storagePath = `${this.userService.currentUserId}/${key}/images/${model.image.name}`
@@ -225,7 +223,7 @@ export class CadModelService
           });
       }
 
-      uploadModel(key, model: CadModel) : Promise <any>
+      uploadModel(key: string, model: CadModel) : Promise <any>
       {
         let rawFirebaseAuth = this.rawFirebaseAuth;
         let storagePath = `${this.userService.currentUserId}/${key}/models/${model.model.name}`

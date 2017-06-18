@@ -9,9 +9,9 @@
   <!--this are the thumbnails which displays all the models that belong to the user-->
   <div class="row">
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items | async" >
-
       <div class="card mb-4" >
         <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image?.URL" alt="no Image">
+
         <div class="card-block">
           <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item?.name}}</h5>
           <p class="card-text"><small class="text-muted">{{item?.power}}</small></p>
@@ -28,8 +28,8 @@
           <button class="btn btn-link float-right" (click)="updateItemLike(item.$key, item.like)">
             <i class="fa fa-heart" aria-hidden="true"></i> {{item?.like}}
           </button>
-
         </div>
+
       </div>
     </div>
   </div>
@@ -37,25 +37,38 @@
   <!--this is the modal dialog for model editing-->
   <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
+
       <!-- Modal content-->
       <div class="modal-content">
+
         <div class="modal-header">
           <h4 class="modal-title">Edit</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <div class="modal-body">
-          <div class="">
-            <div class="row">
-              <div class="alert alert-warning w-100 m-3" *ngIf="error">{{error}}</div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12 col-sm-8 offset-sm-2">
-                <img class="img-fluid" [src]="this.imagePreview" alt="no Image" accepts="image/*">
-              </div>
-            </div>
 
+          <div class="row">
+            <div class="col-12">
+              <div class="alert alert-warning" *ngIf="error">{{error}}</div>
+            </div>
           </div>
+
+
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <model-detail [model]="model" (onSubmit)="onSubmit()"
+              (onNewModel)="newCadModel()"></model-detail>
+            </div>
+          </div>
+
+<!--
+          <div class="row">
+            <div class="col-xs-12 col-sm-8 offset-sm-2">
+              <img class="img-fluid mx-auto d-block" [src]="this.imagePreview" alt="no Image" accepts="image/*">
+            </div>
+          </div>
+
           <hr />
           <div class="form-group row">
             <label class="col-sm-12 col-form-label">Image</label>
@@ -107,7 +120,8 @@
               </div>
             </div>
           </ul>
-        </div>
+        </div>-->
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="this.error = null">Close</button>
           <button class="btn btn-outline-primary" data-dismiss="modal"
