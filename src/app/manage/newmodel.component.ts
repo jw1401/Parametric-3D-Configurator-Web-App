@@ -1,7 +1,7 @@
 import { Component, Inject ,OnInit, ViewChild} from '@angular/core';
 import { CadModel } from '../shared/cad-model';
 import { CadModelService } from '../shared/cad-model.service';
-import { ModelDetailComponent } from'./model-detail.component'
+import { ModelFormComponent } from'./model-form.component'
 import * as $ from 'jquery';
 
 @Component
@@ -16,7 +16,7 @@ export class NewmodelComponent implements OnInit
   public success: any;
   public model: CadModel;
   public valid: boolean = false;
-  @ViewChild(ModelDetailComponent) private detailComponent : ModelDetailComponent;
+  @ViewChild(ModelFormComponent) private modelFormComponent : ModelFormComponent;
 
   constructor(private modelService: CadModelService)
   {}
@@ -26,18 +26,23 @@ export class NewmodelComponent implements OnInit
     this.newModel();
   }
 
+  // Creates the new model in firebase
+  //
   onSubmit()
   {
+    // reset error and success
     this.error = null;
     this.success = null;
 
+    // checks if form valid
     if (this.valid)
     {
+      // creates a new model with files
       this.modelService.createModel(this.model)
         .then((success) =>
           {
             this.success = success;
-            $(document).ready(function(){$('#success').fadeOut(4000);});
+            $(document).ready(function(){$('#success').fadeOut(5000)});
             this.newModel();
           })
         .catch((err) => this.error = err)
@@ -45,10 +50,14 @@ export class NewmodelComponent implements OnInit
     else this.error = "Please check your input!";
   }
 
+  // Reset for a new model
+  //
   newModel()
   {
-    this.detailComponent.resetForm();
+    this.modelFormComponent.resetForm();
     this.error = null;
+
+    // new instance of CadModel
     this.model = new CadModel();
   }
 

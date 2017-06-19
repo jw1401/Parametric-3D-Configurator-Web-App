@@ -1,70 +1,62 @@
 <div class="container" >
+
   <div class="alert alert-danger alert-dismissible" *ngIf="error" id="error">{{error}}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
+
   <div class="alert alert-success alert-dismissible" *ngIf="success" id="success">{{success}}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
+
   <div class=row>
     <div class="col-12">
-      <h5>Public profile</h5>
+      <h5>Profile</h5>
       <hr />
     </div>
   </div>
 
-
   <div class="row" >
-
     <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
       <form  #userForm="ngForm">
-        <div class="form-group row" >
-          <label for ="name" class="col-sm-2 col-form-label">Name</label>
-          <div class="col-sm-10 input-group">
-              <input class ="form-control " id ="name" type="text" name="displayName" [(ngModel)]="user.name" required>
-          </div>
+        <div class="form-group" >
+          <label for ="name">Name</label>
+          <input class ="form-control " id ="name" type="text" name="displayName" [(ngModel)]="user.name" required>
         </div>
 
-        <div class="form-group row">
-          <label for ="country" class="col-sm-2 col-form-label">Country</label>
-          <div class=" col-sm-10 input-group">
-            <input class=" form-control f" type="text" name="country" id ="country" [(ngModel)]="user.country"  required >
-          </div>
+        <div class="form-group">
+          <label for ="country">Country</label>
+          <input class=" form-control " type="text" name="country" id ="country" [(ngModel)]="user.country"  required >
         </div>
 
-        <div class="form-group row">
-          <label for ="bio" class="col-sm-2 col-form-label">Bio</label>
-          <div class=" col-sm-10 input-group">
-            <textarea class=" form-control" type="text" name="bio" id ="bio" [(ngModel)]="user.bio"></textarea>
-          </div>
+        <div class="form-group">
+          <label for ="bio">Bio</label>
+          <textarea class=" form-control" maxlength="150" type="text" name="bio" id ="bio" [(ngModel)]="user.bio"></textarea>
+          <small class="form-text text-muted">Maximum 150 characters</small>
         </div>
 
-        <div class="form-group row">
-          <div class="offset-sm-2 col-sm-10">
-            <button type="button" class="btn btn-secondary" (click)="UpdateUser(userForm)" [disabled]="!userForm.valid">Save</button>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for ="image" class="col-sm-2 col-form-label">Image</label>
-          <div class=" col-sm-10 input-group">
+        <label for ="file">Profile Image</label>
+        <div class="form-group">
+          <label for ="file">
             <img  class="rounded" style="height:200px; width:200px; object-fit:cover; object-position: center" [src]="user.photo?.URL" accepts="image/*"/>
+          </label>
+          <div class="form-group mt-2">
+            <label class="btn btn-secondary btn-file" style="width:200px">Browse
+              <input type="file" id="file" style="display: none" (change)="fileImageChangeEvent($event)" required >
+            </label>
           </div>
         </div>
 
-        <div class="form-group row ">
-          <div class="offset-sm-2  col-sm-10 input-group">
-              <div class="form-group mb-0">
-                <label class="btn btn-secondary btn-file" style ="width:100px">Browse
-                  <input type="file" id="file" style="display: none" (change)="fileImageChangeEvent($event)" required >
-                </label>
-            </div>
-          </div>
-        </div>
+        <hr />
 
+        <div class="form-group">
+          <button type="button" class="btn btn-primary" (click)="UpdateUser(userForm)" [disabled]="!userForm.valid">Save</button>
+        </div>
       </form>
     </div>
 </div>
 
+
+<!-- Account section begins here -->
 <br />
 <div class=row>
   <div class="col-12">
@@ -76,54 +68,51 @@
 <div class="row">
   <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
 
-
     <form  #accountForm="ngForm">
-
-      <div class="form-group row">
-        <label for ="email" class="col-sm-2 col-form-label">Email</label>
-        <div class=" col-sm-10 input-group">
+      <div class="bg-faded p-3">
+        <h5>Enter Email and Password to change account data</h5>
+        <hr />
+        <div class="form-group">
+          <label for ="email">Email</label>
           <input class=" form-control" type="email" name="email"  (ngModel)="email" required >
         </div>
-      </div>
 
-      <div class="form-group row">
-        <label for ="newEmail" class="col-sm-2 col-form-label">Email new</label>
-        <div class=" col-sm-10 input-group">
-          <input class=" form-control" type="email" name="newEmail"  (ngModel)="newEmail" >
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label for ="password" class="col-sm-2 col-form-label">Password</label>
-        <div class=" col-sm-10 input-group">
+        <div class="form-group">
+          <label for ="password">Password</label>
           <input class=" form-control" type="password" name="password" (ngModel)="password" required>
         </div>
       </div>
 
-      <div class="form-group row">
-        <label for ="newPassword" class="col-sm-2 col-form-label">Passw. new</label>
-        <div class=" col-sm-10 input-group">
+      <br />
+
+      <div class="bg-faded p-3">
+        <h5>Change account data</h5>
+        <hr />
+        <div class="form-group">
+          <label for ="newEmail">New Email</label>
+          <input class=" form-control" type="email" name="newEmail"  (ngModel)="newEmail" >
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+
+        <div class="form-group">
+          <label for ="newPassword">New Password</label>
           <input class=" form-control" type="password" name="newPassword"  (ngModel)="newPassword" >
+          <small id="emailHelp" class="form-text text-muted">Minimum 6 characters</small>
         </div>
-      </div>
 
-      <div class="form-group row">
-        <label for ="accountName" class="col-sm-2 col-form-label">Account Name</label>
-        <div class="col-sm-10 input-group">
+        <div class="form-group">
+          <label for ="accountName">New Account-Name</label>
           <input class ="form-control" id ="accountName" type="text" name="accountName" (ngModel)="accountName" >
+          <small id="emailHelp" class="form-text text-muted">Only visible to you!</small>
+        </div>
+
+        <div class="form-group">
+          <button type="button" class="btn btn-primary" (click)="updateAccount(accountForm)" [disabled]="!accountForm.valid">Save</button>
         </div>
       </div>
-
-      <div class="form-group row">
-        <div class="offset-sm-2 col-sm-10">
-          <button type="button" class="btn btn-secondary" (click)="updateAccount(accountForm)" [disabled]="!accountForm.valid">Save</button>
-        </div>
-      </div>
-
     </form>
 
-
-    </div>
   </div>
+</div>
 
 </div>

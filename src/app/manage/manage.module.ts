@@ -9,7 +9,7 @@ import { ManageComponent } from './manage.component';
 import { NewmodelComponent } from './newmodel.component';
 import { EditmodelComponent } from './editmodel.component';
 import { LikedModelsComponent } from './liked-models.component'
-import { ModelDetailComponent} from './model-detail.component'
+import { ModelFormComponent} from './model-form.component'
 
 @NgModule({
   imports:      [
@@ -23,7 +23,7 @@ import { ModelDetailComponent} from './model-detail.component'
     NewmodelComponent,
     EditmodelComponent,
     LikedModelsComponent,
-    ModelDetailComponent,
+    ModelFormComponent,
   ]
 })
 export class ManageModule { }

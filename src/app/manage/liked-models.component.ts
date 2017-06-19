@@ -1,8 +1,7 @@
 import { Component, Inject ,OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import { CadModel } from '../shared/cad-model';
-import {CadModelService} from'../shared/cad-model.service';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { CadModelService } from'../shared/cad-model.service';
+import { Observable } from 'rxjs/Rx';
 
 @Component
 ({
@@ -13,8 +12,7 @@ import { Observable, Subject } from 'rxjs/Rx';
 
 export class LikedModelsComponent implements OnInit
 {
-  public error:any;
-  public items: Observable<any>;//any[]= new Array;
+  public items: Observable<any>;
 
   constructor(private router: Router, private modelService: CadModelService)
   {}
@@ -24,7 +22,7 @@ export class LikedModelsComponent implements OnInit
     this.items = this.modelService.getLikedModels()
   }
 
-  openItem(key:string)
+  openItem (key:string)
   {
     this.router.navigate(['/cadview/' + key])
   }

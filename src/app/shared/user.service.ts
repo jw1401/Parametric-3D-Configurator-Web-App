@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
-import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import { FileService} from './fbStorage.service';
 import { User, Upload } from './user.model';
@@ -18,7 +15,7 @@ export class UserService
   rawFirebaseAuth : any;
   subscriber : any;
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private fileService : FileService)
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private fileService : FileService)
   {
     this.subscriber = afAuth.authState.subscribe((auth) =>
     {
@@ -184,29 +181,34 @@ export class UserService
           });
       }
 
-    deleteProfilePicture(name : any)
+    deleteProfilePicture(name : any) : Promise<any>
     {
       let dbUser = this.db.object(`/users/${this.currentUserId}/photo`);
       let storagePath = `${this.currentUserId}/userData/${name}`;
 
-      this.fileService.deleteFile(storagePath)
-        .then((success) =>
-          {
-            dbUser.remove()
-              .then((success) =>
-                {
-                  console.log("Success removing photo node from user db");
-                })
-                .catch(err =>
-                {
-                  console.log(err);
-                })
-          })
-        .catch((err) =>
-          {
-            console.log(err);
-          })
-
+      return new Promise ((resolve, reject) =>
+      {
+        this.fileService.deleteFile(storagePath)
+          .then((success) =>
+            {
+              dbUser.remove()
+                .then((success) =>
+                  {
+                    console.log("Profile picture deleted on storage and db");
+                    resolve("Profile picture deleted")
+                  })
+                  .catch(err =>
+                  {
+                    console.log(err);
+                    reject(err);
+                  })
+            })
+          .catch((err) =>
+            {
+              console.log(err);
+              reject(err);
+            })
+      })
     }
 
 

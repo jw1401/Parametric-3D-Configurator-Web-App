@@ -1,136 +1,67 @@
 
 <div class="container">
 
+  <!--Error and success section beginn here -->
   <div class="row">
-    <div class="alert alert-warning w-100" *ngIf="error">{{error}}</div>
-    <div class="alert alert-success w-100" *ngIf="success">{{success}}</div>
+    <div class="col-12">
+      <div class="alert alert-warning w-100" *ngIf="error">{{error}}</div>
+      <div class="alert alert-success w-100" *ngIf="success" id="success">{{success}}</div>
+    </div>
   </div>
+  <!--Error and success section ends here -->
 
-  <!--this are the thumbnails which displays all the models that belong to the user-->
+  <!--Thumbnails beginn here -->
   <div class="row">
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items | async" >
+      <!-- Card beginn here -->
       <div class="card mb-4" >
         <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image?.URL" alt="no Image">
-
         <div class="card-block">
           <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item?.name}}</h5>
           <p class="card-text"><small class="text-muted">{{item?.power}}</small></p>
-
-          <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal"
-            (click)="editItem(item)">
+          <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal" (click) = "editItem(item)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </button>
-
-          <button class="btn btn-outline-danger" (click)="deleteItem(item.$key, item.image.name, item.model.name)">
+          <button class="btn btn-outline-danger" (click) = "deleteItem(item.$key, item.image.name, item.model.name)">
               <i class="fa fa-trash-o" aria-hidden="true"></i>
           </button>
-
-          <button class="btn btn-link float-right" (click)="updateItemLike(item.$key, item.like)">
+          <button class="btn btn-link float-right" (click) = "updateItemLike(item.$key, item.like)">
             <i class="fa fa-heart" aria-hidden="true"></i> {{item?.like}}
           </button>
         </div>
-
       </div>
+      <!--Card ends here -->
     </div>
   </div>
+  <!-- Thumbnails end here -->
 
-  <!--this is the modal dialog for model editing-->
+  <!-- Modal starts here -->
   <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-
-      <!-- Modal content-->
       <div class="modal-content">
-
+        <!--Modal header-->
         <div class="modal-header">
           <h4 class="modal-title">Edit</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-
+        <!--Modal body-->
         <div class="modal-body">
-
-          <div class="row">
-            <div class="col-12">
-              <div class="alert alert-warning" *ngIf="error">{{error}}</div>
-            </div>
-          </div>
-
-
           <div class="row">
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-              <model-detail [model]="model" (onSubmit)="onSubmit()"
-              (onNewModel)="newCadModel()"></model-detail>
+              <model-form #myForm [model]= "model" (isValid)= "valid = $event"></model-form>
             </div>
           </div>
-
-<!--
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 offset-sm-2">
-              <img class="img-fluid mx-auto d-block" [src]="this.imagePreview" alt="no Image" accepts="image/*">
-            </div>
-          </div>
-
-          <hr />
-          <div class="form-group row">
-            <label class="col-sm-12 col-form-label">Image</label>
-            <div class="col-sm-12">
-              <label class="custom-file w-100">
-                <input type="file" id="file" class="custom-file-input" (change)="fileImageChangeEvent($event)" required>
-                <span class="custom-file-control" >{{model.image.name}}</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-sm-12 col-form-label">Model</label>
-            <div class="col-sm-12">
-              <label class="custom-file w-100">
-                <input type="file" id="file" class="custom-file-input" (change)="fileModelChangeEvent($event)" required >
-                <span class="custom-file-control" >{{model.model.name}}</span>
-              </label>
-            </div>
-          </div>
-
-          <ul class="list-group">
-            <div class="form-group">
-              <label>Name</label>
-              <input class="form-control" type="text" #updateName="ngModel" [(ngModel)]="model.name"/>
-            </div>
-            <div class="form-group">
-              <label>Description</label>
-              <textarea class="form-control" type="text" #updateDescription [(ngModel)]="model.description" style="height:100px"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Power</label>
-              <input class="form-control" type="text" #updatePower [(ngModel)]="model.power" />
-            </div>
-
-            <div class="form-group">
-              <label for="license">License</label>
-              <select class="form-control" id="license"
-                      [(ngModel)]="model.license" name="license" >
-                <option *ngFor="let lic of licenses" [value]="lic.license">{{lic.name}}</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" id="customizable"  name="customizable" type="checkbox" [(ngModel)]="model.isCustomizable" #customizable="ngModel">  Customizable
-                </label>
-              </div>
-            </div>
-          </ul>
-        </div>-->
-
+        </div>
+        <!--Modal footer-->
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="this.error = null">Close</button>
+          <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
           <button class="btn btn-outline-primary" data-dismiss="modal"
-            (click)="updateItem();">Save
+            (click)="updateItem();" [disabled]="!valid">Update
           </button>
-
         </div>
       </div>
     </div>
   </div>
+  <!--Modal ends here-->
 
 </div>

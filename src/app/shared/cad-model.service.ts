@@ -14,7 +14,6 @@ import { FileService} from './fbStorage.service';
 @Injectable()
 export class CadModelService
 {
-  //public firebase = firebase;
   rawFirebaseAuth : any;
   dbModels : FirebaseListObservable <any> = null;
 
@@ -76,29 +75,37 @@ export class CadModelService
      .map(response => response.arrayBuffer()).toPromise()
   }
 
+  // Create a new model in firebase database and storage
+  //
   createModel (model: CadModel) : Promise <any>
   {
     // assigns the model to currentUserId
     model.userId = this.userService.currentUserId;
+    let errorMessage = "Ooops something went wrong!";
 
     return new Promise((resolve, reject) =>
     {
+      // push data into datbase and go ahead if no error
       this.dbModels.push(model)
         .then((item) =>
           {
-            this.uploadImage (item.key , model);
-            this.uploadModel (item.key , model);
+            // update models per user => then you know which model belongs to the user
             this.db.object (`/modelsPerUser/${this.userService.currentUserId}/${item.key}`).set(true);
-            resolve ("Model sucessfully created");
-          })
-        .catch((err) =>
-          {
-            console.log(err)
-            reject ("Ooops something went wrong!");
-          })
+
+            // upload Image and Model; if success then resolve
+            this.uploadImage (item.key , model).then((success) =>
+            {
+              this.uploadModel (item.key , model).then((success) =>
+              {
+                resolve ("Model created");
+              }).catch((err) => {console.log(err); reject (errorMessage);})
+            }).catch((err) => {console.log(err); reject (errorMessage);});
+          }).catch((err) => {console.log(err); reject (errorMessage);})
     })
   }
 
+  // Update the model database in firebase
+  //
   updateModel(key: string, model: CadModel) : Promise <any>
   {
     return new Promise((resolve, reject) =>
@@ -107,7 +114,7 @@ export class CadModelService
           .then((success) =>
             {
               console.log("Model updated sucessfully");
-              resolve ("Model updated sucessfully");
+              resolve ("Model updated");
             })
           .catch((err) =>
             {
@@ -117,6 +124,8 @@ export class CadModelService
 
   }
 
+  // Update the likes in firebase
+  //
   updateLike(key: string, like: number)
   {
     let item = this.db.object(`/likedModelsPerUser/${this.userService.currentUserId}/${key}`).first().single().subscribe((data) =>
@@ -134,6 +143,8 @@ export class CadModelService
       });
   }
 
+  // deletes the whole model in database and all files in storage
+  //
   deleteModel (key: string, imageName: string, modelName: string)
   {
     this.dbModels.remove(key)
@@ -156,6 +167,8 @@ export class CadModelService
         })
   }
 
+  // deletes the model file in storage
+  //
   deleteModelFile(key: string, name: any) : Promise <any>
   {
     let storagePath = `${this.userService.currentUserId}/${key}/models/${name}`;
@@ -174,6 +187,8 @@ export class CadModelService
         })
   }
 
+  // deletes the image file in storage
+  //
   deleteImageFile(key: string, name: any) : Promise <any>
   {
     let storagePath = `${this.userService.currentUserId}/${key}/images/${name}`;
@@ -193,6 +208,8 @@ export class CadModelService
   }
 
 
+  // Uploads image to storage and set database reference
+  //
   uploadImage(key: string , model: CadModel) : Promise <any>
   {
     let rawFirebaseAuth = this.rawFirebaseAuth;
@@ -223,6 +240,8 @@ export class CadModelService
           });
       }
 
+      // Uploads model to storage and set database reference
+      //
       uploadModel(key: string, model: CadModel) : Promise <any>
       {
         let rawFirebaseAuth = this.rawFirebaseAuth;
