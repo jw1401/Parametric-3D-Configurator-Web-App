@@ -30,7 +30,6 @@ export class FileService
 
 
 
-
   uploadFile2(file: File) : Promise<any>
   {
     let storageRef = firebase.storage().ref(this._storagePath)

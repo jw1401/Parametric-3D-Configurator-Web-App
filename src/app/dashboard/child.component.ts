@@ -50,6 +50,8 @@ export class AccountComponent
 
   currentFile: File;
 
+  imageTypeCheck: string;
+
   constructor(private userService: UserService, private router: Router)
   {
     //this.upload = new Upload();
@@ -63,7 +65,12 @@ export class AccountComponent
       {
         this.user = data;
 
-        this.user.photo != undefined ?  this.imagePreview = this.user.photo.url : null
+        if (this.user.photo != undefined)
+        {
+          this.imagePreview = this.user.photo.url
+          //this.currentFile = this.user.photo
+          this.imageTypeCheck = this.user.photo.type
+        }
 
       });
   }
@@ -78,15 +85,8 @@ export class AccountComponent
     this.success = null;
     this.error = null;
 
-    this.userService.deleteProfilePicture(this.user.photo).then(()=>{
-      this. currentFile = new File(event.target.files[0]);
-      this.userService.uploadProfilePicture(this.currentFile);
-    }).catch((err)=>
-    {
-      this. currentFile = new File(event.target.files[0]);
-      this.userService.uploadProfilePicture(this.currentFile);
-    });
-
+    this.currentFile = new File(event.target.files[0]);
+    this.imageTypeCheck = this.currentFile.file.type
 
     if (event.target.files && event.target.files[0] && event.target.files[0].type.match('image/*'))
     {
@@ -102,41 +102,21 @@ export class AccountComponent
 
     if (userForm.valid)
     {
-
-/*
-        console.log (this.user.photo.name+" "+this.tmpUserPhotoName)
-      if (this.user.photo.name != undefined && this.user.photo.name != this.tmpUserPhotoName)
+      if (this.currentFile.file != undefined && this.user.photo == undefined)
       {
-        if (this.user.photo.type.match('image/*'))
-        {
-          console.log(this.tmpUserPhotoName)
-          if (this.tmpUserPhotoName != "")
-          {
-            this.userService.deleteProfilePicture(this.user.photo.name)
-              .then((success) =>
-              {
-                this.userService.uploadProfilePicture(this.user)
-                  .then((success) => { this.showSuccess(success); })
-                  .catch((err) => { this.error = err });
-              })
-              .catch((err) => this.error = err)
-          }
-          else
-          {
-            console.log(this.user);
-            this.userService.uploadProfilePicture(this.user)
-              .then((success) => { this.showSuccess(success); })
-              .catch((err) => { this.error = err });
-          }
-        } else this.error = "Only images...";
+        this.userService.uploadProfilePicture(this.currentFile);
       }
-
-
+      else if (this.currentFile.file != undefined && this.user.photo != undefined)
+      {
+        this.userService.deleteProfilePicture(this.user.photo).then(()=>{
+          this.userService.uploadProfilePicture(this.currentFile);
+        })
+      }
 
 
       this.userService.updateUserData(this.user)
         .then((success) => { this.showSuccess(success); })
-        .catch((err) => { this.error = err; console.log(err) });*/
+        .catch((err) => { this.error = err; console.log(err) });
     }
   }
 
@@ -187,7 +167,7 @@ export class AccountComponent
   {
     try
     {
-      if (userForm.valid && this.user.photo.type.match('image/*'))
+      if (userForm.valid && this.imageTypeCheck.match('image/*'))
       {
         return true;
       }
