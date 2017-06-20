@@ -16,20 +16,15 @@ export class CadModel
 
     constructor()
     {
+      this.userId=""
       this.name = ""
       this.description = ""
-
-      this.image = new Upload();
-      this.image.name = "";
-      this.image.type = "";
-
-      this.model = new Upload();
-      this.model.name = "";
-
-      this.like = 0;
-      this.license =  licenses[0].license;
       this.power = powers[0];
+      this.like = 0;
+      this.image = new Upload();
+      this.model = new Upload();
       this.isCustomizable = false;
+      this.license =  licenses[0].license;
     }
 }
 

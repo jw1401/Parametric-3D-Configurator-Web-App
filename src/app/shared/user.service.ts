@@ -4,6 +4,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import { FileService} from './fbStorage.service';
 import { User, Upload } from './user.model';
+import { File } from './File.model'
 
 
 //this is the user-service for the user-dashboard
@@ -23,7 +24,7 @@ export class UserService
 
       if(this.authState)
       {
-        console.log("User Service active for " + this.authState.email);
+        this.log("User Service active for " + this.authState.email);
       }
     });
 
@@ -75,13 +76,13 @@ export class UserService
       dbUser.update(user)  //{name: value, country: value, bio: value})
         .then((success)=>
         {
-          console.log("Success");
-          resolve ("Success saving user data")
+          this.log("User data saved");
+          resolve ("User data saved")
         })
         .catch((err)=>
         {
-          console.log(err)
-          reject ("Error: " + err);
+          this.log(err.message)
+          reject (err);
         });
     }) : null
   }
@@ -92,12 +93,12 @@ export class UserService
     return this.rawFirebaseAuth.currentUser.updateProfile({displayName: name})
       .then((success) =>
       {
-        console.log('Success');
-        return Promise.resolve ("Success updating account name")
+        this.log('Account name updated');
+        return Promise.resolve ("Account name updated")
       })
       .catch((err) =>
       {
-        console.log(err);
+        this.log(err);
         return Promise.reject (err);
       })
   }
@@ -115,10 +116,12 @@ export class UserService
             this.rawFirebaseAuth.currentUser.updateEmail(newEmail)
               .then((success) =>
                 {
-                  resolve("Success changing email");
+                  this.log("Email changed")
+                  resolve("Email changed");
                 })
               .catch((err) =>
                 {
+                  this.log(err)
                   reject(err);
                 })
           });
@@ -138,80 +141,116 @@ export class UserService
             this.rawFirebaseAuth.currentUser.updatePassword(newPassword)
               .then((success) =>
                 {
-                  resolve("Success changing password")
+                  this.log("Password changed")
+                  resolve("Password changed")
                 })
               .catch((err) =>
                 {
+                  this.log(err)
                   reject(err);
                 })
           });
     });
   }
 
-  uploadProfilePicture(upload : Upload) : Promise<any>
+  uploadProfilePicture(file : File) : Promise<any>
   {
-    let dbUser = this.db.object(`/users/${this.currentUserId}/photo`);
-    let rawFirebaseAuth = this.rawFirebaseAuth;
-    let storagePath = `${this.currentUserId}/userData/${upload.name}`
+
+    //let dbUser = this.db.object(`/users/${this.currentUserId}`);
+    //let rawFirebaseAuth = this.rawFirebaseAuth;
+    let storagePath = `${this.currentUserId}/userData/${file.file.name}`
+    let dbPath = `/users/${this.currentUserId}/photo`
+
 
     return new Promise ((resolve, reject) =>
     {
-      this.fileService.uploadFile(storagePath,upload.file)
+      this.fileService.dbBasePath = dbPath;
+      this.fileService.storagePath =storagePath;
+
+      this.fileService.uploadFile2(file)
+
+
+      /*
+      console.log(user.photo.file)
+      this.fileService.uploadFile(storagePath,user.photo.file)
         .then((uploadURL) =>
           {
-            upload.URL = uploadURL;
+            user.photo.URL = uploadURL;
 
-            dbUser.update(upload)
+            dbUser.update(user)
               .then((success) =>
                 {
                   rawFirebaseAuth.currentUser.updateProfile({photoURL: uploadURL}); // update auth object with photoURL
-                  resolve("Success changing profile picture ");
+                  this.log("Profile picture uploaded")
+                  resolve ("Profile picture uploaded");
                 })
               .catch((err) =>
                 {
-                  console.log (err)
+                  this.log (err.message)
                   reject (err);
                 });
             })
           .catch ((err) =>
             {
-              console.log (err);
+              this.log ("Error" + err.message);
               reject(err);
-            })
+            })*/
           });
       }
 
-    deleteProfilePicture(name : any) : Promise<any>
+    deleteProfilePicture(file : File) : Promise<any>
     {
-      let dbUser = this.db.object(`/users/${this.currentUserId}/photo`);
-      let storagePath = `${this.currentUserId}/userData/${name}`;
+      //let dbUser = this.db.object(`/users/${this.currentUserId}/photo`);
+      //let storagePath = `${this.currentUserId}/userData/${name}`;
+
+
 
       return new Promise ((resolve, reject) =>
       {
-        this.fileService.deleteFile(storagePath)
+
+        let storagePath = `${this.currentUserId}/userData/${file.name}`
+        let dbPath = `/users/${this.currentUserId}/photo`
+
+        try
+        {
+          this.fileService.dbBasePath = dbPath;
+          this.fileService.storagePath =storagePath;
+          this.fileService.deleteFile2(file)
+          resolve()
+
+        }
+        catch(e)
+        {
+          reject()
+
+        }
+      /*  this.fileService.deleteFile(storagePath)
           .then((success) =>
             {
               dbUser.remove()
                 .then((success) =>
                   {
-                    console.log("Profile picture deleted on storage and db");
+                    this.log("Profile picture deleted on storage and db");
                     resolve("Profile picture deleted")
                   })
                   .catch(err =>
                   {
-                    console.log(err);
+                    this.log(err.message);
                     reject(err);
                   })
             })
           .catch((err) =>
             {
-              console.log(err);
+              this.log(err.message);
               reject(err);
-            })
+            })*/
       })
     }
 
-
+private log(txt: string)
+{
+  console.log(`[UserService]: ${txt}`)
+}
 
 // class end
 }

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../shared/user.service';
 import { User, Upload } from '../shared/user.model'
 import { FirebaseObjectObservable } from 'angularfire2/database';
+import { File} from '../shared/File.model'
 import * as $ from 'jquery';
 
 @Component
@@ -41,23 +42,29 @@ export class AccountComponent
   public error : any;
   public success: any;
   public user : User;
+  public imagePreview: string;
 
+  tmpUserPhotoName: string;
   subscription : any;
-  upload : Upload;
+//  upload : Upload;
+
+  currentFile: File;
 
   constructor(private userService: UserService, private router: Router)
   {
+    //this.upload = new Upload();
     this.user = new User();
-    this.upload = new Upload();
-    console.log(this.user);
   }
 
   ngOnInit()
   {
+
     this.subscription = this.userService.currentUserData.subscribe(data =>
       {
         this.user = data;
-          console.log(this.user);
+
+        this.user.photo != undefined ?  this.imagePreview = this.user.photo.url : null
+
       });
   }
 
@@ -71,14 +78,20 @@ export class AccountComponent
     this.success = null;
     this.error = null;
 
-    this.upload.file = event.target.files[0];
-    this.upload.name = event.target.files[0].name;
-    this.upload.type = event.target.files[0].type;
+    this.userService.deleteProfilePicture(this.user.photo).then(()=>{
+      this. currentFile = new File(event.target.files[0]);
+      this.userService.uploadProfilePicture(this.currentFile);
+    }).catch((err)=>
+    {
+      this. currentFile = new File(event.target.files[0]);
+      this.userService.uploadProfilePicture(this.currentFile);
+    });
+
 
     if (event.target.files && event.target.files[0] && event.target.files[0].type.match('image/*'))
     {
       var reader = new FileReader();
-      reader.onload = (event:any) => {this.user.photo.URL = event.target.result;}
+      reader.onload = (event:any) => {this.imagePreview = event.target.result;}
       reader.readAsDataURL(event.target.files[0]);
     }
   }
@@ -89,28 +102,41 @@ export class AccountComponent
 
     if (userForm.valid)
     {
-      console.log(this.user)
-      this.userService.updateUserData(this.user)
-        .then((success) => { this.showSuccess(success); })
-        .catch((err) => { this.error = err; console.log(err) });
 
-      if (this.upload.name != undefined && this.upload.name != this.user.photo.name)
+/*
+        console.log (this.user.photo.name+" "+this.tmpUserPhotoName)
+      if (this.user.photo.name != undefined && this.user.photo.name != this.tmpUserPhotoName)
       {
-        if (this.upload.type.match('image/*'))
+        if (this.user.photo.type.match('image/*'))
         {
-          this.user.photo != null ? this.userService.deleteProfilePicture(this.user.photo.name)
-            .then((success) =>
-            {
-              this.userService.uploadProfilePicture(this.upload)
-                .then((success) => { this.showSuccess(success); })
-                .catch((err) => { this.error = err });
-            })
-            .catch((err) => this.error = err) : undefined
-
-
-
+          console.log(this.tmpUserPhotoName)
+          if (this.tmpUserPhotoName != "")
+          {
+            this.userService.deleteProfilePicture(this.user.photo.name)
+              .then((success) =>
+              {
+                this.userService.uploadProfilePicture(this.user)
+                  .then((success) => { this.showSuccess(success); })
+                  .catch((err) => { this.error = err });
+              })
+              .catch((err) => this.error = err)
+          }
+          else
+          {
+            console.log(this.user);
+            this.userService.uploadProfilePicture(this.user)
+              .then((success) => { this.showSuccess(success); })
+              .catch((err) => { this.error = err });
+          }
         } else this.error = "Only images...";
       }
+
+
+
+
+      this.userService.updateUserData(this.user)
+        .then((success) => { this.showSuccess(success); })
+        .catch((err) => { this.error = err; console.log(err) });*/
     }
   }
 
@@ -155,6 +181,22 @@ export class AccountComponent
   {
     this.success = success;
     $(document).ready(function(){$('#success').fadeOut(4000);});
+  }
+
+  checkValid(userForm: any): boolean
+  {
+    try
+    {
+      if (userForm.valid && this.user.photo.type.match('image/*'))
+      {
+        return true;
+      }
+      else return false
+    }
+    catch(e)
+    {
+      return false
+    }
   }
 }
 

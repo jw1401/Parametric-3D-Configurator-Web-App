@@ -2,7 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
+import { User}  from '../shared/user.model';
 
 
 @Component({
@@ -12,9 +14,11 @@ import * as firebase from 'firebase/app';
 export class SignupComponent
 {
   public error: any;
+  public user: User = new User();
 
-  constructor(private afAuth: AngularFireAuth, private router: Router)
+  constructor(private afAuth: AngularFireAuth, private router: Router, private db: AngularFireDatabase)
   {
+
   }
 
   onSubmit(formData)
@@ -22,11 +26,22 @@ export class SignupComponent
     if(formData.valid)
     {
       this.afAuth.auth.createUserWithEmailAndPassword(formData.value.email,formData.value.password)
-        .then((success) =>
+        .then((auth) =>
           {
-            console.log(success);
-            this.router.navigate(['/dashboard'])
-          })
+            let user: User = new User();
+            let dbUser = this.db.object(`/users/${auth.uid}`);
+
+            dbUser.update(user)  //{name: value, country: value, bio: value})
+              .then((success)=>
+                {
+                  console.log("Success");
+                  this.router.navigate(['/dashboard'])
+                })
+                .catch((err)=>
+                {
+                  console.log(err)
+                });
+            })
         .catch((err) =>
           {
             console.log(err);
