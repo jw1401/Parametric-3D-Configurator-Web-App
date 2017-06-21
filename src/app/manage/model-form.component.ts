@@ -1,7 +1,9 @@
 import { Component, Input, Output, ViewChild, EventEmitter,AfterViewChecked } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { CadModel, powers } from '../shared/cad-model';
-import { licenses } from '../shared/license';
+import { ModelItem } from '../shared/ModelItem.model';
+import { FileItem } from '../shared/FileItem.model';
+import { licenses, powers } from '../shared/listables';
+
 
 @Component
 ({
@@ -11,7 +13,7 @@ import { licenses } from '../shared/license';
 
 export class ModelFormComponent implements AfterViewChecked
 {
-  @Input() model : CadModel
+  @Input() model : ModelItem
   @Output() isValid = new EventEmitter<boolean>();
   @ViewChild('ModelForm') currentForm: NgForm;
 
@@ -20,6 +22,11 @@ export class ModelFormComponent implements AfterViewChecked
   error: any = null;
   powers: any = powers
   licenses: any = licenses;
+
+  currentFile: FileItem;
+
+  imageFileName: string ="";
+  modelFileName: string ="";
 
   constructor()
   {}
@@ -53,6 +60,10 @@ export class ModelFormComponent implements AfterViewChecked
       this.model.image.name = event.target.files[0].name;
       this.model.image.type = event.target.files[0].type;
 
+      this.imageFileName = this.model.image.name;
+
+      console.log(this.imageFileName)
+
       if (event.target.files && event.target.files[0] && event.target.files[0].type.match('image/*'))
       {
         var reader = new FileReader();
@@ -66,6 +77,7 @@ export class ModelFormComponent implements AfterViewChecked
     }
     catch(e)
     {
+      console.log(e)
       this.isValid.emit(false)
     }
   }
@@ -80,6 +92,8 @@ export class ModelFormComponent implements AfterViewChecked
       this.model.model.file = event.target.files[0];
       this.model.model.name = event.target.files[0].name;
       this.model.model.type = event.target.files[0].type;
+
+      this.modelFileName = this.model.model.name;
 
       //get file extension
       extension = this.model.model.name.split('.').pop().toLowerCase()

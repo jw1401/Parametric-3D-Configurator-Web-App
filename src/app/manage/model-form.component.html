@@ -54,7 +54,7 @@
         <div class="col-sm-10">
           <label class="custom-file w-100">
             <input type="file" id="file" class="custom-file-input" (change)="fileImageChangeEvent($event)" required>
-            <span class="custom-file-control" >{{model.image.name}}</span>
+            <span class="custom-file-control" >{{imageFileName}}</span>
           </label>
           <img  class="rounded mt-3" alt="upload image"
             style="height:200px; width:200px; object-fit:cover; object-position: center"
@@ -68,7 +68,7 @@
         <div class="col-sm-10">
           <label class="custom-file w-100">
             <input type="file" id="file" class="custom-file-input" (change)="fileModelChangeEvent($event)" required >
-            <span class="custom-file-control" >{{model.model.name}}</span>
+            <span class="custom-file-control" >{{modelFileName}}</span>
           </label>
         </div>
       </div>

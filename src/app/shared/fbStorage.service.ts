@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { Upload } from './user.model';
-import { File } from './file.model'
-
+import { FileItem } from './FileItem.model'
 import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 
 
@@ -12,27 +10,14 @@ import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/data
 export class FileService
 {
 
-  private _dbBasePath: string;
-  private _storagePath: string;
-
   constructor(private db: AngularFireDatabase)
   {}
 
-  set dbBasePath (path)
+  // uploads file to storage and database
+  //
+  uploadFile2(file: FileItem, storagePath, dbPath) : Promise<any>
   {
-    this._dbBasePath = path
-  }
-
-  set storagePath (path)
-  {
-    this._storagePath = path
-  }
-
-
-
-  uploadFile2(file: File) : Promise<any>
-  {
-    let storageRef = firebase.storage().ref(this._storagePath)
+    let storageRef = firebase.storage().ref(storagePath)
 
     return new Promise((resolve,reject) =>
     {
@@ -55,85 +40,72 @@ export class FileService
           // upload success
           file.url = uploadTask.snapshot.downloadURL;
           file.name = file.file.name;
-          file.type = file.file.type
+          file.file.type !="" ? file.type = file.file.type : null
 
-          this.log(`${file.name} uploaded`);
-          this.saveFileDataToDatabase(file);
-          resolve (file);
+          this.log(`uploaded ${file.name}`);
+          this.saveFileDataToDatabase(file, dbPath).then(()=> resolve(file)).catch((err)=> reject(err.message));
           });
       });
     }
 
-    private saveFileDataToDatabase(file: File) : Promise<any>
+    // saves file in db
+    //
+    private saveFileDataToDatabase(file: FileItem, dbPath: string)
     {
-      return new Promise ((resolve, reject) => {
-        this.db.object(`${this._dbBasePath}`).update(file).then(()=> {
-          this.log('save File Data To Database');
-          resolve ();
-        }).catch((err) =>{
-          this.log(err.message)
-          reject();
-        })
-      });
+      return this.db.object(`${dbPath}`).update(file)
     }
 
-    private deleteFileDataInDatabase()
-    {
-      return new Promise ((resolve, reject) => {
-        this.db.object(`${this._dbBasePath}`).remove().then(()=> {
-          this.log('deleted File Data In Database');
-          resolve ();
-        }).catch((err) =>{
-          this.log(err.message)
-          reject();
-        })
-      });
-    }
-
-    private deleteFileInStorage()
-    {
-      let storageRef = firebase.storage().ref();
-
-      return new Promise ((resolve, reject) => {
-        storageRef.child(this._storagePath).delete().then(()=> {
-          this.log('deleted File In Storage');
-          resolve ();
-        }).catch((err) => {
-          this.log(err.message)
-          reject();
-        })
-      });
-    }
-
-    public deleteFile2 (file: File) : Promise<any>
+    // deletes file in storage and database
+    //
+    public deleteFile2 (storagePath: string, dbPath: string) : Promise<any>
     {
       return new Promise((resolve, reject) =>
       {
-        this.deleteFileDataInDatabase().then(()=>{
-          this.deleteFileInStorage().then(() =>{
-            this.log("deleted File in storage and db" + file.name)
-            resolve()
-          }).catch((err)=> this.log(err));
-        }).catch((err)=> this.log(err));
+        this.deleteFileDataInDatabase(dbPath).then(()=>
+        {
+          this.deleteFileInStorage(storagePath).then(() =>
+          {
+            this.log(`deleted Storage ${storagePath} and Database ${dbPath}`)
+            resolve('deleted File')
+          })
+          .catch((err)=>
+          {
+            this.log(err.message)
+            reject(err.message)
+          })
+        })
+        .catch((err)=>
+        {
+          this.log(err.message)
+          reject (err.message)
+        })
       })
     }
 
+    // deletes file in database
+    //
+    private deleteFileDataInDatabase(dbPath: string)
+    {
+      return this.db.object(`${dbPath}`).remove()
+    }
 
+    // dletes file in storagePath
+    //
+    private deleteFileInStorage(storagePath: string)
+    {
+      let storageRef = firebase.storage().ref();
+      return storageRef.child(storagePath).delete()
+    }
 
     private log (txt: string)
     {
       console.log(`[fbStorageService]: ${txt}`);
     }
 
-
-
-
-
-
-
   // upload a file with full firebase storage Path and file data
   // returns a Promise : resolves with the upload URL or rejects on error
   //
+  /*
   uploadFile(storagePath : string, file : any) : Promise<any>
   {
     let storageRef = firebase.storage().ref(storagePath)
@@ -183,7 +155,7 @@ export class FileService
               reject(err);
             });
         })
-    }
+    }*/
 
 
 // class end

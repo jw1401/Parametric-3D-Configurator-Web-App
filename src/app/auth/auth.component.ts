@@ -14,12 +14,10 @@ import { User}  from '../shared/user.model';
 export class SignupComponent
 {
   public error: any;
-  public user: User = new User();
+  public user: User;
 
   constructor(private afAuth: AngularFireAuth, private router: Router, private db: AngularFireDatabase)
-  {
-
-  }
+  {}
 
   onSubmit(formData)
   {
@@ -34,18 +32,19 @@ export class SignupComponent
             dbUser.update(user)  //{name: value, country: value, bio: value})
               .then((success)=>
                 {
-                  console.log("Success");
+                  console.log("Signed up!");
                   this.router.navigate(['/dashboard'])
                 })
                 .catch((err)=>
                 {
                   console.log(err)
+                  this.error = err;
                 });
             })
         .catch((err) =>
           {
             console.log(err);
-            this.error=err;
+            this.error = err;
             //this.router.navigate(['/login']);
           })
     }

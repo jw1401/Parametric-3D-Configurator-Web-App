@@ -18,7 +18,7 @@
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4 col-xl-4" *ngFor="let item of items | async" >
         <div class="card mb-4">
-          <img class="card-img-top" (click)="open(item.$key)" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image.URL" alt="no Image">
+          <img class="card-img-top" (click)="open(item.$key)" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image.url" alt="no Image">
           <div class="card-block" >
             <div class="row">
               <div class="col-6">

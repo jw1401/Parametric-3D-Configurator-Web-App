@@ -3,8 +3,8 @@ import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/data
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import { FileService} from './fbStorage.service';
-import { User, Upload } from './user.model';
-import { File } from './File.model'
+import { User } from './user.model';
+import { FileItem } from './FileItem.model'
 
 
 //this is the user-service for the user-dashboard
@@ -18,6 +18,7 @@ export class UserService
 
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private fileService : FileService)
   {
+    // gets the authState
     this.subscriber = afAuth.authState.subscribe((auth) =>
     {
       this.authState = auth;
@@ -31,6 +32,7 @@ export class UserService
     this.rawFirebaseAuth = firebase.auth();
   }
 
+  //checks if user is authenticated
   get authenticated(): boolean
   {
     return this.authState !== null;
@@ -66,7 +68,7 @@ export class UserService
     return this.db.object(`/users/${id}`).first().toPromise()
   }
 
-  // Updates the UserData in the db
+  // Updates the UserData in the firebase db
   updateUserData(user: User) : Promise<any>
   {
     let dbUser = this.db.object(`/users/${this.currentUserId}`);
@@ -76,8 +78,8 @@ export class UserService
       dbUser.update(user)  //{name: value, country: value, bio: value})
         .then((success)=>
         {
-          this.log("User data saved");
-          resolve ("User data saved")
+          this.log("saved userdata");
+          resolve ("saved userdata")
         })
         .catch((err)=>
         {
@@ -93,8 +95,8 @@ export class UserService
     return this.rawFirebaseAuth.currentUser.updateProfile({displayName: name})
       .then((success) =>
       {
-        this.log('Account name updated');
-        return Promise.resolve ("Account name updated")
+        this.log('updated Account Name ');
+        return Promise.resolve ("updated Account Name ")
       })
       .catch((err) =>
       {
@@ -116,15 +118,15 @@ export class UserService
             this.rawFirebaseAuth.currentUser.updateEmail(newEmail)
               .then((success) =>
                 {
-                  this.log("Email changed")
-                  resolve("Email changed");
+                  this.log("changed Email")
+                  resolve ("changed Email");
                 })
               .catch((err) =>
                 {
                   this.log(err)
                   reject(err);
                 })
-          });
+          }).catch((err) => reject(err.message))
     });
   }
 
@@ -141,61 +143,48 @@ export class UserService
             this.rawFirebaseAuth.currentUser.updatePassword(newPassword)
               .then((success) =>
                 {
-                  this.log("Password changed")
-                  resolve("Password changed")
+                  this.log("changed Password")
+                  resolve ("changed Password")
                 })
               .catch((err) =>
                 {
                   this.log(err)
                   reject(err);
                 })
-          });
+          }).catch((err) => reject(err.message))
     });
   }
 
-  uploadProfilePicture(file : File) : Promise<any>
+  // upload a profile picture
+  uploadProfilePicture(file : FileItem) : Promise<any>
   {
-    let storagePath = `${this.currentUserId}/userData/${file.file.name}`
-    let dbPath = `/users/${this.currentUserId}/photo`
-
     return new Promise ((resolve, reject) =>
     {
-      this.fileService.dbBasePath = dbPath;
-      this.fileService.storagePath =storagePath;
+      let storagePath = `${this.currentUserId}/userData/${file.file.name}`
+      let dbPath = `/users/${this.currentUserId}/photo`
 
-      this.fileService.uploadFile2(file).then((success) =>{
-
-        resolve(success.file.name)
-      }).catch((err) => reject(err))
+      this.fileService.uploadFile2(file, storagePath, dbPath).then((success) => resolve('saved ' + success.file.name))
+      .catch((err) => reject(err))
     });
   }
 
-    deleteProfilePicture(file : File) : Promise<any>
+  // delete profile picture
+  deleteProfilePicture(file : FileItem) : Promise<any>
+  {
+    return new Promise ((resolve, reject) =>
     {
-      let storagePath = `${this.currentUserId}/userData/${file.name}`
-      let dbPath = `/users/${this.currentUserId}/photo`
+        let storagePath = `${this.currentUserId}/userData/${file.name}`
+        let dbPath = `/users/${this.currentUserId}/photo`
 
-      return new Promise ((resolve, reject) =>
-      {
-        try
-        {
-          this.fileService.dbBasePath = dbPath;
-          this.fileService.storagePath = storagePath;
-          this.fileService.deleteFile2(file)
-          resolve()
-        }
-        catch(e)
-        {
-          this.log(e)
-          reject(e)
-        }
-      })
-    }
+        this.fileService.deleteFile2(storagePath, dbPath).then((success)=> resolve(success)).catch((err)=>reject(err))
+    })
+  }
 
-private log(txt: string)
-{
-  console.log(`[UserService]: ${txt}`)
-}
+  // log function
+  private log(txt: string)
+  {
+    console.log(`[UserService]: ${txt}`)
+  }
 
 // class end
 }

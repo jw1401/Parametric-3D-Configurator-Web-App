@@ -15,17 +15,17 @@
         <div class="card-block ">
 
           <div class="text-center ">
-            <img class="rounded" id="image" [src]="(user|async)?.photo.URL">
-            <h3 class="card-title">{{(user | async)?.name}}</h3>
+            <img class="rounded" id="image" [src]="imagePreview">
+            <h3 class="card-title">{{user?.name}}</h3>
           </div>
 
           <hr />
 
           <p class="card-text mb-0"><i class="fa fa-home" aria-hidden="true"></i> </p>
-          <p>{{(user|async)?.country}}</p>
+          <p>{{user?.country}}</p>
 
           <p class="card-text mb-0" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> </p>
-          <p>{{(user|async)?.bio}}</p>
+          <p>{{user?.bio}}</p>
 
         </div>
       </div>

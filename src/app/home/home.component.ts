@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FirebaseListObservable } from 'angularfire2/database';
 import { Router } from '@angular/router';
-import { CadModelService } from '../shared/cad-model.service';
+import { ModelService } from '../shared/model.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit
   items: FirebaseListObservable<any>;
   limit : BehaviorSubject<number> = new BehaviorSubject<number>(5);
 
-  constructor(private router: Router, private modelService: CadModelService)
+  constructor(private router: Router, private modelService: ModelService)
   {
   }
 

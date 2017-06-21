@@ -18,7 +18,7 @@ import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { CadviewComponent } from './cadview/cadview.component';
 
-import {CadModelService} from './shared/cad-model.service';
+import {ModelService} from './shared/model.service';
 
 import {Draggable} from 'ng2draggable/draggable.directive';
 
@@ -52,7 +52,7 @@ export const firebaseConfig = environment.firebaseConfig;
     AngularFireAuthModule,
     AngularFireModule.initializeApp(firebaseConfig)
   ],
-  providers: [CadModelService],
+  providers: [ModelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

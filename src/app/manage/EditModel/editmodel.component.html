@@ -15,7 +15,7 @@
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items | async" >
       <!-- Card beginn here -->
       <div class="card mb-4" >
-        <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image?.URL" alt="no Image">
+        <img class="card-img-top" style="height:180px; width:auto; object-fit:cover; object-position: center" [src]="item.image?.url" alt="no Image">
         <div class="card-block">
           <h5 class ="card-title" style="white-space:nowrap;overflow:hidden; text-overflow: ellipsis">{{item?.name}}</h5>
           <p class="card-text"><small class="text-muted">{{item?.power}}</small></p>

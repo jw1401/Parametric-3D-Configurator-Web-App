@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import { FirebaseApp } from 'angularfire2';
-import {CadModelService} from '../shared/cad-model.service';
-import {CadModel} from '../shared/cad-model';
+import {ModelService} from '../shared/model.service';
+import {ModelItem} from '../shared/ModelItem.model';
 import {UserService} from '../shared/user.service';
 import{User} from '../shared/user.model';
 
@@ -33,7 +33,7 @@ export class CadviewComponent implements OnInit
   public myClass = "col-sm-12 col-md-12 col-lg-8";
 
   public user : any;
-  public model: CadModel;
+  public model: ModelItem;
 
   private firebase = firebase;
 
@@ -41,7 +41,7 @@ export class CadviewComponent implements OnInit
 
   public gProcessor = null;
 
-  constructor( private userService: UserService, private modelService:CadModelService, private route: ActivatedRoute,/* @Inject(FirebaseApp) fb: any*/)
+  constructor( private userService: UserService, private modelService:ModelService, private route: ActivatedRoute,/* @Inject(FirebaseApp) fb: any*/)
   {
     //get reference model_uid form passed parameters
     this.route.params.map( params => params['model_uid']).subscribe((id)=>
@@ -71,14 +71,14 @@ export class CadviewComponent implements OnInit
         this.model = model;
         this.user = this.userService.getUserById(this.model.userId)
 
-        let strStorageRef = this.firebase.storage().refFromURL(model.model.URL).toString();
+        let strStorageRef = this.firebase.storage().refFromURL(model.model.url).toString();
 
         //load case .jscad
         if(strStorageRef.match(/\.jscad$/i) || strStorageRef.match(/\.js$/i))
         {
           this.isStl = false;
           if (this.userService.authenticated){this.isCodeVisible=true}else{this.isCodeVisible=false}
-          let modelData = this.modelService.getModelData(model.model.URL);
+          let modelData = this.modelService.getModelData(model.model.url);
 
           modelData.then(data=>
              {
@@ -99,7 +99,7 @@ export class CadviewComponent implements OnInit
         {
             this.isStl = true;
             this.isCodeVisible=false;
-            let modelData = this.modelService.getModelDataBinary(model.model.URL);
+            let modelData = this.modelService.getModelDataBinary(model.model.url);
 
             modelData.then(dataBinary=>
              {

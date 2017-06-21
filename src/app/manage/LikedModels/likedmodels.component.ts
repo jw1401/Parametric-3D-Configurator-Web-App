@@ -1,20 +1,20 @@
 import { Component, Inject ,OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import { CadModelService } from'../shared/cad-model.service';
+import { ModelService } from'../../shared/model.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component
 ({
-  selector: 'app-liked-models',
-  templateUrl: './liked-models.component.html',
-  styleUrls: ['./liked-models.component.css']
+  selector: 'likedmodels',
+  templateUrl: './likedmodels.component.html',
+  styleUrls: ['./likedmodels.component.css']
 })
 
 export class LikedModelsComponent implements OnInit
 {
   public items: Observable<any>;
 
-  constructor(private router: Router, private modelService: CadModelService)
+  constructor(private router: Router, private modelService: ModelService)
   {}
 
   ngOnInit()

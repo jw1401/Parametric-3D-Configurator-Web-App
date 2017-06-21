@@ -1,8 +1,8 @@
 import { Component, Inject ,OnInit, ViewChild} from '@angular/core';
-import { CadModel } from '../shared/cad-model';
-import { CadModelService } from '../shared/cad-model.service';
+import { ModelItem } from '../../shared/ModelItem.model';
+import { ModelService } from '../../shared/model.service';
 import { Observable } from 'rxjs/Rx';
-import { ModelFormComponent } from'./model-form.component'
+import { ModelFormComponent } from'../model-form.component'
 import * as $ from 'jquery';
 
 @Component
@@ -16,7 +16,7 @@ export class EditmodelComponent implements OnInit
   public error: any;
   public success: any;
 
-  public model : CadModel;
+  public model : ModelItem;
   public items: Observable <any>;
   public valid: boolean = false;
 
@@ -25,13 +25,13 @@ export class EditmodelComponent implements OnInit
 
   @ViewChild(ModelFormComponent) private modelFormComponent : ModelFormComponent;
 
-  constructor (private modelService: CadModelService)
+  constructor (private modelService: ModelService)
   {}
 
   ngOnInit()
   {
     // new istance of CadModel
-    this.model=  new CadModel();
+    this.model=  new ModelItem();
 
     // query for all models that belongs to user with uid
     this.items = this.modelService.getEditModels();
@@ -51,7 +51,7 @@ export class EditmodelComponent implements OnInit
     this.model = item;
 
     // sets imagePreview in the child view
-    this.modelFormComponent.imagePreview = this.model.image.URL;
+    this.modelFormComponent.imagePreview = this.model.image.url;
 
     // sets tmp variables for check if should save image or model file
     this.tmpImageName = this.model.image.name;

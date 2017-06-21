@@ -1,7 +1,7 @@
 import { Component, Inject ,OnInit, ViewChild} from '@angular/core';
-import { CadModel } from '../shared/cad-model';
-import { CadModelService } from '../shared/cad-model.service';
-import { ModelFormComponent } from'./model-form.component'
+import { ModelItem } from '../../shared/ModelItem.model';
+import { ModelService } from '../../shared/model.service';
+import { ModelFormComponent } from'../model-form.component'
 import * as $ from 'jquery';
 
 @Component
@@ -14,11 +14,12 @@ export class NewmodelComponent implements OnInit
 {
   public error: any;
   public success: any;
-  public model: CadModel;
+  public model: ModelItem;
   public valid: boolean = false;
   @ViewChild(ModelFormComponent) private modelFormComponent : ModelFormComponent;
 
-  constructor(private modelService: CadModelService)
+
+  constructor(private modelService: ModelService)
   {}
 
   ngOnInit()
@@ -58,7 +59,7 @@ export class NewmodelComponent implements OnInit
     this.error = null;
 
     // new instance of CadModel
-    this.model = new CadModel();
+    this.model = new ModelItem();
   }
 
 //end of class

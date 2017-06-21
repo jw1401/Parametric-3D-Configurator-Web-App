@@ -7,3 +7,5 @@ export const licenses =
   { "license": 'by-nc-nd', "name":'Attribution-NonCommercial-NoDerivatives 4.0 International'},
   { "license": 'by-nc-sa', "name":'Attribution-NonCommercial-ShareAlike 4.0 International'},
 ];
+
+export const powers = [ 'Printable', 'Hi Tec Gadget','Art', 'Engineering','Not special','Universal'];
