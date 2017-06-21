@@ -10,8 +10,22 @@ import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/data
 export class FileService
 {
 
+  private _dbBasePath: string;
+  private _storageBasePath: string;
+
+
   constructor(private db: AngularFireDatabase)
   {}
+
+  set dbBasePath(path)
+  {
+    this._dbBasePath=path;
+  }
+
+  set storageBasePath(path)
+  {
+    this._storageBasePath=path;
+  }
 
   // uploads file to storage and database
   //

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { UserService } from '../../shared/user.service';
-import { User, Upload } from '../../shared/user.model'
+import { User } from '../../shared/user.model'
 
 @Component
 ({
