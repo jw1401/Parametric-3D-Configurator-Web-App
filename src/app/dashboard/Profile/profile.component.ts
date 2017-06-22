@@ -7,7 +7,6 @@ import { FileItem } from '../../shared/FileItem.model'
 import * as $ from 'jquery';
 
 
-
 @Component
 ({
   selector: 'profile',
@@ -25,6 +24,7 @@ export class ProfileComponent
   currentFile: FileItem = null;
   imageTypeCheck: string;
 
+
   constructor(private userService: UserService, private router: Router)
   {
     this.user = new User();
@@ -35,10 +35,9 @@ export class ProfileComponent
     this.subscription = this.userService.currentUserData.subscribe(data =>
       {
         this.user = data;
-
         if (this.user.photo != undefined)
         {
-          this.imagePreview = this.user.photo.url
+          this.user.photo.url !="" ? this.imagePreview = this.user.photo.url : null
           this.imageTypeCheck = this.user.photo.type
         }
       })
@@ -51,13 +50,11 @@ export class ProfileComponent
 
   fileImageChangeEvent(event: any)
   {
-    this.success = null;
     this.error = null;
-
+    this.success = null;
     this.currentFile = new FileItem(event.target.files[0]);
-    this.imageTypeCheck = this.currentFile.file.type
-
-    this.showImage(event);
+    this.imageTypeCheck = this.currentFile.type
+    this.showImage();
   }
 
   UpdateUser(userForm: any)
@@ -74,9 +71,9 @@ export class ProfileComponent
           {
             this.userService.uploadProfilePicture(this.currentFile).then((success)=>
             {
-               this.currentFile = null;
-               this.showSuccess(success);
-             });
+              this.showSuccess(success);
+              this.currentFile = null;
+            });
           }
           else if (this.currentFile != null && this.user.photo.name != "")
           {
@@ -86,10 +83,9 @@ export class ProfileComponent
               {
                  this.showSuccess(success);
                  this.currentFile = null;
-               });
+              });
             })
           }
-
           this.showSuccess(success);
         })
         .catch((err) =>
@@ -105,14 +101,15 @@ export class ProfileComponent
     $(document).ready(function(){$('#success').fadeOut(4000);});
   }
 
-  private showImage(event:any)
+  private showImage()
   {
-    if (event.target.files && event.target.files[0] && event.target.files[0].type.match('image/*'))
+    if (this.currentFile.type.match('image/*'))
     {
       var reader = new FileReader();
       reader.onload = (event:any) => {this.imagePreview = event.target.result;}
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(this.currentFile.file);
     }
+    else this.error = "Only IMAGES"
   }
 
   private checkValid(userForm: any): boolean

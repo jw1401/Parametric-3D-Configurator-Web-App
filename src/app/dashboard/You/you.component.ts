@@ -30,7 +30,7 @@ export class YouComponent
         this.user = data
         if (this.user.photo != undefined)
         {
-          this.imagePreview = this.user.photo.url
+          this.user.photo.url !="" ? this.imagePreview = this.user.photo.url : null
         }
       })
     }

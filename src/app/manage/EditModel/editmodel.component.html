@@ -22,10 +22,10 @@
           <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal" (click) = "editItem(item)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-danger" (click) = "deleteItem(item.$key, item.image.name, item.model.name)">
+          <button class="btn btn-outline-danger" (click) = "deleteItem(item)">
               <i class="fa fa-trash-o" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-link float-right" (click) = "updateItemLike(item.$key, item.like)">
+          <button class="btn btn-link float-right" (click) = "updateItemLike(item)">
             <i class="fa fa-heart" aria-hidden="true"></i> {{item?.like}}
           </button>
         </div>

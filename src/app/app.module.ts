@@ -8,6 +8,8 @@ import {RoutingModule} from './routing.module';
 
 import { AppComponent, PageNotFoundComponent } from './app.component';
 import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 
 import { AuthModule } from './auth/auth.module';
 import { DashModule } from './dashboard/dashboard.module';
@@ -38,6 +40,8 @@ export const firebaseConfig = environment.firebaseConfig;
     PageNotFoundComponent,
     CadviewComponent,
     Draggable,
+    DisclaimerComponent,
+    ContactComponent,
 
   ],
   imports: [

@@ -156,24 +156,25 @@ export class UserService
   }
 
   // upload a profile picture
-  uploadProfilePicture(file : FileItem) : Promise<any>
+  uploadProfilePicture(fileItem : FileItem) : Promise<any>
   {
     return new Promise ((resolve, reject) =>
     {
-      let storagePath = `${this.currentUserId}/userData/${file.file.name}`
+      let storagePath = `${this.currentUserId}/userData/${fileItem.name}`
       let dbPath = `/users/${this.currentUserId}/photo`
 
-      this.fileService.uploadFile2(file, storagePath, dbPath).then((success) => resolve('saved ' + success.file.name))
+      this.fileService.uploadFile2(fileItem, storagePath, dbPath)
+      .then((fileItem) => resolve(`saved ${fileItem.name}`))
       .catch((err) => reject(err))
     });
   }
 
   // delete profile picture
-  deleteProfilePicture(file : FileItem) : Promise<any>
+  deleteProfilePicture(fileItem : FileItem) : Promise<any>
   {
     return new Promise ((resolve, reject) =>
     {
-        let storagePath = `${this.currentUserId}/userData/${file.name}`
+        let storagePath = `${this.currentUserId}/userData/${fileItem.name}`
         let dbPath = `/users/${this.currentUserId}/photo`
 
         this.fileService.deleteFile2(storagePath, dbPath).then((success)=> resolve(success)).catch((err)=>reject(err))

@@ -9,7 +9,7 @@ import { ManageComponent } from './manage.component';
 import { NewmodelComponent } from './NewModel/newmodel.component';
 import { EditmodelComponent } from './EditModel/editmodel.component';
 import { LikedModelsComponent } from './LikedModels/likedmodels.component'
-import { ModelFormComponent } from'./model-form.component'
+import { ModelFormComponent } from'./ModelForm/model-form.component'
 
 
 @NgModule({

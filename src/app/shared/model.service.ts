@@ -19,55 +19,65 @@ export class ModelService
 
   constructor( private db: AngularFireDatabase, private http: Http, private userService: UserService, private fileService: FileService)
   {
+    // sets refernece to models
     this.dbModels = this.db.list('/models');
   }
 
+  // gets models all models with query and pagination
   getModelsList(query={}): FirebaseListObservable <any>
   {
     return this.db.list('/models', { query: query });
   }
 
-  getEditModels(): Observable <any>
+  // gets the models that belong to user
+  getEditModels(): Observable <ModelItem>
   {
     return this.getModelsForModelsKeys(this.getModelsKeysPerUser())
   }
 
+  // gets the liked models per user
   getLikedModels(): Observable <any>
   {
     return this.getModelsForModelsKeys(this.getLikedModelsKeysPerUser())
   }
 
+  // gets models for specified keys
   getModelsForModelsKeys(modelsKeys: Observable <string[]>): Observable <any>
   {
     return modelsKeys.map(mpu => mpu.map(modelKey => this.db.object(`models/`+ modelKey)))
       .flatMap(fbojs =>Observable.combineLatest(fbojs));
   }
 
+  // gets the model keys for models per user
   getModelsKeysPerUser() : Observable <string[]>
   {
     return this.db.list(`/modelsPerUser/${this.userService.currentUserId}`, {preserveSnapshot: true})
-      /*.do(val => console.log("val: ",val))*/
+      /*.do(val => this.log("val: ",val))*/
       .map(mspu => mspu.map(mpu=>mpu.key));
   }
 
+  // gets the models keys for liked models per user
   getLikedModelsKeysPerUser() : Observable <string[]>
   {
     return this.db.list(`/likedModelsPerUser/${this.userService.currentUserId}`, {preserveSnapshot: true}).first()
-      /*.do(val => console.log("val: ",val))*/
+      /*.do(val => this.log("val: ",val))*/
       .map(lmspu => lmspu.map(lmpu=>lmpu.key));
   }
 
+  // get model by key
   getModelByKey(key: string): Promise <ModelItem>
   {
     return this.db.object(`/models/${key}`).first().toPromise().then().catch();
   }
 
+  // get model Data per http get request
   getModelData (modelURL: string): Promise <any>
   {
     return this.http.get(modelURL, { responseType: ResponseContentType.Text})
      .map(response => response.text()).toPromise()
   }
 
+  // get binary model Data per http get request
   getModelDataBinary (modelURL: string): Promise <any>
   {
     return this.http.get(modelURL, { responseType: ResponseContentType.ArrayBuffer})
@@ -80,7 +90,6 @@ export class ModelService
   {
     // assigns the model to currentUserId
     model.userId = this.userService.currentUserId;
-    let errorMessage = "Ooops something went wrong!";
 
     return new Promise((resolve, reject) =>
     {
@@ -91,11 +100,13 @@ export class ModelService
             // update models per user => then you know which model belongs to the user
             this.db.object (`/modelsPerUser/${this.userService.currentUserId}/${item.key}`).set(true);
 
-            this.uploadImage(item.key, model).then(() =>
-            {
-              this.uploadModel(item.key, model).then(()=>resolve('created model')).catch((err)=>reject(err))
-            }).catch((err) => reject(err))
-          }).catch((err) => {console.log(err); reject (errorMessage);})
+            this.uploadImage(item.key, model)
+              .then(() =>
+              {
+                this.uploadModel(item.key, model).then(()=>resolve('created model')).catch((err)=>reject(err))
+              })
+              .catch((err) => reject(err))
+          }).catch((err) => reject (err.message))
     })
   }
 
@@ -122,14 +133,14 @@ export class ModelService
           this.deleteImageFile(key, imageName)
             .then((success) =>
               {
-                console.log("deleted image")
-              }).catch((err) => {console.log(err)})
+                this.log("deleted image")
+              }).catch((err) => {this.log(err)})
 
           this.deleteModelFile(key, modelName)
             .then((success) =>
               {
-                console.log("deleted model")
-              }).catch((err) => {console.log(err)})
+                this.log("deleted model")
+              }).catch((err) => {this.log(err)})
         })
   }
 
@@ -137,12 +148,12 @@ export class ModelService
   //
   deleteModelFile(key: string, name: any) : Promise <any>
   {
-    let storagePath = `${this.userService.currentUserId}/${key}/models/${name}`;
+    let storagePath = `${this.userService.currentUserId}/${key}/files/${name}`;
     let dbPath =`/models/${key}/model`
 
     return new Promise((resolve, reject) =>
     {
-      this.fileService.deleteFile2(storagePath, dbPath).then((success) => resolve("deleted " + name)).catch((err) =>reject(err));
+      this.fileService.deleteFile2(storagePath, dbPath).then((success) => resolve(success)).catch((err) =>reject(err));
     })
   }
 
@@ -150,15 +161,14 @@ export class ModelService
   //
   deleteImageFile(key: string, name: any) : Promise <any>
   {
-    let storagePath = `${this.userService.currentUserId}/${key}/images/${name}`;
+    let storagePath = `${this.userService.currentUserId}/${key}/files/${name}`;
     let dbPath = `/models/${key}/image`
 
     return new Promise((resolve, reject) =>
     {
-      this.fileService.deleteFile2(storagePath, dbPath).then(() => resolve("deleted " + name)).catch((err) =>reject(err));
+      this.fileService.deleteFile2(storagePath, dbPath).then((success) => resolve(success)).catch((err) =>reject(err));
     })
   }
-
 
   // Uploads image to storage and database
   //
@@ -166,10 +176,12 @@ export class ModelService
   {
     return new Promise ((resolve, reject) =>
     {
-      let storagePath =`${this.userService.currentUserId}/${key}/images/${model.image.file.name}`
+      let storagePath =`${this.userService.currentUserId}/${key}/files/${model.image.file.name}`
       let dbPath =`/models/${key}/image`
 
-      this.fileService.uploadFile2(model.image, storagePath, dbPath).then(()=>resolve('uploaded image')).catch((err)=> reject(err))
+      this.fileService.uploadFile2(model.image, storagePath, dbPath)
+      .then((fileItem)=> resolve(`uploaded image ${fileItem.name}`))
+      .catch((err)=> reject(err))
     });
   }
 
@@ -179,10 +191,12 @@ export class ModelService
     {
       return new Promise ((resolve, reject) =>
       {
-        let storagePath =`${this.userService.currentUserId}/${key}/models/${model.model.file.name}`
+        let storagePath =`${this.userService.currentUserId}/${key}/files/${model.model.file.name}`
         let dbPath =`/models/${key}/model`
 
-        this.fileService.uploadFile2(model.model, storagePath, dbPath).then(()=>resolve('uploaded image')).catch((err)=> reject(err))
+        this.fileService.uploadFile2(model.model, storagePath, dbPath)
+        .then((fileItem)=> resolve(`uploaded model ${fileItem.name}`))
+        .catch((err)=> reject(err))
       });
     }
 
@@ -190,7 +204,7 @@ export class ModelService
     //
     updateLike(key: string, like: number)
     {
-      let item = this.db.object(`/likedModelsPerUser/${this.userService.currentUserId}/${key}`).first().single().subscribe((data) =>
+      this.db.object(`/likedModelsPerUser/${this.userService.currentUserId}/${key}`).first().toPromise().then((data) =>
         {
           if (data.$value == null)
           {
@@ -203,6 +217,12 @@ export class ModelService
             this.dbModels.update(key, {like:like-1});
           }
         });
+    }
+
+    // log function
+    private log(txt: string)
+    {
+      console.log(`[ModelService]: ${txt}`)
     }
 
 //end of class

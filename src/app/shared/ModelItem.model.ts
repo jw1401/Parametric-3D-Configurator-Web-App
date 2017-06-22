@@ -33,5 +33,7 @@ export class ModelItem
 
       this.isCustomizable = false;
       this.license =  licenses[0].license;
+
+      //console.log(this);
     }
 }

@@ -2,7 +2,7 @@ import { Component, Inject ,OnInit, ViewChild} from '@angular/core';
 import { ModelItem } from '../../shared/ModelItem.model';
 import { ModelService } from '../../shared/model.service';
 import { Observable } from 'rxjs/Rx';
-import { ModelFormComponent } from'../model-form.component'
+import { ModelFormComponent } from'../ModelForm/model-form.component'
 import * as $ from 'jquery';
 
 @Component
@@ -17,13 +17,14 @@ export class EditmodelComponent implements OnInit
   public success: any;
 
   public model : ModelItem;
-  public items: Observable <any>;
+  public items: Observable <ModelItem>;
   public valid: boolean = false;
+
+  @ViewChild(ModelFormComponent) private modelFormComponent : ModelFormComponent;
 
   private tmpImageName: string;
   private tmpModelName: string;
 
-  @ViewChild(ModelFormComponent) private modelFormComponent : ModelFormComponent;
 
   constructor (private modelService: ModelService)
   {}
@@ -37,10 +38,9 @@ export class EditmodelComponent implements OnInit
     this.items = this.modelService.getEditModels();
   }
 
-  // sets data in the modal Dialog
-  // based on selected item
+  // sets data in the modal Dialog based on clicked item
   //
-  editItem (item: any)
+  editItem (item: ModelItem)
   {
     // reset everything
     this.modelFormComponent.resetForm();
@@ -62,6 +62,7 @@ export class EditmodelComponent implements OnInit
   //
   updateItem ()
   {
+    //console.log(this.model)
     // checks if form model-form is valid
     if (this.valid)
     {
@@ -105,16 +106,16 @@ export class EditmodelComponent implements OnInit
 
   // gives like or dislike
   //
-  updateItemLike (key: string, like: number)
+  updateItemLike (item: ModelItem)
   {
-    this.modelService.updateLike(key, like);
+    this.modelService.updateLike(item.$key, item.like);
   }
 
   // delets the whole item and all files related to item
   //
-  deleteItem (key: string, imageName: string, modelName: string)
+  deleteItem (item: ModelItem)
   {
-    this.modelService.deleteModel(key, imageName, modelName);
+    this.modelService.deleteModel(item.$key, item.image.name, item.model.name);
     this.items = this.modelService.getEditModels();
   }
 
