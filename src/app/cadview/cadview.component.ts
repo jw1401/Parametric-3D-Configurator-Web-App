@@ -61,8 +61,8 @@ export class CadviewComponent implements OnInit
                                     drawFaces: true,
                                 });
 
-    this.gProcessor.setImagePath("/assets/jscad/jscad/imgs/");
-    this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../assets/jscad/jscad/Libraries/');// set for library path
+    this.gProcessor.setImagePath("/assets/jscad/imgs/");
+    this.gProcessor.setOpenJsCadPath(this.gProcessor.baseurl+'../assets/jscad/Libraries/');// set for library path
 
     //get the item from firebase only one time
     this.modelService.getModelByKey(this.modelKey).then(model =>
@@ -85,7 +85,7 @@ export class CadviewComponent implements OnInit
 
              this.myClass = "col-sm-12 col-md-12 col-lg-8"; //make jscad Style
              this.code = data;
-             this.gProcessor.setStatus("Processing <img id=busy src='jscad/jscad/imgs/busy.gif'>");
+             this.gProcessor.setStatus("Processing <img id=busy src='jscad/imgs/busy.gif'>");
              this.gProcessor.setJsCad(data);
              this.gProcessor.viewer.handleResize(); //call handleResize otherwise it looks ugly
            });
@@ -104,9 +104,9 @@ export class CadviewComponent implements OnInit
              let decoder = new encoding.TextDecoder('x-user-defined');
              let data = decoder.decode(dataBinary)
              this.myClass="col-sm-12"; //make stl Style
-             this.gProcessor.setStatus("Converting <img id=busy src='/assets/jscad/jscad/imgs/busy.gif'>");
+             this.gProcessor.setStatus("Converting <img id=busy src='/assets/jscad/imgs/busy.gif'>");
              var worker = Processor.createImportWorker(this.gProcessor);
-             var url = this.gProcessor.baseurl+ '../assets/jscad/jscad/Libraries/';
+             var url = this.gProcessor.baseurl+ '../assets/jscad/Libraries/';
 
              //note: cache: false is set to allow evaluation of 'include' statements
                worker.postMessage({baseurl: url, source: data, filename: "*.stl", cache: false});
