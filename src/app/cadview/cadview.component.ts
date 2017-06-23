@@ -111,6 +111,11 @@ export class CadviewComponent implements OnInit
       });
     }
 
+    save()
+    {
+        window.alert('not implemented')
+    }
+
     redrawCadModel()
     {
       this.gProcessor.setJsCad(this.code);

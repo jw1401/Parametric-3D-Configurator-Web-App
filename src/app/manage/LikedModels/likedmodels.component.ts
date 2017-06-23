@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Rx';
 export class LikedModelsComponent implements OnInit
 {
   public items: Observable<any>;
+  public error: string =null;
 
   constructor(private router: Router, private modelService: ModelService)
   {}

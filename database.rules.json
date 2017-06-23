@@ -1,6 +1,9 @@
 {
   "rules":
   {
+    ".read": true,
+    ".write": "auth != null",
+
     "users":
     {
       "$user_id":
@@ -10,17 +13,15 @@
       }
     },
 
-
     "models":
     {
       ".read": true,
       ".write": "auth != null",
 
-
-        "$model_id":
-        {
-          ".write": "data.child('uid').val() === auth.uid"
-        }
+      "$model_id":
+      {
+        ".write": "data.child('uid').val() === auth.uid"
+      }
     }
   }
 }

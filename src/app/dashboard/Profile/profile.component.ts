@@ -112,7 +112,7 @@ export class ProfileComponent
     else this.error = "Only IMAGES"
   }
 
-  private checkValid(userForm: any): boolean
+  public checkValid(userForm: any): boolean
   {
     try
     {

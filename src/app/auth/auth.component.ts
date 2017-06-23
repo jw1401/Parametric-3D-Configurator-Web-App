@@ -15,6 +15,7 @@ export class SignupComponent
 {
   public error: any;
   public user: User;
+  
 
   constructor(private afAuth: AngularFireAuth, private router: Router, private db: AngularFireDatabase)
   {}
