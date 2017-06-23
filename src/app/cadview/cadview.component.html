@@ -1,7 +1,7 @@
 <div class="container"> <!--Container 1 begin-->
   <div class="row">
     <div class="col-12 ">
-      <h1 class="pb-2">{{model?.name}} </h1>
+      <h2 class="pb-2">{{model?.name}} </h2>
     </div>
   </div>
   <!-- The Cad Region-->
@@ -37,27 +37,66 @@
 <div class="container"> <!--Container 2 begin-->
   <!-- the Description Region-->
   <div class="row mt-3 p-3" >
-    <div class="col-sm-12 p-3" style="background:white">
+    <div class="col-sm-12 p-3" style="background:white;box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);">
       <nav class="nav">
-        <li class="nav-item"><a class="nav-link active pl-0" data-toggle="tab" href="#description" role="tab">Description</a></li>
-        <li *ngIf="!isStl" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit</a></li>
+        <li class="nav-item"><a class="nav-link active pl-0" data-toggle="tab" href="#about" role="tab">About</a></li>
+        <li *ngIf="isCodeVisible" class="nav-item"><a class="nav-link " data-toggle="tab" href="#code" role="tab">Edit</a></li>
         <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#license" role="tab">License</a></li>
-        <li class="nav-item"><a class="nav-link " data-toggle="tab" href="#madeBy" role="tab">Made</a></li>
+        <!--li class="nav-item"><a class="nav-link " data-toggle="tab" href="#more" role="tab">more..</a></li-->
       </nav>
       <hr />
       <div class="tab-content">
-        <div class="tab-pane active" id="description" role="tabpanel">
+        <div class="tab-pane active" id="about" role="tabpanel">
           <div class="row">
-            <div class="col-md-4">
-              <img class="img-fluid" [src]="model?.imageURL" alt="Generic placeholder image">
+            <div class="col-12" style="text-align:center">
+              <h1 class="">About "{{model?.name}}"</h1>
+              <br />
             </div>
-            <div class="col-md-8">
-              <div innerHTML ="{{model?.description}}" class="card-text"></div>
+            <div class="col-12">
+              <img class="rounded img-fluid mx-auto d-block" [src]="model?.image.url" alt="Generic placeholder image" style="height:300px">
+            </div>
+
+          </div>
+          <br /><br />
+
+          <div class="row">
+            <div class="col-12" style="text-align:center">
+
+              <h4 class="">Description</h4>
+              <hr />
+            </div>
+            <div class="col-12">
+              <div innerHTML ="{{model?.description}}" class="card-text p-5"></div>
             </div>
           </div>
-        </div>
 
-        <div class="tab-pane " id="code" role="tabpanel">
+
+
+          <div class="row justify-content-center">
+            <div class="col-12" style="text-align:center">
+
+              <h4 class="">Made by</h4>
+              <hr />
+            </div>
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-4 ">
+                <div class="card text-center" id="userCard" style="">
+                  <div class="card-block ">
+                    <img class="rounded" style="height:100px;width:100px; object-fit:cover; object-position: center; border-radius:50px" [src]="(user|async)?.photo.url">
+                    <h3 class="card-title">{{(user|async)?.name}}</h3>
+                    <hr />
+                    <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
+                    <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.bio}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+        <div class="tab-pane " id="code" role="tabpanel" *ngIf="isCodeVisible">
           <div class=row>
             <div class="col-md-10 col-sm-9">
               <textarea type="text" class="form-control" id="code" spellcheck="false"
@@ -65,37 +104,59 @@
                  id="description" placeholder="..." style="height:250px; font-size:12px"></textarea><br />
             </div>
             <div class="col-md-2 col-sm-3">
-               <button type="button" class="btn btn-outline-primary w-100" (click)="redrawCadModel(); ">Redraw</button>
+               <button type="button" class="btn btn-outline-primary w-100" (click)="redrawCadModel();">Redraw</button><br /><br />
+               <button type="button" class="btn btn-outline-primary w-100" data-toggle="modal" data-target="#codeModal">Open</button><br /><br />
+               <button type="button" class="btn btn-outline-primary w-100" (click)="save();">Save</button><br /><br />
             </div>
           </div>
         </div>
 
-        <div class="tab-pane " id="madeBy" role="tabpanel">
+        <div class="tab-pane " id="more" role="tabpanel">
           <div class="row">
             <div class="col-12 col-sm-12 col-md-8 col-lg-6 ">
-              <div class="card text-center" id="userCard" style="">
-                <div class="card-block ">
-                  <img class="rounded" style="height:225px;width:225px; object-fit:cover; object-position: center; border-radius:125px" [src]="(user|async)?.photoURL">
-                  <h1 class="card-title">{{(user|async)?.name}}</h1>
-                  <hr />
-                  <p class="card-text"><i class="fa fa-home" aria-hidden="true"></i> {{(user|async)?.country}}</p>
-                  <p class="card-text" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> {{(user|async)?.bio}}</p>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
 
-        <div class="tab-pane" id="license" role="tabpanel">
-          <h2>Model License</h2>
-            <p style="text-align:justify">
-              Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen CC BY-NC-SA <br /><br />
-              Diese Lizenz erlaubt es anderen, Ihr Werk zu verbreiten, zu remixen, zu verbessern und darauf aufzubauen, allerdings nur nicht-kommerziell und solange Sie als Urheber des Originals genannt werden und die auf Ihrem Werk basierenden neuen Werke unter denselben Bedingungen veröffentlicht werden.
-            </p>
+        <div class="tab-pane" id="license" role="tabpanel" style="text-align:center">
+          <br />
 
-            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
-          </div>
+            <a rel="license" href="http://creativecommons.org/licenses/{{model?.license}}/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/{{model?.license}}/4.0/88x31.png" /></a>
+            <br />This work is licensed under <a rel="license" href="http://creativecommons.org/licenses/{{model?.license}}/4.0/">cc {{model?.license}}</a><br /><br />
+
+            <p>
+              If you want to know more about the license follow above link!
+            </p>
         </div>
+      </div>
+
       </div>
     </div>
   </div> <!--Container 2 end-->
+
+
+  <!--this is the modal dialog for model editing-->
+  <div id="codeModal" class="modal fade" role="dialog" >
+    <div class="modal-dialog modal-lg" [ng2-draggable]="true">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Code</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <textarea type="text" class="form-control" id="code" spellcheck="false"
+             [(ngModel)]="this.code" name="code"
+             id="description" placeholder="..." style="height:500px; font-size:12px"></textarea><br />
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button class="btn btn-outline-primary" (click)="redrawCadModel();">Redraw</button>
+        </div>
+
+      </div>
+    </div>
+  </div>

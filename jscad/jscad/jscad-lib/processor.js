@@ -21,7 +21,7 @@ var work = require('webworkify');
 //
 function Processor(containerdiv, viewerOptions, onchange)
 {
-  console.log("Processor started...");
+  log("Processor started...");
   AlertUserOfUncaughtExceptions();
 
   //pass in div which contains viewerContext
@@ -65,6 +65,7 @@ function Processor(containerdiv, viewerOptions, onchange)
   {
     libraries: ['libCSG.js','libCSGExporter.js','libOpenscad.js'],
     openJsCadPath: 'jscad/Libraries/',
+    imagePath: 'jscad/imgs/',
     useAsync: true,
     useSync:  true,
   };
@@ -93,9 +94,9 @@ function Processor(containerdiv, viewerOptions, onchange)
 
   this.state = 0;
 
-  this.readyStr = "Ready <img id=busy src='/jscad/jscad/imgs/ready.png'>";
-  this.abortStr = "Aborted <img id=busy src='/jscad/jscad/imgs/aborted.png'>";
-  this.busyStr  = "Rendering. Please wait <img id=busy src='/jscad/jscad/imgs/busy.gif'>";
+  this.readyStr = "Ready <img id=busy src='" + this.processOpts.imagePath + "ready.png'>";
+  this.abortStr = "Aborted <img id=busy src='" + this.processOpts.imagePath + "aborted.png'>";
+  this.busyStr  = "Rendering. Please wait <img id=busy src='" + this.processOpts.imagePath + "busy.gif'>";
 
   this.createElements();
 };
@@ -263,19 +264,16 @@ Processor.prototype =
 
                                     $('#toggleLines').on("click", function()
                                     {
-                                      console.log("toggle-lines");
                                       that.toggleDrawOption("lines");
                                     });
 
                                     $('#toggleFaces').on("click", function()
                                     {
-                                      //console.log("toggleFaces");
                                       that.toggleDrawOption('faces');
                                     });
 
                                     $('#showToolbar').on("click",function()
                                     {
-                                      //console.log($('#updatediv').is(':visible'));
                                       if($('.draggable-status-div').is(':visible'))
                                       {
                                         $('.draggable-status-div').hide();
@@ -399,7 +397,7 @@ Processor.prototype =
             {
               //Format is set here for download
               that.currentFormat = button.value.toString();
-              //console.log(that.currentFormat);
+              //log(that.currentFormat);
               that.generateOutputFile();
             };
             this.downloadbuttons.appendChild(button);
@@ -458,6 +456,16 @@ Processor.prototype =
     setOpenJsCadPath: function(path)
     {
         this.processOpts['openJsCadPath'] = path;
+    },
+
+    // set image path externaly
+    //
+    setImagePath: function(path)
+    {
+      this.processOpts['imagePath'] = path;
+      this.readyStr = "Ready <img id=busy src='" + this.processOpts.imagePath + "ready.png'>";
+      this.abortStr = "Aborted <img id=busy src='" + this.processOpts.imagePath + "aborted.png'>";
+      this.busyStr  = "Rendering. Please wait <img id=busy src='" + this.processOpts.imagePath + "busy.gif'>";
     },
 
     // sets the error message in the errordiv
@@ -572,7 +580,7 @@ Processor.prototype =
             }
             catch(err)
             {
-                console.log(err)
+                log(err)
                 if (! this.processOpts.useSync)
                 {
                     var errtxt = err.toString();
@@ -596,7 +604,7 @@ Processor.prototype =
     rebuildSolidAsync: function()
     {
         //get all Parameter Values stored in parameters Object with names from jsCad File
-        var parameters = getParamValues(this.paramControls);//console.log(parameters)
+        var parameters = getParamValues(this.paramControls);//log(parameters)
 
         //checks if multithreading worker is supported
         if(!window.Worker) throw new Error("Worker threads are unsupported.");
@@ -738,7 +746,7 @@ Processor.prototype =
 
         if (isSafari())
         {
-            console.log("Trying download via DATA URI in Safari");
+            log("Trying download via DATA URI in Safari");
             // convert BLOB to DATA URI
             var blob = convertObjectsToBlob(this.currentObjects, this.selectedFormat(), this.formatInfo(this.selectedFormat()));
             var that = this;
@@ -760,7 +768,7 @@ Processor.prototype =
         }
         else
         {
-          console.log("Trying download via BLOB URL for other Browsers");
+          log("Trying download via BLOB URL for other Browsers");
           // convert BLOB to BLOB URL (HTML5 Standard)
           var blob = convertObjectsToBlob(this.currentObjects, this.selectedFormat(), this.formatInfo(this.selectedFormat()));
           var windowURL=getWindowURL();

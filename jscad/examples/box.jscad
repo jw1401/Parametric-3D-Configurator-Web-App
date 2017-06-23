@@ -1,10 +1,3 @@
-// title      : OpenJSCAD.org Logo
-// author     : Rene K. Mueller
-// license    : MIT License
-// revision   : 0.003
-// tags       : Logo,Intersection,Sphere,Cube
-// file       : logo.jscad
-
 
 var result = []; //result Array
 

@@ -1,0 +1,13 @@
+.card
+{
+  background: whitesmoke;
+}
+
+#image
+{
+  height:180px;
+  width:180px;
+  object-fit:cover;
+  object-position: center;
+  border-radius:90px
+}

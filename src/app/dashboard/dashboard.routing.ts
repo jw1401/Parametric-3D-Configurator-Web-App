@@ -1,19 +1,23 @@
 import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DashboardComponent } from './dashboard.component';
-import { ProfileComponent, AccountComponent, SettingsComponent } from './child.component';
 import { AuthGuard } from '../auth/auth-guard.service';
+
+import { DashboardComponent } from './dashboard.component';
+import { AccountComponent } from './Account/account.component';
+import { YouComponent } from './You/you.component'
+import { ProfileComponent } from './Profile/profile.component'
+
 
 const appRoutes: Routes = [
   { path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: AccountComponent },
-      { path: 'account', component: AccountComponent },
+      { path: '', component: YouComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'settings', component: SettingsComponent }
+      { path: 'you', component: YouComponent },
+      { path: 'account', component: AccountComponent }
     ]
   },
 ];

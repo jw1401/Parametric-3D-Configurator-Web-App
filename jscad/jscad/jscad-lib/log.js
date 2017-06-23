@@ -12,7 +12,7 @@ module.exports = function log(txt)
 
   if( (typeof(console) == "object") && (typeof(console.log) == "function") )
   {
-    console.log("JsCad Log: " + txt);
+    console.log("[JsCad]: " + txt);
   }
   else if( (typeof(self) == "object") && (typeof(self.postMessage) == "function") )
   {

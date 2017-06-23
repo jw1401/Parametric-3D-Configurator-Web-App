@@ -1,7 +1,10 @@
 .jumbotron{
 
-  background: #0275d8!important;
-
+  background: darkblue; /*#0275d8!important;*/
+  /*background-image: url('../../assets/imgs/jumboBack.jpg');
+  background-repeat:  no-repeat;
+  background-position: center;
+  background-size: cover;*/
   color:white;
 }
 
@@ -13,4 +16,14 @@
 
 .card-img-top:hover {
   cursor:pointer;
+}
+
+.card{
+
+  border-radius: 0px;
+}
+
+.card-img-top{
+
+  border-radius: 0px;
 }

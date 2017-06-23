@@ -1,24 +1,25 @@
 import { Component,OnInit } from '@angular/core';
-import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
+//import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 import { Router } from '@angular/router';
+
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  title = '~';
-  public isAuth = false;
+export class AppComponent implements OnInit
+{
   userName:string;
 
-  constructor(public af: AngularFire, private router:Router)
+  constructor(public afAuth: AngularFireAuth, private router:Router)
   {
-    this.af.auth.subscribe(auth=>
+    this.afAuth.authState.subscribe((auth) =>
       {
         if(auth)
         {
-          this.userName =auth.auth.displayName;
+          this.userName = auth.displayName;
         }
         else {}
       })
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit {
 
   logout()
   {
-    this.af.auth.logout();
+    this.afAuth.auth.signOut();
     this.router.navigate(['/'])
   }
 

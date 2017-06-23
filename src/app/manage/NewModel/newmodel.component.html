@@ -1,0 +1,39 @@
+
+<div class="container">
+
+  <!--Error and success section beginn here -->
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-danger w-100 text-center alert-dismissible" *ngIf="error">{{error}}</div>
+      <div class="alert alert-success  w-100 text-center" *ngIf="success" id="success">{{success}}</div>
+    </div>
+  </div>
+  <!--Error and success section ends here -->
+
+  <div class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+      <h5>Create a new model</h5><hr />
+    </div>
+  </div>
+
+  <!-- Model-Form beginn here -->
+  <div class="row">
+    <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+      <model-form #myForm [model]= "model" (isValid)= "valid = $event"></model-form>
+    </div>
+  </div>
+  <!-- Model-Form ends here -->
+
+  <!-- Buttons beginn here -->
+  <div class="row ">
+    <div class="col-12 offset-lg-2 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+      <hr />
+      <div class="mb-0">
+        <button type="button" class="btn btn-outline-primary" (click)= "onSubmit()" [disabled]= "!valid">Create model</button>
+        <button type="button" class="btn btn-outline-primary float-right" (click)= "newModel()">New Model</button>
+      </div>
+    </div>
+  </div>
+  <!-- Buttons ends here -->
+
+</div>

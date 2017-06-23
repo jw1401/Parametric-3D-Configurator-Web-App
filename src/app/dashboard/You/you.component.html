@@ -1,0 +1,35 @@
+<div class="container" >
+
+  <div class="row">
+    <div class="col-12">
+      <h5>{{auth?.displayName}} ({{auth?.email}}) <span *ngIf="auth.emailVerified===false" class="badge badge-pill badge-danger">not verified</span></h5>
+      <hr>
+    </div>
+  </div>
+
+  <div *ngIf="!auth" class="row alert alert-warning">No Data available</div>
+
+  <div class="row justify-content-center" *ngIf="auth">
+    <div class="col-12 col-sm-12 col-md-7 col-lg-5 col-xl-4 ">
+      <div class="card text-center" >
+        <div class="card-block ">
+
+          <div class="text-center ">
+            <img class="rounded" id="image" [src]="imagePreview">
+            <h3 class="card-title">{{user?.name}}</h3>
+          </div>
+
+          <hr />
+
+          <p class="card-text mb-0"><i class="fa fa-home" aria-hidden="true"></i> </p>
+          <p>{{user?.country}}</p>
+
+          <p class="card-text mb-0" style=" word-wrap: break-word;"><i class="fa fa-user-o" aria-hidden="true"></i> </p>
+          <p>{{user?.bio}}</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,15 +1,15 @@
 {
   "name": "jscad",
-  "version": "1.0.0",
-  "description": "jscad for Dingiversum",
+  "version": "0.1.0",
+  "description": "jscad for Adaptable",
   "main": "main.js",
 
   "scripts":
   {
-    "build": "browserify jscad/jscad-lib/processor.js --s Processor -o dist/myBundle.js"
+    "build": "watchify jscad/jscad-lib/processor.js --s Processor -o ../src/assets/jscad/jscadBundle.js"
   },
 
-  "author": "",
+  "author": "jw1401",
   "license": "ISC",
 
   "devDependencies":

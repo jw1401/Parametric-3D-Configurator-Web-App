@@ -2,12 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import {AngularFireModule} from 'angularfire2';
+import { AngularFireModule } from 'angularfire2';
 
 import {RoutingModule} from './routing.module';
 
 import { AppComponent, PageNotFoundComponent } from './app.component';
 import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 
 import { AuthModule } from './auth/auth.module';
 import { DashModule } from './dashboard/dashboard.module';
@@ -18,19 +20,16 @@ import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { CadviewComponent } from './cadview/cadview.component';
 
-import {CadModelService} from './shared/cad-model.service';
+import {ModelService} from './shared/model.service';
+
+import {Draggable} from 'ng2draggable/draggable.directive';
+
+import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
 
 
-  export const firebaseConfig = {
-
-    apiKey: "AIzaSyAINMYkpE9akJSIY53pAdXNhIJXqSd-HXI",
-        authDomain: "johnny-5eb4e.firebaseapp.com",
-        databaseURL: "https://johnny-5eb4e.firebaseio.com",
-        projectId: "johnny-5eb4e",
-        storageBucket: "johnny-5eb4e.appspot.com",
-        messagingSenderId: "455059925409"
-
-};
+export const firebaseConfig = environment.firebaseConfig;
 
 
 @NgModule({
@@ -40,6 +39,9 @@ import {CadModelService} from './shared/cad-model.service';
     HomeComponent,
     PageNotFoundComponent,
     CadviewComponent,
+    Draggable,
+    DisclaimerComponent,
+    ContactComponent,
 
   ],
   imports: [
@@ -50,9 +52,11 @@ import {CadModelService} from './shared/cad-model.service';
     DashModule,
     ManageModule,
     RoutingModule,
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
     AngularFireModule.initializeApp(firebaseConfig)
   ],
-  providers: [CadModelService],
+  providers: [ModelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
