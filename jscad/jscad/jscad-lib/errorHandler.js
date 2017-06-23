@@ -1,8 +1,11 @@
 // Call this routine to install a handler for uncaught exceptions
 //
+
+var log = require('./log.js');
+
 function AlertUserOfUncaughtExceptions()
 {
-  console.log("ErrorHandler started...");
+  log("ErrorHandler started...");
   window.onerror = function(message, url, line)
   {
     var msg = "uncaught exception";

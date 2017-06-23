@@ -14,7 +14,7 @@ const appRoutes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: AccountComponent },
+      { path: '', component: YouComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'you', component: YouComponent },
       { path: 'account', component: AccountComponent }

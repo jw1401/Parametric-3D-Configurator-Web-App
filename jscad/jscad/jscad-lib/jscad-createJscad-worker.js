@@ -11,10 +11,11 @@
 //
 var work = require('webworkify');
 var {textToBlobUrl, getWindowURL} = require('./utils.js');
+var log = require('./log.js');
 
 module.exports = function createJscadWorker (fullurl, script, callback)
 {
-  console.log("Running in Async Mode...");
+  log("Running in Async Mode...");
 
   // puts all the parts of the jsCad Script and everything needed together
   var source = buildJscadWorkerScript(fullurl, script);
@@ -135,7 +136,7 @@ function includeJscad(fn)
   {
     url = fn;
   }
-  console.log("urllll==="+url);
+  //console.log("urllll==="+url);
   importScripts(url);
   return true;
 };

@@ -418,9 +418,12 @@ module.exports =
 },{}],4:[function(require,module,exports){
 // Call this routine to install a handler for uncaught exceptions
 //
+
+var log = require('./log.js');
+
 function AlertUserOfUncaughtExceptions()
 {
-  console.log("ErrorHandler started...");
+  log("ErrorHandler started...");
   window.onerror = function(message, url, line)
   {
     var msg = "uncaught exception";
@@ -466,7 +469,7 @@ function AlertUserOfUncaughtExceptions()
 
 module.exports =AlertUserOfUncaughtExceptions
 
-},{}],5:[function(require,module,exports){
+},{"./log.js":9}],5:[function(require,module,exports){
 // Viewer with threeCSG bridge
 //
 
@@ -799,9 +802,11 @@ module.exports = Viewer;
 
 //const {CSG, CAG} = require('./csg.js');
 
+var log = require('./log.js');
+
  module.exports = function createJscadFunction (fullurl, script, callback)
 {
-  console.log("Running in Sync Mode...");
+  log("Running in Sync Mode...");
 
   // determine the relative base path for include(<relativepath>)
   var relpath = fullurl;
@@ -870,7 +875,7 @@ function includeJscadSync(fn)
   xhr.send();
 };
 
-},{}],7:[function(require,module,exports){
+},{"./log.js":9}],7:[function(require,module,exports){
 // Create an worker (thread) for processing the JSCAD script into CSG/CAG objects
 //
 // fullurl  - URL to original script
@@ -884,10 +889,11 @@ function includeJscadSync(fn)
 //
 var work = require('webworkify');
 var {textToBlobUrl, getWindowURL} = require('./utils.js');
+var log = require('./log.js');
 
 module.exports = function createJscadWorker (fullurl, script, callback)
 {
-  console.log("Running in Async Mode...");
+  log("Running in Async Mode...");
 
   // puts all the parts of the jsCad Script and everything needed together
   var source = buildJscadWorkerScript(fullurl, script);
@@ -1008,7 +1014,7 @@ function includeJscad(fn)
   {
     url = fn;
   }
-  console.log("urllll==="+url);
+  //console.log("urllll==="+url);
   importScripts(url);
   return true;
 };
@@ -1083,7 +1089,7 @@ function runJscadWorker(e)
   postMessage(r);
 };
 
-},{"./utils.js":12,"webworkify":16}],8:[function(require,module,exports){
+},{"./log.js":9,"./utils.js":12,"webworkify":16}],8:[function(require,module,exports){
 // Implementation of Import Worker Thread
 //
 // Handle the onmessage event which starts the thread
@@ -1100,11 +1106,13 @@ function runJscadWorker(e)
 //
 // Additional scripts (libraries) are imported only if necessary
 
+var log = require('./log.js');
+
 module.exports = function (self)
 {
 self.addEventListener('message',function (e)
 {
-  console.log("Import-Worker has started...");
+  log("Import-Worker has started...");
 
   var r = { source: "", converted: "", filename: "", baseurl: "", cache: false };
 
@@ -1134,13 +1142,13 @@ self.addEventListener('message',function (e)
         switch (e)
         {
           case 'stl':
-            console.log('Importing STL File...');
+            //console.log('Importing STL File...');
             importScripts(r.baseurl+'libCSG.js', r.baseurl+'libOpenscad.js');
             r.source = r.converted = parseSTL(data.source,data.filename);
             break;
 
           case 'jscad':
-            console.log("Importing JSCAD File...");
+            //console.log("Importing JSCAD File...");
             r.source = r.converted = data.source;
             break;
 
@@ -1155,7 +1163,7 @@ self.addEventListener('message',function (e)
 });
 }
 
-},{}],9:[function(require,module,exports){
+},{"./log.js":9}],9:[function(require,module,exports){
 //Logging Function for debugging
 //
 module.exports = function log(txt)
@@ -1170,7 +1178,7 @@ module.exports = function log(txt)
 
   if( (typeof(console) == "object") && (typeof(console.log) == "function") )
   {
-    console.log("JsCad Log: " + txt);
+    console.log("[JsCad]: " + txt);
   }
   else if( (typeof(self) == "object") && (typeof(self.postMessage) == "function") )
   {
@@ -1203,7 +1211,7 @@ var work = require('webworkify');
 //
 function Processor(containerdiv, viewerOptions, onchange)
 {
-  console.log("Processor started...");
+  log("Processor started...");
   AlertUserOfUncaughtExceptions();
 
   //pass in div which contains viewerContext
@@ -1446,19 +1454,16 @@ Processor.prototype =
 
                                     $('#toggleLines').on("click", function()
                                     {
-                                      console.log("toggle-lines");
                                       that.toggleDrawOption("lines");
                                     });
 
                                     $('#toggleFaces').on("click", function()
                                     {
-                                      //console.log("toggleFaces");
                                       that.toggleDrawOption('faces');
                                     });
 
                                     $('#showToolbar').on("click",function()
                                     {
-                                      //console.log($('#updatediv').is(':visible'));
                                       if($('.draggable-status-div').is(':visible'))
                                       {
                                         $('.draggable-status-div').hide();
@@ -1582,7 +1587,7 @@ Processor.prototype =
             {
               //Format is set here for download
               that.currentFormat = button.value.toString();
-              //console.log(that.currentFormat);
+              //log(that.currentFormat);
               that.generateOutputFile();
             };
             this.downloadbuttons.appendChild(button);
@@ -1643,6 +1648,8 @@ Processor.prototype =
         this.processOpts['openJsCadPath'] = path;
     },
 
+    // set image path externaly
+    //
     setImagePath: function(path)
     {
       this.processOpts['imagePath'] = path;
@@ -1763,7 +1770,7 @@ Processor.prototype =
             }
             catch(err)
             {
-                console.log(err)
+                log(err)
                 if (! this.processOpts.useSync)
                 {
                     var errtxt = err.toString();
@@ -1787,7 +1794,7 @@ Processor.prototype =
     rebuildSolidAsync: function()
     {
         //get all Parameter Values stored in parameters Object with names from jsCad File
-        var parameters = getParamValues(this.paramControls);//console.log(parameters)
+        var parameters = getParamValues(this.paramControls);//log(parameters)
 
         //checks if multithreading worker is supported
         if(!window.Worker) throw new Error("Worker threads are unsupported.");
@@ -1929,7 +1936,7 @@ Processor.prototype =
 
         if (isSafari())
         {
-            console.log("Trying download via DATA URI in Safari");
+            log("Trying download via DATA URI in Safari");
             // convert BLOB to DATA URI
             var blob = convertObjectsToBlob(this.currentObjects, this.selectedFormat(), this.formatInfo(this.selectedFormat()));
             var that = this;
@@ -1951,7 +1958,7 @@ Processor.prototype =
         }
         else
         {
-          console.log("Trying download via BLOB URL for other Browsers");
+          log("Trying download via BLOB URL for other Browsers");
           // convert BLOB to BLOB URL (HTML5 Standard)
           var blob = convertObjectsToBlob(this.currentObjects, this.selectedFormat(), this.formatInfo(this.selectedFormat()));
           var windowURL=getWindowURL();

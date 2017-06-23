@@ -81,8 +81,6 @@ export class CadviewComponent implements OnInit
 
           modelData.then((data) =>
             {
-             console.log("Loading jscad...");
-
              this.myClass = "col-sm-12 col-md-12 col-lg-8"; //make jscad Style
              this.code = data;
              this.gProcessor.setStatus("Processing <img id=busy src='jscad/imgs/busy.gif'>");
@@ -99,8 +97,6 @@ export class CadviewComponent implements OnInit
 
           modelData.then((dataBinary) =>
            {
-             console.log("Loading other File Format...");
-
              let decoder = new encoding.TextDecoder('x-user-defined');
              let data = decoder.decode(dataBinary)
              this.myClass="col-sm-12"; //make stl Style

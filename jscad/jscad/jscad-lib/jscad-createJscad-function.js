@@ -10,9 +10,11 @@
 
 //const {CSG, CAG} = require('./csg.js');
 
+var log = require('./log.js');
+
  module.exports = function createJscadFunction (fullurl, script, callback)
 {
-  console.log("Running in Sync Mode...");
+  log("Running in Sync Mode...");
 
   // determine the relative base path for include(<relativepath>)
   var relpath = fullurl;

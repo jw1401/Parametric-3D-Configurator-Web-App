@@ -6,7 +6,7 @@
 
   "scripts":
   {
-    "build": "browserify jscad/jscad-lib/processor.js --s Processor -o ../src/assets/jscad/jscadBundle.js"
+    "build": "watchify jscad/jscad-lib/processor.js --s Processor -o ../src/assets/jscad/jscadBundle.js"
   },
 
   "author": "jw1401",

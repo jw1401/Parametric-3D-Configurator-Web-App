@@ -14,11 +14,13 @@
 //
 // Additional scripts (libraries) are imported only if necessary
 
+var log = require('./log.js');
+
 module.exports = function (self)
 {
 self.addEventListener('message',function (e)
 {
-  console.log("Import-Worker has started...");
+  log("Import-Worker has started...");
 
   var r = { source: "", converted: "", filename: "", baseurl: "", cache: false };
 
@@ -48,13 +50,13 @@ self.addEventListener('message',function (e)
         switch (e)
         {
           case 'stl':
-            console.log('Importing STL File...');
+            //console.log('Importing STL File...');
             importScripts(r.baseurl+'libCSG.js', r.baseurl+'libOpenscad.js');
             r.source = r.converted = parseSTL(data.source,data.filename);
             break;
 
           case 'jscad':
-            console.log("Importing JSCAD File...");
+            //console.log("Importing JSCAD File...");
             r.source = r.converted = data.source;
             break;
 
