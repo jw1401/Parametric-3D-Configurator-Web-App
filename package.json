@@ -1,6 +1,6 @@
 {
-  "name": "Dingiversum",
-  "version": "0.5.0",
+  "name": "Adaptable",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

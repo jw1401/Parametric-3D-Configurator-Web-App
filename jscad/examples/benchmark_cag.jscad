@@ -4,7 +4,7 @@
 // description: testing how fast the CAG objects are created
 
 function main() {
-   echo("OpenJSCAD "+OpenJsCad.version+" CSG Benchmark");
+   
 
    var p = {
              'rectangles': CAG.rectangle,
@@ -24,6 +24,4 @@ function main() {
       echo(i+" "+t.toFixed(4)+" iterations / sec");
    }
    return o[0];
-}   
-   
-   
+}

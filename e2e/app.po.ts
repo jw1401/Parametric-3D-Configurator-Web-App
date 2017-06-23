@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class DingiversumAppPage {
+export class AdaptableAppPage {
   navigateTo() {
     return browser.get('/');
   }

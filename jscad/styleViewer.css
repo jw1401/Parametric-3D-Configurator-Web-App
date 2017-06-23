@@ -12,18 +12,13 @@
     width:auto;              /* defines Canvas width*/
     height:500px;            /* defines Canvas height*/
     border: thin solid lightgray;
-    /*border-radius: 2px;*/
-    /*box-shadow: 0px 1px 5px rgba(85, 85, 85, 0.15);*/
 }
 
 /*parametersdiv begins here*/
 #pWrapper
 {
   position:relative;
-  /*margin: 0px;  not inherited */
   padding: 5px;
-  /*border: thin solid lightgray;
-  border-radius: 2px;*/
   background: white;
   width:100%;
   height:500px;
@@ -41,8 +36,6 @@ canvas
     margin: 0px;            /* not inherited */
     border: none;           /* not inherited */
     padding: 0px;           /* not inherited */
-    /*border-radius: 2px;*/
-    /* ensure that the canvas uses the whole width and height of the document */
     height: 100%;
     width: 100%;
     cursor: crosshair;      /* show that we can change orientation of view */
@@ -83,14 +76,12 @@ canvas
   #viewerContext
   {
       height:300px;
-      /*margin-right: 0px;*/
   }
 
   body{}
 
   #columnBig
   {
-    /*padding-right:0px;*/
   }
 
   #pWrapper
@@ -134,7 +125,7 @@ canvas
     margin-bottom: 10px;
     border:  0px solid red; /* not inherited */
     padding: 5px; /* not inherited */
-    background-color:transparent;/*#337AB7;/*dodgerblue;*/
+    background-color:transparent;
     font-weight: normal;
     text-align:center;
     width: 100%;

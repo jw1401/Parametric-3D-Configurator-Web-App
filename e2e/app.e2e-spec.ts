@@ -1,10 +1,10 @@
-import { DingiversumAppPage } from './app.po';
+import { AdaptableAppPage } from './app.po';
 
 describe('cli-app App', () => {
-  let page: DingiversumAppPage;
+  let page: AdaptableAppPage;
 
   beforeEach(() => {
-    page = new DingiversumAppPage();
+    page = new AdaptableAppPage();
   });
 
   it('should display message saying app works', () => {
