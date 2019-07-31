@@ -11,8 +11,6 @@ Workflow:
 - Upload models to the Adaptable Site (you will need an user account).
 - Find, adapt and download 3D Models for 3D Printing!
 
-This is a web app based on OpenJsCad.org. (https://Openjscad.org)
-
 ## Purpose
 
 The purpose of this project was to learn
@@ -26,3 +24,5 @@ The purpose of this project was to learn
 ## License
 
 All code released under MIT License
+
+This is a web app based on OpenJsCad.org. (https://Openjscad.org)
