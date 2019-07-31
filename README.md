@@ -1,5 +1,7 @@
 # Adaptable 
 
+![Adaptable Logo](/adaptable.png)
+
 Adaptbale is an small web based online repository where users can upload and download adaptable 3D Models!
 
 (https://customizeit-601f1.firebaseapp.com/home)
