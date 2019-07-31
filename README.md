@@ -1,9 +1,8 @@
 ![Adaptable Logo](https://github.com/jw1401/Parametric-3D-Configurator-Web-App/blob/master/Adaptable.png)
-
-
+---
 Adaptbale is an small web based online repository where users can upload and download adaptable 3D Models!
 
---> https://customizeit-601f1.firebaseapp.com/home
+Find the APP here --> https://customizeit-601f1.firebaseapp.com/home
 
 Workflow:
 
