@@ -2,7 +2,7 @@
 ---
 Adaptbale is an small web based online repository where users can upload and download adaptable 3D Models!
 
-Find the APP here --> https://customizeit-601f1.firebaseapp.com/home
+Find the APP here --> Web App is deactivated
 
 Workflow:
 
